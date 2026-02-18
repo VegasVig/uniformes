@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Solicitação de Uniforme</title>
+
+<style>
+body{
+  background:#0a0f1f;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+}
+
+.container{
+  background:#111a33;
+  margin:20px;
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 0 20px #00eaff55;
+}
+
+input,select{
+  width:90%;
+  padding:12px;
+  margin:10px;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  background:#00eaff;
+  color:#000;
+  font-weight:bold;
+  padding:15px;
+  border:none;
+  border-radius:10px;
+  width:90%;
+}
+
+canvas{
+  background:white;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Solicitação de Uniforme</h2>
+
+<input id="nome" placeholder="Nome do funcionário">
+
+<select id="setor">
+<option>Vigilante Armado</option>
+<option>Vigilante Desarmado</option>
+<option>Porteiro</option>
+<option>Administrativo</option>
+</select>
+
+<select id="uniforme">
+<option>Uniforme Completo</option>
+<option>Camisa</option>
+<option>Calça</option>
+<option>Blazer</option>
+</select>
+
+<h3>Assinatura</h3>
+
+<canvas id="assinatura" width="300" height="150"></canvas>
+<br>
+<button onclick="enviar()">SOLICITAR</button>
+
+</div>
+
+<script>
+const canvas = document.getElementById("assinatura");
+const ctx = canvas.getContext("2d");
+
+let desenhando=false;
+
+canvas.addEventListener("touchstart",()=>desenhando=true);
+canvas.addEventListener("touchend",()=>desenhando=false);
+
+canvas.addEventListener("touchmove",(e)=>{
+ if(!desenhando) return;
+
+ let rect = canvas.getBoundingClientRect();
+ ctx.lineWidth=2;
+ ctx.lineCap="round";
+ ctx.strokeStyle="black";
+
+ ctx.lineTo(
+   e.touches[0].clientX-rect.left,
+   e.touches[0].clientY-rect.top
+ );
+ ctx.stroke();
+});
+
+async function enviar(){
+
+const assinatura = canvas.toDataURL();
+
+await fetch("COLE_AQUI_URL_APPS_SCRIPT",{
+method:"POST",
+body:JSON.stringify({
+nome:document.getElementById("nome").value,
+setor:document.getElementById("setor").value,
+uniforme:document.getElementById("uniforme").value,
+itens:"Solicitado",
+assinatura:assinatura
+})
+});
+
+alert("Solicitação enviada!");
+location.reload();
+}
+</script>
+
+</body>
+</html>
