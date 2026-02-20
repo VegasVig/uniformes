@@ -4,52 +4,95 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Solicitação de Uniforme</title>
+<title>Solicitação de Uniforme - Vegas</title>
 
 <style>
+
+/* ===== FUNDO ===== */
 body{
-  background:#0a0f1f;
-  color:white;
-  font-family:Arial;
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(180deg,#000,#1a1a1a);
+  color:#e5e5e5;
   text-align:center;
 }
 
+/* ===== CONTAINER ===== */
 .container{
-  background:#111a33;
-  margin:20px;
-  padding:20px;
-  border-radius:15px;
-  box-shadow:0 0 20px #00eaff55;
+  max-width:420px;
+  margin:20px auto;
+  background:#111;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:
+     0 0 15px rgba(255,255,255,0.08),
+     inset 0 0 10px rgba(255,255,255,0.05);
 }
 
+/* ===== LOGO ===== */
+.logo{
+  width:180px;
+  margin-bottom:15px;
+  filter: grayscale(100%) contrast(120%);
+}
+
+/* ===== TITULO ===== */
+h2{
+  color:#cfcfcf;
+  letter-spacing:1px;
+}
+
+/* ===== INPUTS ===== */
 input,select{
-  width:90%;
+  width:95%;
   padding:12px;
-  margin:10px;
+  margin:10px 0;
   border-radius:8px;
-  border:none;
+  border:1px solid #444;
+  background:#0d0d0d;
+  color:white;
 }
 
-button{
-  background:#00eaff;
-  color:#000;
-  font-weight:bold;
-  padding:15px;
-  border:none;
-  border-radius:10px;
-  width:90%;
-}
-
+/* ===== ASSINATURA ===== */
 canvas{
   background:white;
-  border-radius:10px;
+  border-radius:8px;
+  border:2px solid #444;
 }
+
+/* ===== BOTÃO ===== */
+button{
+  width:95%;
+  padding:14px;
+  margin-top:15px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  background:linear-gradient(180deg,#bfbfbf,#6e6e6e);
+  color:#000;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:linear-gradient(180deg,#ffffff,#8a8a8a);
+}
+
+footer{
+  margin-top:15px;
+  font-size:12px;
+  color:#777;
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="container">
+
+<!-- LOGO -->
+<img src="assets/vegaslogo.png" class="logo">
 
 <h2>Solicitação de Uniforme</h2>
 
@@ -72,24 +115,35 @@ canvas{
 <h3>Assinatura</h3>
 
 <canvas id="assinatura" width="300" height="150"></canvas>
+
 <br>
-<button onclick="enviar()">SOLICITAR</button>
+
+<button onclick="enviar()">SOLICITAR UNIFORME</button>
+
+<footer>
+Vegas Vigilância e Segurança
+</footer>
 
 </div>
 
 <script>
+
 const canvas = document.getElementById("assinatura");
 const ctx = canvas.getContext("2d");
 
 let desenhando=false;
 
 canvas.addEventListener("touchstart",()=>desenhando=true);
-canvas.addEventListener("touchend",()=>desenhando=false);
+canvas.addEventListener("touchend",()=> {
+  desenhando=false;
+  ctx.beginPath();
+});
 
 canvas.addEventListener("touchmove",(e)=>{
  if(!desenhando) return;
 
  let rect = canvas.getBoundingClientRect();
+
  ctx.lineWidth=2;
  ctx.lineCap="round";
  ctx.strokeStyle="black";
@@ -98,14 +152,21 @@ canvas.addEventListener("touchmove",(e)=>{
    e.touches[0].clientX-rect.left,
    e.touches[0].clientY-rect.top
  );
+
  ctx.stroke();
+ ctx.beginPath();
+ ctx.moveTo(
+   e.touches[0].clientX-rect.left,
+   e.touches[0].clientY-rect.top
+ );
 });
+
 
 async function enviar(){
 
 const assinatura = canvas.toDataURL();
 
-await fetch("COLE_AQUI_URL_APPS_SCRIPT",{
+await fetch("COLE_AQUI_SUA_URL_APPS_SCRIPT",{
 method:"POST",
 body:JSON.stringify({
 nome:document.getElementById("nome").value,
@@ -116,9 +177,10 @@ assinatura:assinatura
 })
 });
 
-alert("Solicitação enviada!");
+alert("Solicitação enviada com sucesso!");
 location.reload();
 }
+
 </script>
 
 </body>
