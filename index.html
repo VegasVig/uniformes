@@ -4,27 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Solicitação de Uniforme</title>
+<title>Solicitação de Uniforme - Vegas</title>
 
 <style>
 
 body{
   background:#000;
-  font-family:Arial;
+  font-family:Arial, Helvetica, sans-serif;
   color:#ddd;
   text-align:center;
+  margin:0;
 }
 
 .container{
   max-width:420px;
-  margin:auto;
+  margin:20px auto;
   background:#111;
   padding:20px;
   border-radius:12px;
+  box-shadow:0 0 10px rgba(255,255,255,0.08);
 }
 
 .logo{
   width:170px;
+  margin-bottom:10px;
   filter:grayscale(100%);
 }
 
@@ -38,21 +41,41 @@ input,select{
   border-radius:8px;
 }
 
+/* ===== LISTA UNIFORMES ===== */
+
 .uniformes{
   text-align:left;
   margin-top:15px;
 }
 
-label{
-  display:block;
-  margin:5px 0;
+.uniformes label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#0c0c0c;
+  padding:10px;
+  border-radius:6px;
+  margin:6px 0;
+  border:1px solid #333;
 }
+
+.uniformes input[type="checkbox"]{
+  width:18px;
+  height:18px;
+  cursor:pointer;
+}
+
+/* ===== ASSINATURA ===== */
 
 canvas{
   background:white;
   border-radius:8px;
+  border:2px solid #444;
   margin-top:10px;
+  touch-action:none;
 }
+
+/* ===== BOTÃO ===== */
 
 button{
   margin-top:15px;
@@ -62,6 +85,11 @@ button{
   background:linear-gradient(#bbb,#666);
   font-weight:bold;
   border-radius:8px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:linear-gradient(#fff,#888);
 }
 
 </style>
@@ -71,13 +99,12 @@ button{
 
 <div class="container">
 
-<img src="assets/vegaslogo.png" class="logo">
+<img src="./assets/vegaslogo.jpg" class="logo">
 
 <h3>Solicitação de Uniforme</h3>
 
 <input id="nome" placeholder="Nome do funcionário">
 
-<!-- POSTOS -->
 <select id="posto" onchange="carregarUniformes()">
 <option value="">Selecione o Posto</option>
 <option value="armado">Vigilante Armado - Geral</option>
@@ -93,19 +120,20 @@ button{
 <option value="comercial">Comercial</option>
 </select>
 
-<!-- UNIFORMES DINÂMICOS -->
 <div id="listaUniformes" class="uniformes"></div>
 
 <h4>Assinatura</h4>
-<canvas id="assinatura" width="300" height="150"></canvas>
+<canvas id="assinatura"></canvas>
 
-<button onclick="enviar()">SOLICITAR</button>
+<button onclick="enviar()">SOLICITAR UNIFORME</button>
 
 </div>
 
 <script>
 
-/* ===== BANCO DE UNIFORMES ===== */
+/* =========================
+   BANCO DE UNIFORMES
+========================= */
 
 const uniformes = {
 
@@ -193,7 +221,9 @@ comercial:[
 
 };
 
-/* ===== CARREGA UNIFORMES ===== */
+/* =========================
+   CARREGAR UNIFORMES
+========================= */
 
 function carregarUniformes(){
 
@@ -208,50 +238,78 @@ uniformes[posto].forEach(item=>{
 div.innerHTML += `
 <label>
 <input type="checkbox" value="${item}">
- ${item}
+<span>${item}</span>
 </label>`;
 });
 
 }
 
-/* ===== ASSINATURA ===== */
+/* =========================
+   ASSINATURA MOBILE FIX
+========================= */
 
 const canvas = document.getElementById("assinatura");
 const ctx = canvas.getContext("2d");
+
+function ajustarCanvas(){
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 160;
+}
+
+ajustarCanvas();
+window.addEventListener("resize",ajustarCanvas);
+
 let desenhando=false;
 
-canvas.addEventListener("touchstart",()=>desenhando=true);
-canvas.addEventListener("touchend",()=>{
-desenhando=false;
-ctx.beginPath();
-});
+canvas.addEventListener("touchstart",(e)=>{
+ e.preventDefault();
+ desenhando=true;
+},{passive:false});
+
+canvas.addEventListener("touchend",(e)=>{
+ e.preventDefault();
+ desenhando=false;
+ ctx.beginPath();
+},{passive:false});
 
 canvas.addEventListener("touchmove",(e)=>{
-if(!desenhando) return;
+ e.preventDefault();
 
-let rect = canvas.getBoundingClientRect();
+ if(!desenhando) return;
 
-ctx.lineWidth=2;
-ctx.lineCap="round";
+ const rect = canvas.getBoundingClientRect();
+ const touch = e.touches[0];
 
-ctx.lineTo(
-e.touches[0].clientX-rect.left,
-e.touches[0].clientY-rect.top
-);
+ ctx.lineWidth=2;
+ ctx.lineCap="round";
+ ctx.strokeStyle="black";
 
-ctx.stroke();
-ctx.beginPath();
-ctx.moveTo(
-e.touches[0].clientX-rect.left,
-e.touches[0].clientY-rect.top
-);
-});
+ ctx.lineTo(
+   touch.clientX-rect.left,
+   touch.clientY-rect.top
+ );
 
-/* ===== ENVIO ===== */
+ ctx.stroke();
+ ctx.beginPath();
+ ctx.moveTo(
+   touch.clientX-rect.left,
+   touch.clientY-rect.top
+ );
+
+},{passive:false});
+
+/* =========================
+   ENVIO
+========================= */
 
 async function enviar(){
 
-const checks = document.querySelectorAll("input[type=checkbox]:checked");
+const checks=document.querySelectorAll("input[type=checkbox]:checked");
+
+if(checks.length===0){
+ alert("Selecione ao menos um uniforme.");
+ return;
+}
 
 let itens=[];
 checks.forEach(c=>itens.push(c.value));
@@ -268,7 +326,7 @@ assinatura:assinatura
 })
 });
 
-alert("Solicitação enviada!");
+alert("Solicitação enviada com sucesso!");
 location.reload();
 }
 
@@ -276,4 +334,3 @@ location.reload();
 
 </body>
 </html>
-
