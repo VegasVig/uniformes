@@ -4,84 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Solicitação de Uniforme - Vegas</title>
+<title>Solicitação de Uniforme</title>
 
 <style>
 
-/* ===== FUNDO ===== */
 body{
-  margin:0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(180deg,#000,#1a1a1a);
-  color:#e5e5e5;
+  background:#000;
+  font-family:Arial;
+  color:#ddd;
   text-align:center;
 }
 
-/* ===== CONTAINER ===== */
 .container{
   max-width:420px;
-  margin:20px auto;
+  margin:auto;
   background:#111;
-  padding:25px;
+  padding:20px;
   border-radius:12px;
-  box-shadow:
-     0 0 15px rgba(255,255,255,0.08),
-     inset 0 0 10px rgba(255,255,255,0.05);
 }
 
-/* ===== LOGO ===== */
 .logo{
-  width:180px;
-  margin-bottom:15px;
-  filter: grayscale(100%) contrast(120%);
+  width:170px;
+  filter:grayscale(100%);
 }
 
-/* ===== TITULO ===== */
-h2{
-  color:#cfcfcf;
-  letter-spacing:1px;
-}
-
-/* ===== INPUTS ===== */
 input,select{
   width:95%;
   padding:12px;
   margin:10px 0;
-  border-radius:8px;
+  background:#0c0c0c;
   border:1px solid #444;
-  background:#0d0d0d;
   color:white;
+  border-radius:8px;
 }
 
-/* ===== ASSINATURA ===== */
+.uniformes{
+  text-align:left;
+  margin-top:15px;
+}
+
+label{
+  display:block;
+  margin:5px 0;
+}
+
 canvas{
   background:white;
   border-radius:8px;
-  border:2px solid #444;
+  margin-top:10px;
 }
 
-/* ===== BOTÃO ===== */
 button{
-  width:95%;
+  margin-top:15px;
   padding:14px;
-  margin-top:15px;
+  width:95%;
   border:none;
-  border-radius:8px;
+  background:linear-gradient(#bbb,#666);
   font-weight:bold;
-  background:linear-gradient(180deg,#bfbfbf,#6e6e6e);
-  color:#000;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-button:hover{
-  background:linear-gradient(180deg,#ffffff,#8a8a8a);
-}
-
-footer{
-  margin-top:15px;
-  font-size:12px;
-  color:#777;
+  border-radius:8px;
 }
 
 </style>
@@ -91,93 +71,204 @@ footer{
 
 <div class="container">
 
-<!-- LOGO -->
-<img src="./assets/vegaslogo.jpg" class="logo">
+<img src="assets/vegaslogo.png" class="logo">
 
-<h2>Solicitação de Uniforme</h2>
+<h3>Solicitação de Uniforme</h3>
 
 <input id="nome" placeholder="Nome do funcionário">
 
-<select id="setor">
-<option>Vigilante Armado</option>
-<option>Vigilante Desarmado</option>
-<option>Porteiro</option>
-<option>Administrativo</option>
+<!-- POSTOS -->
+<select id="posto" onchange="carregarUniformes()">
+<option value="">Selecione o Posto</option>
+<option value="armado">Vigilante Armado - Geral</option>
+<option value="nagumo">Vigilante Nagumo</option>
+<option value="royal">Vigilante Royal</option>
+<option value="porteiroHSJB">Porteiro HSJB</option>
+<option value="porteiroGeral">Porteiro Geral</option>
+<option value="projetoVida">Projeto Vida</option>
+<option value="asg">ASG</option>
+<option value="monitoramento">Monitoramento</option>
+<option value="tecnica">Área Técnica</option>
+<option value="administrativo">Administrativo</option>
+<option value="comercial">Comercial</option>
 </select>
 
-<select id="uniforme">
-<option>Uniforme Completo</option>
-<option>Camisa</option>
-<option>Calça</option>
-<option>Blazer</option>
-</select>
+<!-- UNIFORMES DINÂMICOS -->
+<div id="listaUniformes" class="uniformes"></div>
 
-<h3>Assinatura</h3>
-
+<h4>Assinatura</h4>
 <canvas id="assinatura" width="300" height="150"></canvas>
 
-<br>
-
-<button onclick="enviar()">SOLICITAR UNIFORME</button>
-
-<footer>
-Vegas Vigilância e Segurança
-</footer>
+<button onclick="enviar()">SOLICITAR</button>
 
 </div>
 
 <script>
 
+/* ===== BANCO DE UNIFORMES ===== */
+
+const uniformes = {
+
+armado:[
+"Camisa vigilante bege",
+"Calça tática",
+"Blusa preta vigilância",
+"Casaco vigilância",
+"Gravata",
+"Capa placa balística",
+"Boné",
+"Fiel",
+"Apito",
+"Coturno"
+],
+
+nagumo:[
+"Blazer",
+"Calça social",
+"Camisa social branca",
+"Gravata",
+"Sapato social"
+],
+
+royal:[
+"Blazer",
+"Calça social",
+"Camisa social branca",
+"Gravata",
+"Coldre axilar"
+],
+
+porteiroHSJB:[
+"Blazer",
+"Calça social",
+"Camisa social branca",
+"Gravata",
+"Sapato social"
+],
+
+porteiroGeral:[
+"Camisa porteiro cinza",
+"Calça social",
+"Blusa preta serviços",
+"Casaco preto",
+"Boné"
+],
+
+projetoVida:[
+"Blusa preta serviços",
+"Calça social",
+"Casaco preto",
+"Botina"
+],
+
+asg:[
+"Camisa ASG cinza",
+"Calça elástico",
+"Blusa preta serviços",
+"Casaco preto",
+"Botina"
+],
+
+monitoramento:[
+"Blusa preta vigilância",
+"Casaco preto vigilância"
+],
+
+tecnica:[
+"Blusa preta vigilância",
+"Calça jeans",
+"Casaco preto",
+"Boné"
+],
+
+administrativo:[
+"Blusa preta social",
+"Casaco preto"
+],
+
+comercial:[
+"Blusa social",
+"Casaco preto"
+]
+
+};
+
+/* ===== CARREGA UNIFORMES ===== */
+
+function carregarUniformes(){
+
+const posto = document.getElementById("posto").value;
+const div = document.getElementById("listaUniformes");
+
+div.innerHTML="";
+
+if(!uniformes[posto]) return;
+
+uniformes[posto].forEach(item=>{
+div.innerHTML += `
+<label>
+<input type="checkbox" value="${item}">
+ ${item}
+</label>`;
+});
+
+}
+
+/* ===== ASSINATURA ===== */
+
 const canvas = document.getElementById("assinatura");
 const ctx = canvas.getContext("2d");
-
 let desenhando=false;
 
 canvas.addEventListener("touchstart",()=>desenhando=true);
-canvas.addEventListener("touchend",()=> {
-  desenhando=false;
-  ctx.beginPath();
+canvas.addEventListener("touchend",()=>{
+desenhando=false;
+ctx.beginPath();
 });
 
 canvas.addEventListener("touchmove",(e)=>{
- if(!desenhando) return;
+if(!desenhando) return;
 
- let rect = canvas.getBoundingClientRect();
+let rect = canvas.getBoundingClientRect();
 
- ctx.lineWidth=2;
- ctx.lineCap="round";
- ctx.strokeStyle="black";
+ctx.lineWidth=2;
+ctx.lineCap="round";
 
- ctx.lineTo(
-   e.touches[0].clientX-rect.left,
-   e.touches[0].clientY-rect.top
- );
+ctx.lineTo(
+e.touches[0].clientX-rect.left,
+e.touches[0].clientY-rect.top
+);
 
- ctx.stroke();
- ctx.beginPath();
- ctx.moveTo(
-   e.touches[0].clientX-rect.left,
-   e.touches[0].clientY-rect.top
- );
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(
+e.touches[0].clientX-rect.left,
+e.touches[0].clientY-rect.top
+);
 });
 
+/* ===== ENVIO ===== */
 
 async function enviar(){
 
+const checks = document.querySelectorAll("input[type=checkbox]:checked");
+
+let itens=[];
+checks.forEach(c=>itens.push(c.value));
+
 const assinatura = canvas.toDataURL();
 
-await fetch("COLE_AQUI_SUA_URL_APPS_SCRIPT",{
+await fetch("COLE_AQUI_URL_APPS_SCRIPT",{
 method:"POST",
 body:JSON.stringify({
 nome:document.getElementById("nome").value,
-setor:document.getElementById("setor").value,
-uniforme:document.getElementById("uniforme").value,
-itens:"Solicitado",
+posto:document.getElementById("posto").value,
+itens:itens.join(", "),
 assinatura:assinatura
 })
 });
 
-alert("Solicitação enviada com sucesso!");
+alert("Solicitação enviada!");
 location.reload();
 }
 
@@ -185,3 +276,4 @@ location.reload();
 
 </body>
 </html>
+
