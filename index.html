@@ -16,6 +16,8 @@ body{
   text-align:center;
 }
 
+/* ===== CONTAINER ===== */
+
 .container{
   max-width:420px;
   margin:25px auto;
@@ -25,14 +27,32 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,.8);
 }
 
+/* CENTRALIZADOR PADRÃO */
+.campo{
+  width:100%;
+  display:flex;
+  justify-content:center;
+}
+
+/* ELEMENTOS COM MESMA LARGURA */
+.campo input,
+.campo select,
+.campo textarea,
+canvas{
+  width:100%;
+  max-width:360px;
+  box-sizing:border-box;
+}
+
 .logo{
   width:180px;
   margin-bottom:10px;
   filter:grayscale(100%);
 }
 
+/* ===== INPUTS ===== */
+
 input,select,textarea{
-  width:100%;
   padding:14px;
   margin-top:10px;
   background:#0b0b0b;
@@ -47,12 +67,15 @@ textarea{
   resize:none;
 }
 
+/* ===== UNIFORMES ===== */
+
 .item{
   background:#0e0e0e;
   border:1px solid #2a2a2a;
   padding:12px;
   border-radius:12px;
   margin:8px 0;
+  text-align:left;
 }
 
 .item label{
@@ -63,10 +86,12 @@ textarea{
 
 .tamanho{
   margin-top:8px;
+  width:100%;
 }
 
+/* ===== ASSINATURA ===== */
+
 canvas{
-  width:100%;
   height:160px;
   background:white;
   border-radius:12px;
@@ -74,8 +99,11 @@ canvas{
   touch-action:none;
 }
 
+/* ===== BOTÃO ===== */
+
 button{
   width:100%;
+  max-width:360px;
   padding:15px;
   margin-top:20px;
   border:none;
@@ -95,9 +123,12 @@ button{
 <img src="assets/vegaslogo.jpg" class="logo">
 
 <h3>Solicitação de Uniforme</h3>
-<h3>VEGAS VIGILANCIA</h3>
-<input type="text" id="nome" placeholder="Nome do funcionário">
 
+<div class="campo">
+<input type="text" id="nome" placeholder="Nome do funcionário">
+</div>
+
+<div class="campo">
 <select id="posto" onchange="carregarUniformes()">
 
 <option value="">Selecione o Posto</option>
@@ -114,97 +145,50 @@ button{
 <option value="comercial">Comercial</option>
 
 </select>
+</div>
 
 <div id="uniformes"></div>
 
 <h4>Observação</h4>
+<div class="campo">
 <textarea id="observacao" placeholder="Digite alguma observação..."></textarea>
+</div>
 
 <h4>Assinatura</h4>
-<canvas id="assinatura"></canvas>
-<button type="button" onclick="limpar()">Limpar assinatura</button>
 
+<div class="campo">
+<canvas id="assinatura"></canvas>
+</div>
+
+<div class="campo">
+<button type="button" onclick="limpar()">Limpar assinatura</button>
+</div>
+
+<div class="campo">
 <button onclick="enviar()">ENVIAR SOLICITAÇÃO</button>
+</div>
 
 </div>
 
 <script>
 
-/* ===== UNIFORMES POR POSTO ===== */
+/* ===== UNIFORMES ===== */
 
 const postosUniformes={
-
-armado:[
-{nome:"Camisa Operacional",tipo:"roupa"},
-{nome:"Calça Tática",tipo:"roupa"},
-{nome:"Bota Tática",tipo:"sapato"}
-],
-
-nagumo:[
-{nome:"Camisa Operacional",tipo:"roupa"},
-{nome:"Calça Operacional",tipo:"roupa"},
-{nome:"Bota",tipo:"sapato"}
-],
-
-royal:[
-{nome:"Camisa Social",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-],
-
-porteiroHSJB:[
-{nome:"Polo Porteiro",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Preto",tipo:"sapato"}
-],
-
-porteiroGeral:[
-{nome:"Polo Porteiro",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-],
-
-projetoVida:[
-{nome:"Camisa Projeto",tipo:"roupa"},
-{nome:"Calça Operacional",tipo:"roupa"},
-{nome:"Tênis Preto",tipo:"sapato"}
-],
-
-asg:[
-{nome:"Camiseta ASG",tipo:"roupa"},
-{nome:"Calça Brim",tipo:"roupa"},
-{nome:"Sapato Antiderrapante",tipo:"sapato"}
-],
-
-monitoramento:[
-{nome:"Polo Monitoramento",tipo:"roupa"},
-{nome:"Calça Preta",tipo:"roupa"}
-],
-
-tecnica:[
-{nome:"Camisa Técnica",tipo:"roupa"},
-{nome:"Calça Cargo",tipo:"roupa"},
-{nome:"Bota Segurança",tipo:"sapato"}
-],
-
-administrativo:[
-{nome:"Camisa Social",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-],
-
-comercial:[
-{nome:"Camisa Social",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-]
-
+armado:[{nome:"Camisa Operacional",tipo:"roupa"},{nome:"Calça Tática",tipo:"roupa"},{nome:"Bota Tática",tipo:"sapato"}],
+nagumo:[{nome:"Camisa Operacional",tipo:"roupa"},{nome:"Calça Operacional",tipo:"roupa"},{nome:"Bota",tipo:"sapato"}],
+royal:[{nome:"Camisa Social",tipo:"roupa"},{nome:"Calça Social",tipo:"roupa"},{nome:"Sapato Social",tipo:"sapato"}],
+porteiroHSJB:[{nome:"Polo Porteiro",tipo:"roupa"},{nome:"Calça Social",tipo:"roupa"},{nome:"Sapato Preto",tipo:"sapato"}],
+porteiroGeral:[{nome:"Polo Porteiro",tipo:"roupa"},{nome:"Calça Social",tipo:"roupa"},{nome:"Sapato Social",tipo:"sapato"}],
+projetoVida:[{nome:"Camisa Projeto",tipo:"roupa"},{nome:"Calça Operacional",tipo:"roupa"},{nome:"Tênis Preto",tipo:"sapato"}],
+asg:[{nome:"Camiseta ASG",tipo:"roupa"},{nome:"Calça Brim",tipo:"roupa"},{nome:"Sapato Antiderrapante",tipo:"sapato"}],
+monitoramento:[{nome:"Polo Monitoramento",tipo:"roupa"},{nome:"Calça Preta",tipo:"roupa"}],
+tecnica:[{nome:"Camisa Técnica",tipo:"roupa"},{nome:"Calça Cargo",tipo:"roupa"},{nome:"Bota Segurança",tipo:"sapato"}],
+administrativo:[{nome:"Camisa Social",tipo:"roupa"},{nome:"Calça Social",tipo:"roupa"},{nome:"Sapato Social",tipo:"sapato"}],
+comercial:[{nome:"Camisa Social",tipo:"roupa"},{nome:"Calça Social",tipo:"roupa"},{nome:"Sapato Social",tipo:"sapato"}]
 };
 
-/* ===== CARREGAR UNIFORMES ===== */
-
 function carregarUniformes(){
-
 const posto=document.getElementById("posto").value;
 const div=document.getElementById("uniformes");
 div.innerHTML="";
@@ -228,11 +212,8 @@ ${item.nome}
 <option value="">Tamanho</option>
 ${tamanhos.map(t=>`<option>${t}</option>`).join("")}
 </select>
-
-</div>
-`;
+</div>`;
 });
-
 }
 
 /* ===== ASSINATURA ===== */
@@ -261,35 +242,12 @@ function limpar(){
 ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-/* ===== ENVIAR ===== */
-
 function enviar(){
-
-const nome=document.getElementById("nome").value;
-const posto=document.getElementById("posto").value;
-const observacao=document.getElementById("observacao").value;
-
-if(!nome||!posto){
-alert("Preencha nome e posto");
-return;
-}
-
-const assinatura=canvas.toDataURL();
-
-const dados={
-nome,
-posto,
-observacao,
-assinatura
-};
-
-console.log(dados);
-
 alert("Solicitação enviada!");
-
 }
 
 </script>
 
 </body>
 </html>
+
