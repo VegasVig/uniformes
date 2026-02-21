@@ -8,88 +8,160 @@
 
 <style>
 
+/* ===== BASE ===== */
+
 body{
-  background:#000;
-  font-family:Arial, Helvetica, sans-serif;
-  color:#ddd;
-  text-align:center;
   margin:0;
+  font-family:'Segoe UI', Arial, sans-serif;
+  background:radial-gradient(circle at top,#1a1a1a 0%,#000 60%);
+  color:#e5e5e5;
 }
+
+/* ===== CONTAINER ===== */
 
 .container{
   max-width:420px;
-  margin:20px auto;
-  background:#111;
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 0 10px rgba(255,255,255,0.08);
+  margin:30px auto;
+  padding:25px;
+  border-radius:18px;
+  background:rgba(20,20,20,0.9);
+  backdrop-filter:blur(8px);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.8),
+    inset 0 0 0 1px rgba(255,255,255,0.05);
 }
+
+/* ===== LOGO ===== */
 
 .logo{
-  width:170px;
-  margin-bottom:10px;
-  filter:grayscale(100%);
+  width:180px;
+  display:block;
+  margin:auto;
+  margin-bottom:15px;
+  filter:grayscale(100%) brightness(1.2);
 }
 
-input,select{
-  width:95%;
+/* ===== TITULOS ===== */
+
+h3{
+  text-align:center;
+  letter-spacing:1px;
+  font-weight:600;
+}
+
+h4{
+  margin-top:20px;
+  color:#bbb;
+  font-weight:500;
+}
+
+/* ===== INPUTS ===== */
+
+input,select,textarea{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  background:#0b0b0b;
+  border:1px solid #2f2f2f;
+  border-radius:10px;
+  color:#fff;
+  font-size:15px;
+  transition:0.25s;
+}
+
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border:1px solid #777;
+  box-shadow:0 0 8px rgba(255,255,255,0.15);
+}
+
+textarea{
+  height:85px;
+  resize:none;
+}
+
+/* ===== UNIFORMES ===== */
+
+.item{
+  background:linear-gradient(145deg,#0a0a0a,#141414);
+  border-radius:12px;
   padding:12px;
-  margin:10px 0;
-  background:#0c0c0c;
-  border:1px solid #444;
-  color:white;
-  border-radius:8px;
+  margin:8px 0;
+  border:1px solid #262626;
+  transition:.2s;
 }
 
-/* ===== LISTA UNIFORMES ===== */
-
-.uniformes{
-  text-align:left;
-  margin-top:15px;
+.item:hover{
+  transform:scale(1.01);
+  border-color:#444;
 }
 
-.uniformes label{
+.item label{
   display:flex;
   align-items:center;
-  gap:10px;
-  background:#0c0c0c;
-  padding:10px;
-  border-radius:6px;
-  margin:6px 0;
-  border:1px solid #333;
+  gap:12px;
+  cursor:pointer;
 }
 
-.uniformes input[type="checkbox"]{
-  width:18px;
-  height:18px;
+/* CHECKBOX MODERNO */
+
+.item input[type="checkbox"]{
+  appearance:none;
+  width:20px;
+  height:20px;
+  border-radius:6px;
+  border:2px solid #555;
+  background:#000;
   cursor:pointer;
+}
+
+.item input[type="checkbox"]:checked{
+  background:#d0d0d0;
+  border-color:#d0d0d0;
+  box-shadow:0 0 6px rgba(255,255,255,0.5);
+}
+
+.tamanho{
+  margin-top:10px;
 }
 
 /* ===== ASSINATURA ===== */
 
 canvas{
+  width:100%;
+  height:160px;
   background:white;
-  border-radius:8px;
-  border:2px solid #444;
-  margin-top:10px;
+  border-radius:12px;
+  border:2px solid #333;
   touch-action:none;
 }
 
 /* ===== BOTÃO ===== */
 
 button{
-  margin-top:15px;
-  padding:14px;
-  width:95%;
+  margin-top:20px;
+  width:100%;
+  padding:16px;
   border:none;
-  background:linear-gradient(#bbb,#666);
-  font-weight:bold;
-  border-radius:8px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:600;
+  letter-spacing:1px;
+  background:linear-gradient(135deg,#e0e0e0,#7a7a7a);
+  color:#000;
   cursor:pointer;
+  transition:.25s;
+  box-shadow:
+    0 5px 15px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.5);
 }
 
 button:hover{
-  background:linear-gradient(#fff,#888);
+  transform:translateY(-2px);
+}
+
+button:active{
+  transform:scale(.98);
 }
 
 </style>
@@ -99,7 +171,7 @@ button:hover{
 
 <div class="container">
 
-<img src="./assets/vegaslogo.jpg" class="logo">
+<img src="assets/vegaslogo.jpg" class="logo">
 
 <h3>Solicitação de Uniforme</h3>
 
@@ -107,20 +179,17 @@ button:hover{
 
 <select id="posto" onchange="carregarUniformes()">
 <option value="">Selecione o Posto</option>
-<option value="armado">Vigilante Armado - Geral</option>
-<option value="nagumo">Vigilante Nagumo</option>
-<option value="royal">Vigilante Royal</option>
-<option value="porteiroHSJB">Porteiro HSJB</option>
-<option value="porteiroGeral">Porteiro Geral</option>
-<option value="projetoVida">Projeto Vida</option>
+<option value="armado">Vigilante Armado</option>
+<option value="porteiro">Porteiro</option>
 <option value="asg">ASG</option>
-<option value="monitoramento">Monitoramento</option>
 <option value="tecnica">Área Técnica</option>
-<option value="administrativo">Administrativo</option>
-<option value="comercial">Comercial</option>
 </select>
 
-<div id="listaUniformes" class="uniformes"></div>
+<div id="listaUniformes"></div>
+
+<h4>Observações</h4>
+<textarea id="observacao"
+placeholder="Digite alguma observação (opcional)..."></textarea>
 
 <h4>Assinatura</h4>
 <canvas id="assinatura"></canvas>
@@ -131,131 +200,87 @@ button:hover{
 
 <script>
 
-/* =========================
-   BANCO DE UNIFORMES
-========================= */
+/* ===== IDENTIFICA CALÇADO ===== */
 
-const uniformes = {
+function ehCalcado(nome){
+ const n = nome.toLowerCase();
+ return n.includes("sapato") ||
+        n.includes("coturno") ||
+        n.includes("botina");
+}
 
-armado:[
-"Camisa vigilante bege",
-"Calça tática",
-"Blusa preta vigilância",
-"Casaco vigilância",
-"Gravata",
-"Capa placa balística",
-"Boné",
-"Fiel",
-"Apito",
-"Coturno"
-],
+/* ===== UNIFORMES ===== */
 
-nagumo:[
-"Blazer",
-"Calça social",
-"Camisa social branca",
-"Gravata",
-"Sapato social"
-],
-
-royal:[
-"Blazer",
-"Calça social",
-"Camisa social branca",
-"Gravata",
-"Coldre axilar"
-],
-
-porteiroHSJB:[
-"Blazer",
-"Calça social",
-"Camisa social branca",
-"Gravata",
-"Sapato social"
-],
-
-porteiroGeral:[
-"Camisa porteiro cinza",
-"Calça social",
-"Blusa preta serviços",
-"Casaco preto",
-"Boné"
-],
-
-projetoVida:[
-"Blusa preta serviços",
-"Calça social",
-"Casaco preto",
-"Botina"
-],
-
-asg:[
-"Camisa ASG cinza",
-"Calça elástico",
-"Blusa preta serviços",
-"Casaco preto",
-"Botina"
-],
-
-monitoramento:[
-"Blusa preta vigilância",
-"Casaco preto vigilância"
-],
-
-tecnica:[
-"Blusa preta vigilância",
-"Calça jeans",
-"Casaco preto",
-"Boné"
-],
-
-administrativo:[
-"Blusa preta social",
-"Casaco preto"
-],
-
-comercial:[
-"Blusa social",
-"Casaco preto"
-]
-
+const uniformes={
+armado:["Camisa vigilante","Calça tática","Coturno","Boné"],
+porteiro:["Camisa social","Calça social","Sapato social"],
+asg:["Camisa ASG","Calça elástico","Botina"],
+tecnica:["Blusa técnica","Calça jeans","Botina"]
 };
 
-/* =========================
-   CARREGAR UNIFORMES
-========================= */
+/* ===== CARREGAR ===== */
 
 function carregarUniformes(){
 
-const posto = document.getElementById("posto").value;
-const div = document.getElementById("listaUniformes");
-
+const posto=document.getElementById("posto").value;
+const div=document.getElementById("listaUniformes");
 div.innerHTML="";
 
 if(!uniformes[posto]) return;
 
 uniformes[posto].forEach(item=>{
-div.innerHTML += `
+
+let tamanhoHTML="";
+
+/* ROUPAS */
+if(!ehCalcado(item)){
+tamanhoHTML=`
+<select class="tamanho" disabled>
+<option value="">Tamanho</option>
+<option>P</option>
+<option>M</option>
+<option>G</option>
+<option>GG</option>
+<option>EG</option>
+</select>`;
+}
+
+/* CALÇADOS */
+else{
+tamanhoHTML=`<select class="tamanho" disabled>
+<option value="">Número</option>
+${Array.from({length:15},(_,i)=>`<option>${i+34}</option>`).join("")}
+</select>`;
+}
+
+div.innerHTML+=`
+<div class="item">
 <label>
-<input type="checkbox" value="${item}">
+<input type="checkbox" onchange="ativarTamanho(this)">
 <span>${item}</span>
-</label>`;
+</label>
+${tamanhoHTML}
+</div>`;
 });
 
 }
 
-/* =========================
-   ASSINATURA MOBILE FIX
-========================= */
+/* ===== ATIVAR TAMANHO ===== */
 
-const canvas = document.getElementById("assinatura");
-const ctx = canvas.getContext("2d");
-
-function ajustarCanvas(){
-  canvas.width = canvas.offsetWidth;
-  canvas.height = 160;
+function ativarTamanho(check){
+const select=check.closest(".item").querySelector(".tamanho");
+if(select) select.disabled=!check.checked;
 }
 
+/* ===== ASSINATURA MOBILE ===== */
+
+const canvas=document.getElementById("assinatura");
+const ctx=canvas.getContext("2d");
+
+function ajustarCanvas(){
+ canvas.width=canvas.offsetWidth;
+ canvas.height=160;
+}
 ajustarCanvas();
 window.addEventListener("resize",ajustarCanvas);
 
@@ -274,54 +299,53 @@ canvas.addEventListener("touchend",(e)=>{
 
 canvas.addEventListener("touchmove",(e)=>{
  e.preventDefault();
-
  if(!desenhando) return;
 
- const rect = canvas.getBoundingClientRect();
- const touch = e.touches[0];
+ const rect=canvas.getBoundingClientRect();
+ const t=e.touches[0];
 
  ctx.lineWidth=2;
  ctx.lineCap="round";
- ctx.strokeStyle="black";
 
- ctx.lineTo(
-   touch.clientX-rect.left,
-   touch.clientY-rect.top
- );
-
+ ctx.lineTo(t.clientX-rect.left,t.clientY-rect.top);
  ctx.stroke();
  ctx.beginPath();
- ctx.moveTo(
-   touch.clientX-rect.left,
-   touch.clientY-rect.top
- );
+ ctx.moveTo(t.clientX-rect.left,t.clientY-rect.top);
 
 },{passive:false});
 
-/* =========================
-   ENVIO
-========================= */
+/* ===== ENVIO ===== */
 
 async function enviar(){
 
-const checks=document.querySelectorAll("input[type=checkbox]:checked");
+const itens=[];
 
-if(checks.length===0){
+document.querySelectorAll(".item").forEach(item=>{
+ const check=item.querySelector("input");
+ const tamanho=item.querySelector(".tamanho");
+
+ if(check.checked){
+   itens.push(
+     check.nextElementSibling.textContent +
+     (tamanho ? " - "+tamanho.value : "")
+   );
+ }
+});
+
+if(itens.length===0){
  alert("Selecione ao menos um uniforme.");
  return;
 }
 
-let itens=[];
-checks.forEach(c=>itens.push(c.value));
-
-const assinatura = canvas.toDataURL();
+const assinatura=canvas.toDataURL();
 
 await fetch("COLE_AQUI_URL_APPS_SCRIPT",{
 method:"POST",
 body:JSON.stringify({
 nome:document.getElementById("nome").value,
 posto:document.getElementById("posto").value,
-itens:itens.join(", "),
+itens:itens.join(" | "),
+observacao:document.getElementById("observacao").value,
 assinatura:assinatura
 })
 });
@@ -334,3 +358,4 @@ location.reload();
 
 </body>
 </html>
+
