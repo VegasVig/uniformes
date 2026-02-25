@@ -2,90 +2,112 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>Solicitação de Uniforme</title>
+<title>Solicitação de Uniforme - Vegas</title>
 
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 
 body{
 margin:0;
-font-family:'Segoe UI',Arial;
-background:radial-gradient(circle at top,#1c1c1c,#000);
-color:#e5e5e5;
-text-align:center;
-}
-
-.container{
-max-width:420px;
-margin:25px auto;
-padding:22px;
-border-radius:18px;
-background:#121212;
-box-shadow:0 10px 30px rgba(0,0,0,.8);
-}
-
-.logo{
-width:180px;
-margin-bottom:10px;
-filter:grayscale(100%);
-}
-
-.campo{
+font-family:Arial;
+background:#0f1115;
+color:white;
 display:flex;
 justify-content:center;
 }
 
-.campo input,
-.campo select,
-.campo textarea,
-canvas,
-button{
-width:100%;
-max-width:360px;
+.container{
+width:95%;
+max-width:700px;
+background:#1a1d24;
+margin:20px;
+padding:25px;
+border-radius:12px;
+box-shadow:0 0 25px rgba(0,0,0,0.6);
 }
 
-input,select,textarea{
-padding:14px;
-margin-top:10px;
-background:#0b0b0b;
-border:1px solid #333;
-border-radius:10px;
+.logo{
+display:block;
+margin:auto;
+width:160px;
+margin-bottom:20px;
+}
+
+h2{
+text-align:center;
+color:#d1d5db;
+}
+
+label{
+margin-top:15px;
+display:block;
+font-weight:bold;
+color:#bbb;
+}
+
+select,input,textarea{
+width:100%;
+padding:12px;
+margin-top:6px;
+border-radius:8px;
+border:none;
+background:#2a2f38;
 color:white;
+font-size:15px;
 }
 
 textarea{
-height:90px;
+height:120px;
 resize:none;
 }
 
-.item{
-background:#0e0e0e;
-border:1px solid #2a2a2a;
-padding:12px;
-border-radius:12px;
-margin:8px 0;
-text-align:left;
+.uniforme-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#232730;
+padding:10px;
+border-radius:8px;
+margin-top:8px;
 }
 
 canvas{
-height:160px;
 background:white;
-border-radius:12px;
+border-radius:10px;
+width:100%;
+height:200px;
 margin-top:10px;
 touch-action:none;
 }
 
 button{
-padding:15px;
+width:100%;
 margin-top:20px;
+padding:15px;
 border:none;
-border-radius:12px;
-font-weight:bold;
-background:linear-gradient(135deg,#e0e0e0,#7a7a7a);
+border-radius:10px;
+background:#3b3f46;
+color:white;
+font-size:16px;
 cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#50555e;
+}
+
+#recibo{
+background:white;
+color:black;
+padding:20px;
+margin-top:20px;
+display:none;
 }
 
 </style>
@@ -93,19 +115,17 @@ cursor:pointer;
 
 <body>
 
-<div class="container">
+<div class="container" id="formArea">
 
 <img src="assets/vegaslogo.jpg" class="logo">
 
-<h3>Solicitação de Uniforme</h3>
+<h2>Solicitação de Uniforme</h2>
 
-<div class="campo">
-<input id="nome" placeholder="Nome do funcionário">
-</div>
+<label>Nome do Funcionário</label>
+<input id="nome">
 
-<div class="campo">
+<label>Posto de Serviço</label>
 <select id="posto" onchange="carregarUniformes()">
-
 <option value="">Selecione o Posto</option>
 <option value="armado">Vigilante Armado - Geral</option>
 <option value="nagumo">Vigilante Nagumo</option>
@@ -118,256 +138,156 @@ cursor:pointer;
 <option value="tecnica">Área Técnica</option>
 <option value="administrativo">Administrativo</option>
 <option value="comercial">Comercial</option>
-
 </select>
-</div>
 
 <div id="uniformes"></div>
 
-<h4>Observação</h4>
-<div class="campo">
-<textarea id="observacao"></textarea>
-</div>
+<label>Observações</label>
+<textarea id="obs"></textarea>
 
-<h4>Assinatura</h4>
-<div class="campo">
+<label>Assinatura</label>
 <canvas id="assinatura"></canvas>
-</div>
 
-<div class="campo">
-<button onclick="limpar()">Limpar assinatura</button>
-</div>
-
-<div class="campo">
-<button onclick="enviar()">ENVIAR SOLICITAÇÃO</button>
-</div>
+<button onclick="enviar()">Enviar Solicitação</button>
 
 </div>
+
+<div id="recibo"></div>
 
 <script>
 
-/* ===== UNIFORMES POR POSTO ===== */
+const canvas=document.getElementById("assinatura");
+const signaturePad=new SignaturePad(canvas);
 
-const postosUniformes={
+function resizeCanvas(){
+const ratio=Math.max(window.devicePixelRatio||1,1);
+canvas.width=canvas.offsetWidth*ratio;
+canvas.height=canvas.offsetHeight*ratio;
+canvas.getContext("2d").scale(ratio,ratio);
+signaturePad.clear();
+}
+window.addEventListener("resize",resizeCanvas);
+resizeCanvas();
 
-armado:[
-{nome:"Camisa Operacional",tipo:"roupa"},
-{nome:"Calça Tática",tipo:"roupa"},
-{nome:"Bota Tática",tipo:"sapato"}
-],
-
-nagumo:[
-{nome:"Camisa Operacional",tipo:"roupa"},
-{nome:"Calça Operacional",tipo:"roupa"},
-{nome:"Bota",tipo:"sapato"}
-],
-
-royal:[
-{nome:"Camisa Social",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-],
-
-porteiroHSJB:[
-{nome:"Polo Porteiro",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Preto",tipo:"sapato"}
-],
-
-porteiroGeral:[
-{nome:"Polo Porteiro",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-],
-
-projetoVida:[
-{nome:"Camisa Projeto",tipo:"roupa"},
-{nome:"Calça Operacional",tipo:"roupa"},
-{nome:"Tênis Preto",tipo:"sapato"}
-],
-
-asg:[
-{nome:"Camiseta ASG",tipo:"roupa"},
-{nome:"Calça Brim",tipo:"roupa"},
-{nome:"Sapato Antiderrapante",tipo:"sapato"}
-],
-
-monitoramento:[
-{nome:"Polo Monitoramento",tipo:"roupa"},
-{nome:"Calça Preta",tipo:"roupa"}
-],
-
-tecnica:[
-{nome:"Camisa Técnica",tipo:"roupa"},
-{nome:"Calça Cargo",tipo:"roupa"},
-{nome:"Bota Segurança",tipo:"sapato"}
-],
-
-administrativo:[
-{nome:"Camisa Social",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-],
-
-comercial:[
-{nome:"Camisa Social",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-]
-
-};
-
-/* ===== CARREGAR UNIFORMES ===== */
+function gerarNumeros(inicio,fim){
+let html="";
+for(let i=inicio;i<=fim;i++){
+html+=`<option>${i}</option>`;
+}
+return html;
+}
 
 function carregarUniformes(){
 
 const posto=document.getElementById("posto").value;
 const div=document.getElementById("uniformes");
-div.innerHTML="";
 
-if(!postosUniformes[posto]) return;
+let calcaOptions="";
 
-postosUniformes[posto].forEach(item=>{
-
-let tamanhos=[];
-
-/* SAPATO */
-if(item.tipo==="sapato"){
-tamanhos=Array.from({length:15},(_,k)=>k+34);
+if(posto==="asg"){
+calcaOptions=`
+<option>P</option>
+<option>M</option>
+<option>G</option>
+<option>GG</option>
+<option>XG</option>
+<option>EXG</option>
+<option>EXGG</option>`;
+}else{
+calcaOptions=gerarNumeros(38,56);
 }
 
-/* CALÇA ASG */
-else if(posto==="asg" && item.nome.toLowerCase().includes("calça")){
-tamanhos=["P","M","G","GG","XG","EXG","EXGG"];
-}
+div.innerHTML=`
 
-/* CALÇAS OUTROS POSTOS */
-else if(item.nome.toLowerCase().includes("calça")){
-tamanhos=Array.from({length:10},(_,k)=>k+38);
-}
+<label>Uniformes</label>
 
-/* OUTRAS ROUPAS */
-else{
-tamanhos=["P","M","G","GG","EG"];
-}
-
-div.innerHTML+=`
-<div class="item">
-<label>
-<input type="checkbox"> ${item.nome}
-</label>
-
-<select>
-<option>Tamanho</option>
-${tamanhos.map(t=>`<option>${t}</option>`).join("")}
+<div class="uniforme-item">
+Camisa Social
+<select id="camisa">
+<option></option>
+<option>N2</option>
+<option>N3</option>
+<option>N4</option>
+<option>N5</option>
+<option>N6</option>
+<option>N7</option>
+<option>N8</option>
 </select>
-</div>`;
-});
+</div>
 
+<div class="uniforme-item">
+Calça
+<select id="calca">
+<option></option>
+${calcaOptions}
+</select>
+</div>
+
+<div class="uniforme-item">
+Sapato
+<select id="sapato">
+<option></option>
+${gerarNumeros(34,48)}
+</select>
+</div>
+`;
 }
-
-/* ===== ASSINATURA ===== */
-
-const canvas=document.getElementById("assinatura");
-const ctx=canvas.getContext("2d");
-
-canvas.width=360;
-canvas.height=160;
-
-let desenhando=false;
-
-canvas.addEventListener("pointerdown",()=>desenhando=true);
-canvas.addEventListener("pointerup",()=>{desenhando=false;ctx.beginPath();});
-canvas.addEventListener("pointermove",(e)=>{
-if(!desenhando)return;
-const rect=canvas.getBoundingClientRect();
-ctx.lineWidth=2;
-ctx.lineCap="round";
-ctx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
-ctx.stroke();
-ctx.beginPath();
-ctx.moveTo(e.clientX-rect.left,e.clientY-rect.top);
-});
-
-function limpar(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-}
-
-/* ===== ENVIO + PDF ===== */
 
 async function enviar(){
 
+if(signaturePad.isEmpty()){
+alert("Assine antes de enviar");
+return;
+}
+
 const nome=document.getElementById("nome").value;
-const postoSelect=document.getElementById("posto");
-const posto=postoSelect.options[postoSelect.selectedIndex].text;
-const obs=document.getElementById("observacao").value;
+const posto=document.getElementById("posto").value;
+const camisa=document.getElementById("camisa")?.value||"";
+const calca=document.getElementById("calca")?.value||"";
+const sapato=document.getElementById("sapato")?.value||"";
+const obs=document.getElementById("obs").value;
 
-if(!nome || !postoSelect.value){
-alert("Preencha os dados");
-return;
-}
+const assinatura=signaturePad.toDataURL();
 
-let lista=[];
-document.querySelectorAll(".item").forEach(item=>{
-const check=item.querySelector("input");
-const select=item.querySelector("select");
-
-if(check.checked && select.value!="Tamanho"){
-lista.push(check.parentNode.innerText.trim()+" - "+select.value);
-}
-});
-
-if(lista.length===0){
-alert("Selecione ao menos um uniforme");
-return;
-}
-
-const assinatura=canvas.toDataURL();
-
-/* ENVIO GOOGLE SHEETS */
-await fetch("COLE_AQUI_SUA_URL_DO_APPS_SCRIPT",{
+await fetch("SUA_URL_DO_APPS_SCRIPT",{
 method:"POST",
 body:JSON.stringify({
-data:new Date().toLocaleString("pt-BR"),
-nome,
-posto,
-uniformes:lista.join(", "),
-observacao:obs,
-assinatura
+nome,posto,camisa,calca,sapato,obs,assinatura
 })
 });
 
-/* GERAR PDF */
-const { jsPDF } = window.jspdf;
-const pdf=new jsPDF();
-
-pdf.setFontSize(16);
-pdf.text("COMPROVANTE DE SOLICITAÇÃO",20,20);
-
-pdf.setFontSize(12);
-pdf.text("Funcionário: "+nome,20,40);
-pdf.text("Posto: "+posto,20,50);
-
-let y=65;
-pdf.text("Uniformes:",20,y);
-y+=10;
-
-lista.forEach(u=>{
-pdf.text("- "+u,25,y);
-y+=8;
-});
-
-pdf.text("Observação: "+(obs||"Nenhuma"),20,y+10);
-
-pdf.text("Assinatura:",20,y+25);
-pdf.addImage(assinatura,"PNG",20,y+30,80,40);
-
-pdf.text("Data: "+new Date().toLocaleString("pt-BR"),20,y+80);
-
-pdf.save("comprovante_uniforme.pdf");
+gerarPDF(nome,posto,camisa,calca,sapato,obs,assinatura);
 
 alert("Solicitação enviada com sucesso!");
+signaturePad.clear();
+}
 
+async function gerarPDF(nome,posto,camisa,calca,sapato,obs,assinatura){
+
+const recibo=document.getElementById("recibo");
+
+recibo.style.display="block";
+recibo.innerHTML=`
+<h2>Comprovante de Solicitação</h2>
+<p><b>Funcionário:</b> ${nome}</p>
+<p><b>Posto:</b> ${posto}</p>
+<p><b>Camisa:</b> ${camisa}</p>
+<p><b>Calça:</b> ${calca}</p>
+<p><b>Sapato:</b> ${sapato}</p>
+<p><b>Observação:</b> ${obs}</p>
+<img src="${assinatura}" width="200">
+`;
+
+const canvasRecibo=await html2canvas(recibo);
+
+const { jsPDF }=window.jspdf;
+const pdf=new jsPDF();
+
+const imgData=canvasRecibo.toDataURL("image/jpeg");
+pdf.addImage(imgData,"JPEG",10,10,190,0);
+pdf.save("Comprovante_Uniforme.pdf");
+
+recibo.style.display="none";
 }
 
 </script>
