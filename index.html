@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Solicitação de Uniforme</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -29,6 +30,7 @@ box-shadow:0 10px 30px rgba(0,0,0,.8);
 .logo{
 width:180px;
 filter:grayscale(100%);
+margin-bottom:10px;
 }
 
 .campo{
@@ -54,6 +56,11 @@ border-radius:10px;
 color:white;
 }
 
+textarea{
+height:90px;
+resize:none;
+}
+
 .item{
 background:#0e0e0e;
 border:1px solid #2a2a2a;
@@ -73,7 +80,7 @@ touch-action:none;
 
 button{
 padding:15px;
-margin-top:20px;
+margin-top:15px;
 border:none;
 border-radius:12px;
 font-weight:bold;
@@ -118,122 +125,97 @@ cursor:pointer;
 
 <div id="uniformes"></div>
 
+<h4>Observação</h4>
+<div class="campo">
+<textarea id="observacao"></textarea>
+</div>
+
+<h4>Assinatura</h4>
+<div class="campo">
+<canvas id="assinatura"></canvas>
+</div>
+
+<div class="campo">
+<button onclick="limpar()">Limpar assinatura</button>
+</div>
+
+<div class="campo">
+<button onclick="enviar()">ENVIAR SOLICITAÇÃO</button>
+</div>
+
 </div>
 
 <script>
 
-/* ================= UNIFORMES OFICIAIS ================= */
+/* ================= UNIFORMES ================= */
 
 const postosUniformes={
 
 armado:[
-"Camisa vigilante bege",
-"Calça vigilante tática",
-"Blusa preta vigilância",
-"Casaco vigilância",
-"Gravata",
-"Capa para placa balística",
-"Boné",
-"Fiel",
-"Apito",
-"Coturno",
-"Cinto",
-"Cinto tático",
-"Coldre",
-"Baleiro",
-"Touca vegas vigilância"
+"Camisa vigilante bege","Calça vigilante tática","Blusa preta vigilância",
+"Casaco vigilância","Gravata","Capa para placa balística","Boné",
+"Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre",
+"Baleiro","Touca vegas vigilância"
 ],
 
 nagumo:[
-"Blazer",
-"Calça social",
-"Camisa social branca",
-"Gravata",
-"Sapato social",
-"Botom preto vigilante"
+"Blazer","Calça social","Camisa social branca",
+"Gravata","Sapato social","Botom preto vigilante"
 ],
 
 royal:[
-"Blazer",
-"Calça social",
-"Camisa social branca",
-"Gravata",
-"Sapato social",
-"Botom preto vigilante",
-"Coldre axilar",
-"Baleiro",
-"Capa para placa balística",
-"Fiel",
-"Apito"
+"Blazer","Calça social","Camisa social branca","Gravata",
+"Sapato social","Botom preto vigilante","Coldre axilar",
+"Baleiro","Capa para placa balística","Fiel","Apito"
 ],
 
 porteiroHSJB:[
-"Blazer",
-"Calça social",
-"Camisa social branca",
-"Gravata",
-"Sapato social",
-"Botom branco serviços"
+"Blazer","Calça social","Camisa social branca",
+"Gravata","Sapato social","Botom branco serviços"
 ],
 
 porteiroGeral:[
-"Camisa porteiro cinza",
-"Calça social",
-"Blusa preta serviços",
-"Casaco preto serviços",
-"Boné",
-"Botina",
-"Touca vegas vigilância"
+"Camisa porteiro cinza","Calça social","Blusa preta serviços",
+"Casaco preto serviços","Boné","Botina","Touca vegas vigilância"
 ],
 
 projetoVida:[
-"Blusa preta serviços",
-"Calça social",
-"Casaco preto serviços",
-"Boné",
-"Botina",
-"Touca vegas vigilância"
+"Blusa preta serviços","Calça social","Casaco preto serviços",
+"Boné","Botina","Touca vegas vigilância"
 ],
 
 asg:[
-"Camisa ASG cinza",
-"Calça elástico cinza",
-"Blusa preta serviços",
-"Casaco preto serviços",
-"Botina",
-"Galocha"
+"Camisa ASG cinza","Calça elástico cinza","Blusa preta serviços",
+"Casaco preto serviços","Botina","Galocha"
 ],
 
 monitoramento:[
-"Blusa preta vigilância",
-"Casaco preto vigilância"
+"Blusa preta vigilância","Casaco preto vigilância"
 ],
 
 tecnica:[
 "Blusa preta vigilância",
 "Calça jeans",
 "Casaco preto vigilância",
-"Boné"
+"Boné",
+"Par de Botina"
 ],
 
 administrativo:[
-"Blusa preta vigilância",
-"Casaco preto vigilância"
+"Blusa preta vigilância","Casaco preto vigilância"
 ],
 
 gerencia:[
-"Blusa preta social",
-"Casaco preto vigilância"
+"Blusa preta social","Casaco preto vigilância"
 ],
 
 comercial:[
-"Blusa preta social",
-"Casaco preto vigilância"
+"Blusa preta social","Casaco preto vigilância"
 ]
 
 };
 
-/* ================= TAMANHOS AUTOMÁTICOS ================= */
+/* ================= TAMANHOS ================= */
 
 function carregarUniformes(){
 
@@ -247,48 +229,140 @@ postosUniformes[posto].forEach(nome=>{
 
 let tamanhos=null;
 
-/* SAPATOS */
-if(/sapato|botina|coturno|galocha/i.test(nome)){
+/* CALÇADOS */
+if(/sapato|botina|coturno|galocha/i.test(nome))
 tamanhos=Array.from({length:15},(_,i)=>i+34);
-}
 
 /* CAMISA SOCIAL */
-else if(/camisa social/i.test(nome)){
+else if(/camisa social/i.test(nome))
 tamanhos=["N2","N3","N4","N5","N6","N7","N8"];
-}
 
 /* CALÇA ASG */
-else if(posto==="asg" && /calça/i.test(nome)){
+else if(posto==="asg" && /calça/i.test(nome))
 tamanhos=["P","M","G","GG","XG","EXG","EXGG"];
-}
 
-/* CALÇA OUTROS */
-else if(/calça/i.test(nome)){
+/* OUTRAS CALÇAS */
+else if(/calça/i.test(nome))
 tamanhos=Array.from({length:10},(_,i)=>i+38);
-}
 
 /* ROUPAS PADRÃO */
-else if(/camisa|blusa|casaco/i.test(nome)){
+else if(/camisa|blusa|casaco/i.test(nome))
 tamanhos=["P","M","G","GG","EG"];
-}
 
 div.innerHTML+=`
 <div class="item">
-<label>
-<input type="checkbox"> ${nome}
-</label>
-
-${
-tamanhos ?
-`<select>
+<label><input type="checkbox"> ${nome}</label>
+${tamanhos ? `
+<select>
 <option>Tamanho</option>
 ${tamanhos.map(t=>`<option>${t}</option>`).join("")}
-</select>`
-: ""
-}
-
+</select>` : ""}
 </div>`;
 });
+
+}
+
+/* ================= ASSINATURA ================= */
+
+const canvas=document.getElementById("assinatura");
+const ctx=canvas.getContext("2d");
+
+canvas.width=360;
+canvas.height=160;
+
+let desenhando=false;
+
+canvas.addEventListener("pointerdown",()=>desenhando=true);
+canvas.addEventListener("pointerup",()=>{desenhando=false;ctx.beginPath();});
+canvas.addEventListener("pointermove",(e)=>{
+if(!desenhando)return;
+const rect=canvas.getBoundingClientRect();
+ctx.lineWidth=2;
+ctx.lineCap="round";
+ctx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(e.clientX-rect.left,e.clientY-rect.top);
+});
+
+function limpar(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+/* ================= ENVIO + PDF ================= */
+
+async function enviar(){
+
+const nome=document.getElementById("nome").value;
+const postoSelect=document.getElementById("posto");
+const posto=postoSelect.options[postoSelect.selectedIndex].text;
+const obs=document.getElementById("observacao").value;
+
+if(!nome || !postoSelect.value){
+alert("Preencha os dados");
+return;
+}
+
+let lista=[];
+
+document.querySelectorAll(".item").forEach(item=>{
+const check=item.querySelector("input");
+const select=item.querySelector("select");
+
+if(check.checked){
+lista.push(
+select ? check.parentNode.innerText.trim()+" - "+select.value
+: check.parentNode.innerText.trim()
+);
+}
+});
+
+if(lista.length===0){
+alert("Selecione ao menos um uniforme");
+return;
+}
+
+const assinatura=canvas.toDataURL();
+
+/* ENVIO GOOGLE */
+await fetch("COLE_AQUI_SUA_URL_DO_SCRIPT",{
+method:"POST",
+body:JSON.stringify({
+data:new Date().toLocaleString("pt-BR"),
+nome,
+posto,
+uniformes:lista.join(", "),
+observacao:obs,
+assinatura
+})
+});
+
+/* PDF */
+const { jsPDF } = window.jspdf;
+const pdf=new jsPDF();
+
+pdf.setFontSize(16);
+pdf.text("COMPROVANTE DE SOLICITAÇÃO",20,20);
+
+pdf.setFontSize(12);
+pdf.text("Funcionário: "+nome,20,40);
+pdf.text("Posto: "+posto,20,50);
+
+let y=65;
+lista.forEach(u=>{
+pdf.text("- "+u,25,y);
+y+=8;
+});
+
+pdf.text("Observação: "+(obs||"Nenhuma"),20,y+10);
+pdf.text("Assinatura:",20,y+25);
+pdf.addImage(assinatura,"PNG",20,y+30,80,40);
+
+pdf.text("Data: "+new Date().toLocaleString("pt-BR"),20,y+80);
+
+pdf.save("comprovante_uniforme.pdf");
+
+alert("Solicitação enviada com sucesso!");
 
 }
 
