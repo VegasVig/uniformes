@@ -6,7 +6,7 @@
 
 <title>Solicitação de Uniforme</title>
 
-<!-- BIBLIOTECA PDF -->
+<!-- PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
@@ -28,8 +28,12 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,.8);
 }
 
+.logo{
+  width:180px;
+  filter:grayscale(100%);
+}
+
 .campo{
-  width:100%;
   display:flex;
   justify-content:center;
 }
@@ -40,11 +44,6 @@ body{
 canvas{
   width:100%;
   max-width:360px;
-}
-
-.logo{
-  width:180px;
-  filter:grayscale(100%);
 }
 
 input,select,textarea{
@@ -110,9 +109,16 @@ button{
 
 <option value="">Selecione o Posto</option>
 <option value="armado">Vigilante Armado - Geral</option>
+<option value="nagumo">Vigilante Nagumo</option>
+<option value="royal">Vigilante Royal</option>
+<option value="porteiroHSJB">Porteiro HSJB</option>
+<option value="porteiroGeral">Porteiro Geral</option>
+<option value="projetoVida">Projeto Vida</option>
 <option value="asg">ASG</option>
+<option value="monitoramento">Monitoramento</option>
 <option value="tecnica">Área Técnica</option>
 <option value="administrativo">Administrativo</option>
+<option value="comercial">Comercial</option>
 
 </select>
 </div>
@@ -125,7 +131,6 @@ button{
 </div>
 
 <h4>Assinatura</h4>
-
 <div class="campo">
 <canvas id="assinatura"></canvas>
 </div>
@@ -142,25 +147,78 @@ button{
 
 <script>
 
+/* ===== UNIFORMES POR POSTO ===== */
+
 const postosUniformes={
+
 armado:[
 {nome:"Camisa Operacional",tipo:"roupa"},
 {nome:"Calça Tática",tipo:"roupa"},
+{nome:"Bota Tática",tipo:"sapato"}
+],
+
+nagumo:[
+{nome:"Camisa Operacional",tipo:"roupa"},
+{nome:"Calça Operacional",tipo:"roupa"},
 {nome:"Bota",tipo:"sapato"}
 ],
+
+royal:[
+{nome:"Camisa Social",tipo:"roupa"},
+{nome:"Calça Social",tipo:"roupa"},
+{nome:"Sapato Social",tipo:"sapato"}
+],
+
+porteiroHSJB:[
+{nome:"Polo Porteiro",tipo:"roupa"},
+{nome:"Calça Social",tipo:"roupa"},
+{nome:"Sapato Preto",tipo:"sapato"}
+],
+
+porteiroGeral:[
+{nome:"Polo Porteiro",tipo:"roupa"},
+{nome:"Calça Social",tipo:"roupa"},
+{nome:"Sapato Social",tipo:"sapato"}
+],
+
+projetoVida:[
+{nome:"Camisa Projeto",tipo:"roupa"},
+{nome:"Calça Operacional",tipo:"roupa"},
+{nome:"Tênis Preto",tipo:"sapato"}
+],
+
 asg:[
 {nome:"Camiseta ASG",tipo:"roupa"},
-{nome:"Calça Brim",tipo:"roupa"}
+{nome:"Calça Brim",tipo:"roupa"},
+{nome:"Sapato Antiderrapante",tipo:"sapato"}
 ],
+
+monitoramento:[
+{nome:"Polo Monitoramento",tipo:"roupa"},
+{nome:"Calça Preta",tipo:"roupa"}
+],
+
 tecnica:[
 {nome:"Camisa Técnica",tipo:"roupa"},
+{nome:"Calça Cargo",tipo:"roupa"},
 {nome:"Bota Segurança",tipo:"sapato"}
 ],
+
 administrativo:[
 {nome:"Camisa Social",tipo:"roupa"},
+{nome:"Calça Social",tipo:"roupa"},
+{nome:"Sapato Social",tipo:"sapato"}
+],
+
+comercial:[
+{nome:"Camisa Social",tipo:"roupa"},
+{nome:"Calça Social",tipo:"roupa"},
 {nome:"Sapato Social",tipo:"sapato"}
 ]
+
 };
+
+/* ===== CARREGAR UNIFORMES ===== */
 
 function carregarUniformes(){
 
@@ -179,17 +237,15 @@ const tamanhos=item.tipo==="roupa"?roupas:sapatos;
 div.innerHTML+=`
 <div class="item">
 <label>
-<input type="checkbox" id="uni${i}">
-${item.nome}
+<input type="checkbox">${item.nome}
 </label>
 
-<select id="tam${i}">
+<select>
 <option>Tamanho</option>
 ${tamanhos.map(t=>`<option>${t}</option>`).join("")}
 </select>
 </div>`;
 });
-
 }
 
 /* ===== ASSINATURA ===== */
@@ -232,42 +288,22 @@ return;
 const { jsPDF } = window.jspdf;
 const pdf=new jsPDF();
 
-let y=20;
-
 pdf.setFontSize(16);
-pdf.text("COMPROVANTE DE SOLICITAÇÃO DE UNIFORME",10,y);
+pdf.text("COMPROVANTE DE SOLICITAÇÃO DE UNIFORME",10,20);
 
-y+=15;
 pdf.setFontSize(12);
+pdf.text("Funcionário: "+nome,10,40);
+pdf.text("Posto: "+posto,10,50);
+pdf.text("Observação: "+(obs||"Nenhuma"),10,60);
 
-pdf.text("Funcionário: "+nome,10,y);
-y+=8;
-
-pdf.text("Posto: "+posto,10,y);
-y+=10;
-
-pdf.text("Observação:",10,y);
-y+=8;
-
-pdf.text(obs || "Nenhuma",10,y);
-
-y+=15;
-
-/* assinatura */
 const assinatura=canvas.toDataURL("image/png");
-pdf.text("Assinatura:",10,y);
-y+=5;
+pdf.addImage(assinatura,"PNG",10,70,80,40);
 
-pdf.addImage(assinatura,"PNG",10,y,80,40);
+pdf.text("Data: "+new Date().toLocaleString(),10,120);
 
-/* data */
-y+=50;
-pdf.text("Data: "+new Date().toLocaleString(),10,y);
-
-/* baixar */
 pdf.save("comprovante_uniforme.pdf");
 
-alert("PDF gerado com sucesso!");
+alert("Solicitação enviada e comprovante gerado!");
 
 }
 
@@ -275,4 +311,3 @@ alert("PDF gerado com sucesso!");
 
 </body>
 </html>
-
