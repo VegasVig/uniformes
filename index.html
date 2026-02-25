@@ -146,7 +146,78 @@ cursor:pointer;
 
 <script>
 
-/* ===== UNIFORMES ===== */
+/* ===== UNIFORMES POR POSTO ===== */
+
+const postosUniformes={
+
+armado:[
+{nome:"Camisa Operacional",tipo:"roupa"},
+{nome:"Calça Tática",tipo:"roupa"},
+{nome:"Bota Tática",tipo:"sapato"}
+],
+
+nagumo:[
+{nome:"Camisa Operacional",tipo:"roupa"},
+{nome:"Calça Operacional",tipo:"roupa"},
+{nome:"Bota",tipo:"sapato"}
+],
+
+royal:[
+{nome:"Camisa Social",tipo:"roupa"},
+{nome:"Calça Social",tipo:"roupa"},
+{nome:"Sapato Social",tipo:"sapato"}
+],
+
+porteiroHSJB:[
+{nome:"Polo Porteiro",tipo:"roupa"},
+{nome:"Calça Social",tipo:"roupa"},
+{nome:"Sapato Preto",tipo:"sapato"}
+],
+
+porteiroGeral:[
+{nome:"Polo Porteiro",tipo:"roupa"},
+{nome:"Calça Social",tipo:"roupa"},
+{nome:"Sapato Social",tipo:"sapato"}
+],
+
+projetoVida:[
+{nome:"Camisa Projeto",tipo:"roupa"},
+{nome:"Calça Operacional",tipo:"roupa"},
+{nome:"Tênis Preto",tipo:"sapato"}
+],
+
+asg:[
+{nome:"Camiseta ASG",tipo:"roupa"},
+{nome:"Calça Brim",tipo:"roupa"},
+{nome:"Sapato Antiderrapante",tipo:"sapato"}
+],
+
+monitoramento:[
+{nome:"Polo Monitoramento",tipo:"roupa"},
+{nome:"Calça Preta",tipo:"roupa"}
+],
+
+tecnica:[
+{nome:"Camisa Técnica",tipo:"roupa"},
+{nome:"Calça Cargo",tipo:"roupa"},
+{nome:"Bota Segurança",tipo:"sapato"}
+],
+
+administrativo:[
+{nome:"Camisa Social",tipo:"roupa"},
+{nome:"Calça Social",tipo:"roupa"},
+{nome:"Sapato Social",tipo:"sapato"}
+],
+
+comercial:[
+{nome:"Camisa Social",tipo:"roupa"},
+{nome:"Calça Social",tipo:"roupa"},
+{nome:"Sapato Social",tipo:"sapato"}
+]
+
+};
+
+/* ===== CARREGAR UNIFORMES ===== */
 
 function carregarUniformes(){
 
@@ -160,25 +231,22 @@ postosUniformes[posto].forEach(item=>{
 
 let tamanhos=[];
 
-/* ===== SAPATOS ===== */
+/* SAPATO */
 if(item.tipo==="sapato"){
 tamanhos=Array.from({length:15},(_,k)=>k+34);
 }
 
-/* ===== CALÇA ASG (ESPECIAL) ===== */
-else if(
-posto==="asg" &&
-item.nome.toLowerCase().includes("calça")
-){
+/* CALÇA ASG */
+else if(posto==="asg" && item.nome.toLowerCase().includes("calça")){
 tamanhos=["P","M","G","GG","XG","EXG","EXGG"];
 }
 
-/* ===== CALÇAS DOS OUTROS POSTOS ===== */
+/* CALÇAS OUTROS POSTOS */
 else if(item.nome.toLowerCase().includes("calça")){
-tamanhos=Array.from({length:10},(_,k)=>k+38); // 38 a 56
+tamanhos=Array.from({length:10},(_,k)=>k+38);
 }
 
-/* ===== OUTRAS ROUPAS ===== */
+/* OUTRAS ROUPAS */
 else{
 tamanhos=["P","M","G","GG","EG"];
 }
@@ -197,15 +265,16 @@ ${tamanhos.map(t=>`<option>${t}</option>`).join("")}
 });
 
 }
+
 /* ===== ASSINATURA ===== */
 
 const canvas=document.getElementById("assinatura");
 const ctx=canvas.getContext("2d");
 
-let desenhando=false;
-
 canvas.width=360;
 canvas.height=160;
+
+let desenhando=false;
 
 canvas.addEventListener("pointerdown",()=>desenhando=true);
 canvas.addEventListener("pointerup",()=>{desenhando=false;ctx.beginPath();});
@@ -256,7 +325,7 @@ return;
 const assinatura=canvas.toDataURL();
 
 /* ENVIO GOOGLE SHEETS */
-await fetch("https://script.google.com/macros/s/AKfycby-um32V6HBT85NpMwWcI10ZoxEfjusqlGGnEaktB9A3neUSXcIYnKQ8WhEoHRWMtkibg/exec",{
+await fetch("COLE_AQUI_SUA_URL_DO_APPS_SCRIPT",{
 method:"POST",
 body:JSON.stringify({
 data:new Date().toLocaleString("pt-BR"),
@@ -268,7 +337,7 @@ assinatura
 })
 });
 
-/* PDF */
+/* GERAR PDF */
 const { jsPDF } = window.jspdf;
 const pdf=new jsPDF();
 
