@@ -6,6 +6,9 @@
 
 <title>Solicitação de Uniforme</title>
 
+<!-- BIBLIOTECA PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 
 body{
@@ -16,8 +19,6 @@ body{
   text-align:center;
 }
 
-/* ===== CONTAINER ===== */
-
 .container{
   max-width:420px;
   margin:25px auto;
@@ -27,30 +28,24 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,.8);
 }
 
-/* CENTRALIZADOR PADRÃO */
 .campo{
   width:100%;
   display:flex;
   justify-content:center;
 }
 
-/* ELEMENTOS COM MESMA LARGURA */
 .campo input,
 .campo select,
 .campo textarea,
 canvas{
   width:100%;
   max-width:360px;
-  box-sizing:border-box;
 }
 
 .logo{
   width:180px;
-  margin-bottom:10px;
   filter:grayscale(100%);
 }
-
-/* ===== INPUTS ===== */
 
 input,select,textarea{
   padding:14px;
@@ -59,15 +54,12 @@ input,select,textarea{
   border:1px solid #333;
   border-radius:10px;
   color:white;
-  font-size:15px;
 }
 
 textarea{
   height:90px;
   resize:none;
 }
-
-/* ===== UNIFORMES ===== */
 
 .item{
   background:#0e0e0e;
@@ -78,19 +70,6 @@ textarea{
   text-align:left;
 }
 
-.item label{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.tamanho{
-  margin-top:8px;
-  width:100%;
-}
-
-/* ===== ASSINATURA ===== */
-
 canvas{
   height:160px;
   background:white;
@@ -98,8 +77,6 @@ canvas{
   margin-top:10px;
   touch-action:none;
 }
-
-/* ===== BOTÃO ===== */
 
 button{
   width:100%;
@@ -123,7 +100,6 @@ button{
 <img src="assets/vegaslogo.jpg" class="logo">
 
 <h3>Solicitação de Uniforme</h3>
-<h3>VEGAS VIGILANCIA</h3>
 
 <div class="campo">
 <input type="text" id="nome" placeholder="Nome do funcionário">
@@ -134,25 +110,18 @@ button{
 
 <option value="">Selecione o Posto</option>
 <option value="armado">Vigilante Armado - Geral</option>
-<option value="nagumo">Vigilante Nagumo</option>
-<option value="royal">Vigilante Royal</option>
-<option value="porteiroHSJB">Porteiro HSJB</option>
-<option value="porteiroGeral">Porteiro Geral</option>
-<option value="projetoVida">Projeto Vida</option>
 <option value="asg">ASG</option>
-<option value="monitoramento">Monitoramento</option>
 <option value="tecnica">Área Técnica</option>
 <option value="administrativo">Administrativo</option>
-<option value="comercial">Comercial</option>
 
 </select>
 </div>
 
 <div id="uniformes"></div>
 
-
+<h4>Observação</h4>
 <div class="campo">
-<textarea id="observacao" placeholder="Digite alguma observação sobre o uniforme"></textarea>
+<textarea id="observacao"></textarea>
 </div>
 
 <h4>Assinatura</h4>
@@ -162,7 +131,7 @@ button{
 </div>
 
 <div class="campo">
-<button type="button" onclick="limpar()">Limpar assinatura</button>
+<button onclick="limpar()">Limpar assinatura</button>
 </div>
 
 <div class="campo">
@@ -173,23 +142,28 @@ button{
 
 <script>
 
-/* ===== UNIFORMES ===== */
-
 const postosUniformes={
-armado:[{nome:"Camisa Operacional",tipo:"roupa"},{nome:"Calça Tática",tipo:"roupa"},{nome:"Bota Tática",tipo:"sapato"}],
-nagumo:[{nome:"Camisa Operacional",tipo:"roupa"},{nome:"Calça Operacional",tipo:"roupa"},{nome:"Bota",tipo:"sapato"}],
-royal:[{nome:"Camisa Social",tipo:"roupa"},{nome:"Calça Social",tipo:"roupa"},{nome:"Sapato Social",tipo:"sapato"}],
-porteiroHSJB:[{nome:"Polo Porteiro",tipo:"roupa"},{nome:"Calça Social",tipo:"roupa"},{nome:"Sapato Preto",tipo:"sapato"}],
-porteiroGeral:[{nome:"Polo Porteiro",tipo:"roupa"},{nome:"Calça Social",tipo:"roupa"},{nome:"Sapato Social",tipo:"sapato"}],
-projetoVida:[{nome:"Camisa Projeto",tipo:"roupa"},{nome:"Calça Operacional",tipo:"roupa"},{nome:"Tênis Preto",tipo:"sapato"}],
-asg:[{nome:"Camiseta ASG",tipo:"roupa"},{nome:"Calça Brim",tipo:"roupa"},{nome:"Sapato Antiderrapante",tipo:"sapato"}],
-monitoramento:[{nome:"Polo Monitoramento",tipo:"roupa"},{nome:"Calça Preta",tipo:"roupa"}],
-tecnica:[{nome:"Camisa Técnica",tipo:"roupa"},{nome:"Calça Cargo",tipo:"roupa"},{nome:"Bota Segurança",tipo:"sapato"}],
-administrativo:[{nome:"Camisa Social",tipo:"roupa"},{nome:"Calça Social",tipo:"roupa"},{nome:"Sapato Social",tipo:"sapato"}],
-comercial:[{nome:"Camisa Social",tipo:"roupa"},{nome:"Calça Social",tipo:"roupa"},{nome:"Sapato Social",tipo:"sapato"}]
+armado:[
+{nome:"Camisa Operacional",tipo:"roupa"},
+{nome:"Calça Tática",tipo:"roupa"},
+{nome:"Bota",tipo:"sapato"}
+],
+asg:[
+{nome:"Camiseta ASG",tipo:"roupa"},
+{nome:"Calça Brim",tipo:"roupa"}
+],
+tecnica:[
+{nome:"Camisa Técnica",tipo:"roupa"},
+{nome:"Bota Segurança",tipo:"sapato"}
+],
+administrativo:[
+{nome:"Camisa Social",tipo:"roupa"},
+{nome:"Sapato Social",tipo:"sapato"}
+]
 };
 
 function carregarUniformes(){
+
 const posto=document.getElementById("posto").value;
 const div=document.getElementById("uniformes");
 div.innerHTML="";
@@ -209,12 +183,13 @@ div.innerHTML+=`
 ${item.nome}
 </label>
 
-<select id="tam${i}" class="tamanho">
-<option value="">Tamanho</option>
+<select id="tam${i}">
+<option>Tamanho</option>
 ${tamanhos.map(t=>`<option>${t}</option>`).join("")}
 </select>
 </div>`;
 });
+
 }
 
 /* ===== ASSINATURA ===== */
@@ -226,8 +201,6 @@ let desenhando=false;
 
 canvas.addEventListener("pointerdown",()=>desenhando=true);
 canvas.addEventListener("pointerup",()=>{desenhando=false;ctx.beginPath();});
-canvas.addEventListener("pointerleave",()=>desenhando=false);
-
 canvas.addEventListener("pointermove",(e)=>{
 if(!desenhando) return;
 const rect=canvas.getBoundingClientRect();
@@ -243,8 +216,59 @@ function limpar(){
 ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-function enviar(){
-alert("Solicitação enviada!");
+/* ===== GERAR PDF ===== */
+
+async function enviar(){
+
+const nome=document.getElementById("nome").value;
+const posto=document.getElementById("posto").value;
+const obs=document.getElementById("observacao").value;
+
+if(!nome || !posto){
+alert("Preencha os dados");
+return;
+}
+
+const { jsPDF } = window.jspdf;
+const pdf=new jsPDF();
+
+let y=20;
+
+pdf.setFontSize(16);
+pdf.text("COMPROVANTE DE SOLICITAÇÃO DE UNIFORME",10,y);
+
+y+=15;
+pdf.setFontSize(12);
+
+pdf.text("Funcionário: "+nome,10,y);
+y+=8;
+
+pdf.text("Posto: "+posto,10,y);
+y+=10;
+
+pdf.text("Observação:",10,y);
+y+=8;
+
+pdf.text(obs || "Nenhuma",10,y);
+
+y+=15;
+
+/* assinatura */
+const assinatura=canvas.toDataURL("image/png");
+pdf.text("Assinatura:",10,y);
+y+=5;
+
+pdf.addImage(assinatura,"PNG",10,y,80,40);
+
+/* data */
+y+=50;
+pdf.text("Data: "+new Date().toLocaleString(),10,y);
+
+/* baixar */
+pdf.save("comprovante_uniforme.pdf");
+
+alert("PDF gerado com sucesso!");
+
 }
 
 </script>
