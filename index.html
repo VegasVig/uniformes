@@ -148,63 +148,6 @@ cursor:pointer;
 
 /* ===== UNIFORMES ===== */
 
-const postosUniformes={
-armado:[
-{nome:"Camisa Operacional",tipo:"roupa"},
-{nome:"Calça Tática",tipo:"roupa"},
-{nome:"Bota Tática",tipo:"sapato"}
-],
-nagumo:[
-{nome:"Camisa Operacional",tipo:"roupa"},
-{nome:"Calça Operacional",tipo:"roupa"},
-{nome:"Bota",tipo:"sapato"}
-],
-royal:[
-{nome:"Camisa Social",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-],
-porteiroHSJB:[
-{nome:"Polo Porteiro",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Preto",tipo:"sapato"}
-],
-porteiroGeral:[
-{nome:"Polo Porteiro",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-],
-projetoVida:[
-{nome:"Camisa Projeto",tipo:"roupa"},
-{nome:"Calça Operacional",tipo:"roupa"},
-{nome:"Tênis Preto",tipo:"sapato"}
-],
-asg:[
-{nome:"Camiseta ASG",tipo:"roupa"},
-{nome:"Calça Brim",tipo:"roupa"},
-{nome:"Sapato Antiderrapante",tipo:"sapato"}
-],
-monitoramento:[
-{nome:"Polo Monitoramento",tipo:"roupa"},
-{nome:"Calça Preta",tipo:"roupa"}
-],
-tecnica:[
-{nome:"Camisa Técnica",tipo:"roupa"},
-{nome:"Calça Cargo",tipo:"roupa"},
-{nome:"Bota Segurança",tipo:"sapato"}
-],
-administrativo:[
-{nome:"Camisa Social",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-],
-comercial:[
-{nome:"Camisa Social",tipo:"roupa"},
-{nome:"Calça Social",tipo:"roupa"},
-{nome:"Sapato Social",tipo:"sapato"}
-]
-};
-
 function carregarUniformes(){
 
 const posto=document.getElementById("posto").value;
@@ -215,23 +158,45 @@ if(!postosUniformes[posto]) return;
 
 postosUniformes[posto].forEach(item=>{
 
-const roupas=["P","M","G","GG","EG"];
-const sapatos=Array.from({length:15},(_,k)=>k+34);
-const tamanhos=item.tipo==="roupa"?roupas:sapatos;
+let tamanhos=[];
+
+/* ===== SAPATOS ===== */
+if(item.tipo==="sapato"){
+tamanhos=Array.from({length:15},(_,k)=>k+34);
+}
+
+/* ===== CALÇA ASG (ESPECIAL) ===== */
+else if(
+posto==="asg" &&
+item.nome.toLowerCase().includes("calça")
+){
+tamanhos=["P","M","G","GG","XG","EXG","EXGG"];
+}
+
+/* ===== CALÇAS DOS OUTROS POSTOS ===== */
+else if(item.nome.toLowerCase().includes("calça")){
+tamanhos=Array.from({length:10},(_,k)=>k+38); // 38 a 56
+}
+
+/* ===== OUTRAS ROUPAS ===== */
+else{
+tamanhos=["P","M","G","GG","EG"];
+}
 
 div.innerHTML+=`
 <div class="item">
 <label>
 <input type="checkbox"> ${item.nome}
 </label>
+
 <select>
 <option>Tamanho</option>
 ${tamanhos.map(t=>`<option>${t}</option>`).join("")}
 </select>
 </div>`;
 });
-}
 
+}
 /* ===== ASSINATURA ===== */
 
 const canvas=document.getElementById("assinatura");
