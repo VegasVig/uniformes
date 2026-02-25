@@ -6,87 +6,86 @@
 
 <title>Solicitação de Uniforme</title>
 
-<!-- PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 
 body{
-  margin:0;
-  font-family:'Segoe UI',Arial;
-  background:radial-gradient(circle at top,#1a1a1a,#000);
-  color:#e5e5e5;
-  text-align:center;
+margin:0;
+font-family:'Segoe UI',Arial;
+background:radial-gradient(circle at top,#1c1c1c,#000);
+color:#e5e5e5;
+text-align:center;
 }
 
 .container{
-  max-width:420px;
-  margin:25px auto;
-  padding:22px;
-  border-radius:18px;
-  background:#121212;
-  box-shadow:0 10px 30px rgba(0,0,0,.8);
+max-width:420px;
+margin:25px auto;
+padding:22px;
+border-radius:18px;
+background:#121212;
+box-shadow:0 10px 30px rgba(0,0,0,.8);
 }
 
 .logo{
-  width:180px;
-  filter:grayscale(100%);
+width:180px;
+margin-bottom:10px;
+filter:grayscale(100%);
 }
 
 .campo{
-  display:flex;
-  justify-content:center;
+display:flex;
+justify-content:center;
 }
 
 .campo input,
 .campo select,
 .campo textarea,
-canvas{
-  width:100%;
-  max-width:360px;
+canvas,
+button{
+width:100%;
+max-width:360px;
 }
 
 input,select,textarea{
-  padding:14px;
-  margin-top:10px;
-  background:#0b0b0b;
-  border:1px solid #333;
-  border-radius:10px;
-  color:white;
+padding:14px;
+margin-top:10px;
+background:#0b0b0b;
+border:1px solid #333;
+border-radius:10px;
+color:white;
 }
 
 textarea{
-  height:90px;
-  resize:none;
+height:90px;
+resize:none;
 }
 
 .item{
-  background:#0e0e0e;
-  border:1px solid #2a2a2a;
-  padding:12px;
-  border-radius:12px;
-  margin:8px 0;
-  text-align:left;
+background:#0e0e0e;
+border:1px solid #2a2a2a;
+padding:12px;
+border-radius:12px;
+margin:8px 0;
+text-align:left;
 }
 
 canvas{
-  height:160px;
-  background:white;
-  border-radius:12px;
-  margin-top:10px;
-  touch-action:none;
+height:160px;
+background:white;
+border-radius:12px;
+margin-top:10px;
+touch-action:none;
 }
 
 button{
-  width:100%;
-  max-width:360px;
-  padding:15px;
-  margin-top:20px;
-  border:none;
-  border-radius:12px;
-  font-weight:bold;
-  background:linear-gradient(135deg,#e0e0e0,#7a7a7a);
-  cursor:pointer;
+padding:15px;
+margin-top:20px;
+border:none;
+border-radius:12px;
+font-weight:bold;
+background:linear-gradient(135deg,#e0e0e0,#7a7a7a);
+cursor:pointer;
 }
 
 </style>
@@ -101,7 +100,7 @@ button{
 <h3>Solicitação de Uniforme</h3>
 
 <div class="campo">
-<input type="text" id="nome" placeholder="Nome do funcionário">
+<input id="nome" placeholder="Nome do funcionário">
 </div>
 
 <div class="campo">
@@ -147,79 +146,64 @@ button{
 
 <script>
 
-/* ===== UNIFORMES POR POSTO ===== */
+/* ===== UNIFORMES ===== */
 
 const postosUniformes={
-
 armado:[
 {nome:"Camisa Operacional",tipo:"roupa"},
 {nome:"Calça Tática",tipo:"roupa"},
 {nome:"Bota Tática",tipo:"sapato"}
 ],
-
 nagumo:[
 {nome:"Camisa Operacional",tipo:"roupa"},
 {nome:"Calça Operacional",tipo:"roupa"},
 {nome:"Bota",tipo:"sapato"}
 ],
-
 royal:[
 {nome:"Camisa Social",tipo:"roupa"},
 {nome:"Calça Social",tipo:"roupa"},
 {nome:"Sapato Social",tipo:"sapato"}
 ],
-
 porteiroHSJB:[
 {nome:"Polo Porteiro",tipo:"roupa"},
 {nome:"Calça Social",tipo:"roupa"},
 {nome:"Sapato Preto",tipo:"sapato"}
 ],
-
 porteiroGeral:[
 {nome:"Polo Porteiro",tipo:"roupa"},
 {nome:"Calça Social",tipo:"roupa"},
 {nome:"Sapato Social",tipo:"sapato"}
 ],
-
 projetoVida:[
 {nome:"Camisa Projeto",tipo:"roupa"},
 {nome:"Calça Operacional",tipo:"roupa"},
 {nome:"Tênis Preto",tipo:"sapato"}
 ],
-
 asg:[
 {nome:"Camiseta ASG",tipo:"roupa"},
 {nome:"Calça Brim",tipo:"roupa"},
 {nome:"Sapato Antiderrapante",tipo:"sapato"}
 ],
-
 monitoramento:[
 {nome:"Polo Monitoramento",tipo:"roupa"},
 {nome:"Calça Preta",tipo:"roupa"}
 ],
-
 tecnica:[
 {nome:"Camisa Técnica",tipo:"roupa"},
 {nome:"Calça Cargo",tipo:"roupa"},
 {nome:"Bota Segurança",tipo:"sapato"}
 ],
-
 administrativo:[
 {nome:"Camisa Social",tipo:"roupa"},
 {nome:"Calça Social",tipo:"roupa"},
 {nome:"Sapato Social",tipo:"sapato"}
 ],
-
 comercial:[
 {nome:"Camisa Social",tipo:"roupa"},
 {nome:"Calça Social",tipo:"roupa"},
 {nome:"Sapato Social",tipo:"sapato"}
 ]
-
 };
-
-
-/* ===== CARREGAR UNIFORMES ===== */
 
 function carregarUniformes(){
 
@@ -237,44 +221,32 @@ const tamanhos=item.tipo==="roupa"?roupas:sapatos;
 
 div.innerHTML+=`
 <div class="item">
-
 <label>
 <input type="checkbox"> ${item.nome}
 </label>
-
 <select>
-<option value="">Tamanho</option>
-${tamanhos.map(t=>`<option value="${t}">${t}</option>`).join("")}
+<option>Tamanho</option>
+${tamanhos.map(t=>`<option>${t}</option>`).join("")}
 </select>
-
 </div>`;
 });
 }
-
 
 /* ===== ASSINATURA ===== */
 
 const canvas=document.getElementById("assinatura");
 const ctx=canvas.getContext("2d");
 
-/* tamanho REAL do canvas */
+let desenhando=false;
+
 canvas.width=360;
 canvas.height=160;
 
-let desenhando=false;
-
 canvas.addEventListener("pointerdown",()=>desenhando=true);
-
-canvas.addEventListener("pointerup",()=>{
-desenhando=false;
-ctx.beginPath();
-});
-
+canvas.addEventListener("pointerup",()=>{desenhando=false;ctx.beginPath();});
 canvas.addEventListener("pointermove",(e)=>{
-if(!desenhando) return;
-
+if(!desenhando)return;
 const rect=canvas.getBoundingClientRect();
-
 ctx.lineWidth=2;
 ctx.lineCap="round";
 ctx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
@@ -287,34 +259,28 @@ function limpar(){
 ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-
-/* ===== ENVIAR PARA GOOGLE SHEETS ===== */
+/* ===== ENVIO + PDF ===== */
 
 async function enviar(){
 
-const nome=document.getElementById("nome").value.trim();
-const posto=document.getElementById("posto").value;
+const nome=document.getElementById("nome").value;
+const postoSelect=document.getElementById("posto");
+const posto=postoSelect.options[postoSelect.selectedIndex].text;
 const obs=document.getElementById("observacao").value;
 
-if(!nome || !posto){
-alert("Preencha nome e posto!");
+if(!nome || !postoSelect.value){
+alert("Preencha os dados");
 return;
 }
 
-/* coletar uniformes */
 let lista=[];
-
 document.querySelectorAll(".item").forEach(item=>{
-
-const check=item.querySelector("input[type=checkbox]");
+const check=item.querySelector("input");
 const select=item.querySelector("select");
 
-if(check.checked && select.value){
-lista.push(
-check.parentNode.innerText.trim()+" - "+select.value
-);
+if(check.checked && select.value!="Tamanho"){
+lista.push(check.parentNode.innerText.trim()+" - "+select.value);
 }
-
 });
 
 if(lista.length===0){
@@ -322,40 +288,51 @@ alert("Selecione ao menos um uniforme");
 return;
 }
 
-const assinatura=canvas.toDataURL("image/png");
+const assinatura=canvas.toDataURL();
 
-/* URL DO SEU APPS SCRIPT */
-const url="https://script.google.com/macros/s/AKfycby-um32V6HBT85NpMwWcI10ZoxEfjusqlGGnEaktB9A3neUSXcIYnKQ8WhEoHRWMtkibg/exec";
-
-const dados={
-nome:nome,
-posto:posto,
+/* ENVIO GOOGLE SHEETS */
+await fetch("https://script.google.com/macros/s/AKfycby-um32V6HBT85NpMwWcI10ZoxEfjusqlGGnEaktB9A3neUSXcIYnKQ8WhEoHRWMtkibg/exec",{
+method:"POST",
+body:JSON.stringify({
+data:new Date().toLocaleString("pt-BR"),
+nome,
+posto,
 uniformes:lista.join(", "),
 observacao:obs,
-assinatura:assinatura,
-data:new Date().toLocaleString("pt-BR")
-};
-
-try{
-
-await fetch(url,{
-method:"POST",
-mode:"no-cors",   // 🔥 necessário no Apps Script
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify(dados)
+assinatura
+})
 });
 
-alert("✅ Solicitação enviada para o estoque!");
+/* PDF */
+const { jsPDF } = window.jspdf;
+const pdf=new jsPDF();
 
-document.location.reload();
+pdf.setFontSize(16);
+pdf.text("COMPROVANTE DE SOLICITAÇÃO",20,20);
 
-}catch(e){
+pdf.setFontSize(12);
+pdf.text("Funcionário: "+nome,20,40);
+pdf.text("Posto: "+posto,20,50);
 
-alert("Erro ao enviar: "+e);
+let y=65;
+pdf.text("Uniformes:",20,y);
+y+=10;
 
-}
+lista.forEach(u=>{
+pdf.text("- "+u,25,y);
+y+=8;
+});
+
+pdf.text("Observação: "+(obs||"Nenhuma"),20,y+10);
+
+pdf.text("Assinatura:",20,y+25);
+pdf.addImage(assinatura,"PNG",20,y+30,80,40);
+
+pdf.text("Data: "+new Date().toLocaleString("pt-BR"),20,y+80);
+
+pdf.save("comprovante_uniforme.pdf");
+
+alert("Solicitação enviada com sucesso!");
 
 }
 
