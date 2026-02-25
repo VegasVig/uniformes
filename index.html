@@ -285,27 +285,38 @@ alert("Preencha os dados");
 return;
 }
 
-const { jsPDF } = window.jspdf;
-const pdf=new jsPDF();
+/* pegar uniformes selecionados */
+let lista=[];
+document.querySelectorAll(".item").forEach(item=>{
+const check=item.querySelector("input[type=checkbox]");
+const select=item.querySelector("select");
 
-pdf.setFontSize(16);
-pdf.text("COMPROVANTE DE SOLICITAÇÃO DE UNIFORME",10,20);
+if(check.checked){
+lista.push(check.parentNode.innerText.trim()+" - "+select.value);
+}
+});
 
-pdf.setFontSize(12);
-pdf.text("Funcionário: "+nome,10,40);
-pdf.text("Posto: "+posto,10,50);
-pdf.text("Observação: "+(obs||"Nenhuma"),10,60);
+const assinatura=canvas.toDataURL();
 
-const assinatura=canvas.toDataURL("image/png");
-pdf.addImage(assinatura,"PNG",10,70,80,40);
+/* URL DO APPS SCRIPT */
+const url="https://script.google.com/macros/s/AKfycby-um32V6HBT85NpMwWcI10ZoxEfjusqlGGnEaktB9A3neUSXcIYnKQ8WhEoHRWMtkibg/exec";
 
-pdf.text("Data: "+new Date().toLocaleString(),10,120);
+/* enviar */
+await fetch(url,{
+method:"POST",
+body:JSON.stringify({
+nome:nome,
+posto:posto,
+uniformes:lista.join(", "),
+observacao:obs,
+assinatura:assinatura
+})
+});
 
-pdf.save("comprovante_uniforme.pdf");
-
-alert("Solicitação enviada e comprovante gerado!");
+alert("Solicitação enviada para o estoque!");
 
 }
+
 
 </script>
 
