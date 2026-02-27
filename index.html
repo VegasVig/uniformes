@@ -309,9 +309,6 @@ ${tamanhos.map(t => `<option>${t}</option>`).join("")}
 
             await fetch("https://script.google.com/macros/s/AKfycbyHjQFsZc67E-VqYFHgTFpsn8sNolu_FVf7pA7_2JMTOARSopcWffE7Y8KGp4NXZOM2Gg/exec", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
                 body: JSON.stringify({
                     data: new Date().toLocaleString("pt-BR"),
                     nome: nome,
@@ -320,7 +317,7 @@ ${tamanhos.map(t => `<option>${t}</option>`).join("")}
                     posto: posto,
                     uniformes: lista.join(", "),
                     observacao: obs,
-                    assinatura: assinatura   
+                    assinatura: assinatura
                 })
             });
 
