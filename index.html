@@ -2,80 +2,51 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Solicitação de Uniforme</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<title>Entrega de Uniformes - Vegas</title>
 
 <style>
 
 body{
-margin:0;
-font-family:'Segoe UI',Arial;
-background:radial-gradient(circle at top,#1c1c1c,#000);
-color:#e5e5e5;
-text-align:center;
+  background:#0b0b0b;
+  font-family:Arial;
+  color:white;
+  text-align:center;
 }
 
 .container{
-max-width:420px;
-margin:25px auto;
-padding:22px;
-border-radius:18px;
-background:#121212;
-box-shadow:0 10px 30px rgba(0,0,0,.8);
-}
-
-.logo{width:180px;margin-bottom:10px;}
-
-.campo{display:flex;justify-content:center;}
-
-.campo input,
-.campo select,
-.campo textarea,
-canvas,
-button{
-width:100%;
-max-width:360px;
+  max-width:600px;
+  margin:auto;
 }
 
 input,select,textarea{
-padding:14px;
-margin-top:10px;
-background:#0b0b0b;
-border:1px solid #333;
-border-radius:10px;
-color:white;
-}
-
-textarea{height:90px;resize:none;}
-
-.item{
-background:#0e0e0e;
-border:1px solid #2a2a2a;
-padding:12px;
-border-radius:12px;
-margin:8px 0;
-text-align:left;
-}
-
-canvas{
-height:160px;
-background:white;
-border-radius:12px;
-margin-top:10px;
-touch-action:none;
+  width:95%;
+  padding:10px;
+  margin:6px;
+  border-radius:6px;
+  border:none;
 }
 
 button{
-padding:15px;
-margin-top:15px;
-border:none;
-border-radius:12px;
-font-weight:bold;
-background:linear-gradient(135deg,#e0e0e0,#7a7a7a);
-cursor:pointer;
+  padding:12px;
+  margin:10px;
+  border:none;
+  border-radius:6px;
+  background:#caa64b;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+canvas{
+  background:white;
+  border-radius:6px;
+}
+
+.logo{
+  width:200px;
+  margin-top:20px;
 }
 
 </style>
@@ -85,269 +56,167 @@ cursor:pointer;
 
 <div class="container">
 
-<img src="assets/vegaslogo.jpg" class="logo">
+<img src="uniatual.jpg" class="logo">
 
-<h3>Solicitação de Uniforme</h3>
+<h2>Entrega de Uniformes</h2>
 
-<div class="campo">
-<input id="nome" placeholder="Nome do funcionário">
-</div>
+<input id="nome" placeholder="Nome completo">
 
-<div class="campo">
 <input id="cpf" placeholder="CPF">
-</div>
 
-<div class="campo">
 <input id="telefone" placeholder="Telefone">
-</div>
 
-<div class="campo">
-<select id="posto" onchange="carregarUniformes()">
-<option value="">Selecione o Posto</option>
-<option value="armado">Vigilante Armado - Geral</option>
-<option value="nagumo">Vigilante Nagumo</option>
-<option value="royal">Vigilante Royal</option>
-<option value="porteiroHSJB">Porteiro HSJB</option>
-<option value="porteiroGeral">Porteiro Geral</option>
-<option value="projetoVida">Projeto Vida</option>
-<option value="asg">ASG</option>
-<option value="monitoramento">Monitoramento</option>
-<option value="tecnica">Área Técnica</option>
-<option value="administrativo">Administrativo</option>
-<option value="gerencia">Administrativo Gerência</option>
-<option value="comercial">Comercial</option>
+<select id="posto">
+<option>Selecione o posto</option>
+<option>ASG</option>
+<option>Comercial</option>
+<option>Área Técnica</option>
 </select>
-</div>
 
-<div id="uniformes"></div>
+<textarea id="uniformes" placeholder="Uniformes solicitados"></textarea>
 
-<h4>Observação</h4>
-<div class="campo">
-<textarea id="observacao"></textarea>
-</div>
+<textarea id="observacao" placeholder="Observações"></textarea>
 
-<h4>Assinatura</h4>
-<div class="campo">
-<canvas id="assinatura"></canvas>
-</div>
+<h3>Assinatura do Funcionário</h3>
 
-<div class="campo">
-<button onclick="limpar()">Limpar assinatura</button>
-</div>
+<canvas id="assinatura" width="400" height="200"></canvas>
 
-<div class="campo">
-<button onclick="enviar()">ENVIAR SOLICITAÇÃO</button>
-</div>
+<br>
+
+<button onclick="limparAssinatura()">Limpar Assinatura</button>
+<button onclick="enviar()">Enviar</button>
 
 </div>
 
 <script>
 
-/* ======= MASCARAS ======= */
+/* ===========================
+   CONFIG
+=========================== */
 
-cpf.oninput=e=>{
-let v=e.target.value.replace(/\D/g,'').slice(0,11);
-v=v.replace(/(\d{3})(\d)/,'$1.$2');
-v=v.replace(/(\d{3})(\d)/,'$1.$2');
-v=v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
-e.target.value=v;
-};
+const URL_SCRIPT = "COLE_AQUI_SUA_URL_EXEC";
 
-telefone.oninput=e=>{
-let v=e.target.value.replace(/\D/g,'').slice(0,11);
-if(v.length>10)
-v=v.replace(/(\d{2})(\d{5})(\d{4})/,'($1) $2-$3');
-else
-v=v.replace(/(\d{2})(\d{4})(\d{4})/,'($1) $2-$3');
-e.target.value=v;
-};
+/* ===========================
+   ASSINATURA DIGITAL
+=========================== */
 
-/* ================= UNIFORMES ================= */
+const canvas = document.getElementById("assinatura");
+const ctx = canvas.getContext("2d");
 
-const postosUniformes={
-armado:["Camisa vigilante bege","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+let desenhando = false;
 
-nagumo:["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
+canvas.addEventListener("mousedown", iniciar);
+canvas.addEventListener("mouseup", parar);
+canvas.addEventListener("mousemove", desenhar);
 
-royal:["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+canvas.addEventListener("touchstart", iniciarTouch);
+canvas.addEventListener("touchend", parar);
+canvas.addEventListener("touchmove", desenharTouch);
 
-porteiroHSJB:["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom branco serviços"],
-
-porteiroGeral:["Camisa porteiro cinza","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
-
-projetoVida:["Blusa preta serviços","Calça social","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
-
-asg:["Camisa ASG cinza","Calça elástico cinza","Blusa preta serviços","Casaco preto serviços","Botina","Galocha"],
-
-monitoramento:["Blusa preta vigilância","Casaco preto vigilância"],
-
-tecnica:["Blusa preta vigilância","Calça jeans","Casaco preto vigilância","Boné","Par de Botina"],
-
-administrativo:["Blusa preta vigilância","Casaco preto vigilância"],
-
-gerencia:["Camisa social preta","Casaco preto vigilância"],
-
-comercial:["Camisa social preta","Casaco preto vigilância"]
-};
-
-/* ===== TAMANHOS ===== */
-
-function carregarUniformes(){
-
-const posto=document.getElementById("posto").value;
-const div=document.getElementById("uniformes");
-div.innerHTML="";
-
-if(!postosUniformes[posto]) return;
-
-postosUniformes[posto].forEach(nome=>{
-
-let tamanhos=null;
-
-if(/sapato|botina|coturno|galocha/i.test(nome))
-tamanhos=Array.from({length:15},(_,i)=>i+34);
-
-else if(/camisa social/i.test(nome))
-tamanhos=["N2","N3","N4","N5","N6","N7","N8"];
-
-else if(posto==="asg" && /calça/i.test(nome))
-tamanhos=["P","M","G","GG","XG","EXG","EXGG"];
-
-else if(/calça/i.test(nome))
-tamanhos=Array.from({length:10},(_,i)=>i+38);
-
-else if(/camisa|blusa|casaco/i.test(nome))
-tamanhos=["P","M","G","GG","EG"];
-
-div.innerHTML+=`
-<div class="item">
-<label><input type="checkbox"> ${nome}</label>
-${tamanhos?`
-<select>
-<option>Tamanho</option>
-${tamanhos.map(t=>`<option>${t}</option>`).join("")}
-</select>`:""}
-</div>`;
-});
-
+function iniciar(){
+  desenhando = true;
 }
 
-/* ===== ASSINATURA ===== */
-
-const canvas=document.getElementById("assinatura");
-const ctx=canvas.getContext("2d");
-
-canvas.width=360;
-canvas.height=160;
-
-let desenhando=false;
-
-canvas.onpointerdown=()=>desenhando=true;
-canvas.onpointerup=()=>{desenhando=false;ctx.beginPath();};
-canvas.onpointermove=e=>{
-if(!desenhando)return;
-const r=canvas.getBoundingClientRect();
-ctx.lineWidth=2;
-ctx.lineCap="round";
-ctx.lineTo(e.clientX-r.left,e.clientY-r.top);
-ctx.stroke();
-ctx.beginPath();
-ctx.moveTo(e.clientX-r.left,e.clientY-r.top);
-};
-
-function limpar(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
+function parar(){
+  desenhando = false;
+  ctx.beginPath();
 }
 
-/* ===== ENVIO ===== */
+function desenhar(e){
+  if(!desenhando) return;
 
-async function enviar(){
+  const rect = canvas.getBoundingClientRect();
 
-const nome=document.getElementById("nome").value;
-const cpf=document.getElementById("cpf").value;
-const telefone=document.getElementById("telefone").value;
-const postoSel=document.getElementById("posto");
-const posto=postoSel.options[postoSel.selectedIndex].text;
-const obs=document.getElementById("observacao").value;
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
 
-if(!nome || cpf.length<14 || telefone.length<14 || !postoSel.value){
-alert("Preencha todos os dados.");
-return;
+  ctx.lineTo(
+    e.clientX - rect.left,
+    e.clientY - rect.top
+  );
+
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(
+    e.clientX - rect.left,
+    e.clientY - rect.top
+  );
 }
 
-let lista=[];
+/* MOBILE */
 
-document.querySelectorAll(".item").forEach(item=>{
-const check=item.querySelector("input");
-const select=item.querySelector("select");
-
-if(check.checked){
-lista.push(
-select?check.parentNode.innerText.trim()+" - "+select.value
-:check.parentNode.innerText.trim()
-);
-}
-});
-
-if(lista.length===0){
-alert("Selecione uniforme");
-return;
+function iniciarTouch(e){
+  desenhando = true;
 }
 
-const assinatura=canvas.toDataURL();
+function desenharTouch(e){
+  if(!desenhando) return;
 
-/* GOOGLE SHEETS */
-await fetch("https://script.google.com/macros/s/AKfycby8p31tT29-Nn7oMfFGNHMuG1v7VPcrRQCt_5AmyJ1Hv5PnvftaLRkak2jp54K1SARC2w/exec",{
-method:"POST",
-body:JSON.stringify({
-data:new Date().toLocaleString("pt-BR"),
-nome,
-cpf,
-telefone,
-posto,
-uniformes:lista.join(", "),
-observacao:obs
-})
-});
+  e.preventDefault();
 
-/* PDF */
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
 
-const { jsPDF } = window.jspdf;
-const pdf=new jsPDF();
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
 
-pdf.setFontSize(16);
-pdf.text("COMPROVANTE DE SOLICITAÇÃO",20,20);
+  ctx.lineTo(
+    touch.clientX - rect.left,
+    touch.clientY - rect.top
+  );
 
-pdf.setFontSize(12);
-pdf.text("Funcionário: "+nome,20,40);
-pdf.text("CPF: "+cpf,20,50);
-pdf.text("Telefone: "+telefone,20,60);
-pdf.text("Posto: "+posto,20,70);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(
+    touch.clientX - rect.left,
+    touch.clientY - rect.top
+  );
+}
 
-let y=85;
+/* ===========================
+   LIMPAR ASSINATURA
+=========================== */
 
-pdf.text("Uniformes solicitados:",20,y);
-y+=10;
+function limparAssinatura(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
 
-lista.forEach(u=>{
-const linhas=pdf.splitTextToSize("- "+u,170);
-linhas.forEach(l=>{
-pdf.text(l,20,y);
-y+=7;
-if(y>270){pdf.addPage();y=20;}
-});
-});
+/* ===========================
+   ENVIAR DADOS
+=========================== */
 
-pdf.text("Observação: "+(obs||"Nenhuma"),20,y+10);
+function enviar(){
 
-pdf.text("Assinatura:",20,y+25);
-pdf.addImage(assinatura,"PNG",20,y+30,80,40);
+  const assinaturaBase64 = canvas.toDataURL("image/png");
 
-pdf.text("Data: "+new Date().toLocaleString("pt-BR"),20,y+75);
+  const dados = {
+    data: new Date(),
+    nome: document.getElementById("nome").value,
+    cpf: document.getElementById("cpf").value,
+    telefone: document.getElementById("telefone").value,
+    posto: document.getElementById("posto").value,
+    uniformes: document.getElementById("uniformes").value,
+    observacao: document.getElementById("observacao").value,
+    assinatura: assinaturaBase64
+  };
 
-pdf.save("comprovante_uniforme.pdf");
+  fetch(URL_SCRIPT,{
+    method:"POST",
+    body: JSON.stringify(dados)
+  })
+  .then(()=>{
 
-alert("Solicitação enviada com sucesso!");
+    alert("Entrega registrada com sucesso ✅");
+
+    document.getElementById("nome").value="";
+    document.getElementById("cpf").value="";
+    document.getElementById("telefone").value="";
+    document.getElementById("uniformes").value="";
+    document.getElementById("observacao").value="";
+
+    limparAssinatura();
+  })
+  .catch(()=>alert("Erro ao enviar"));
 
 }
 
