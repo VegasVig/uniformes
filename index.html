@@ -145,9 +145,9 @@
             <button onclick="limpar()">Limpar assinatura</button>
         </div>
 
-        <div class="campo">
-            <button onclick="enviar()">ENVIAR SOLICITAÇÃO</button>
-        </div>
+        <button id="btnEnviar" onclick="enviar()">
+            ENVIAR SOLICITAÇÃO
+        </button>
 
     </div>
 
@@ -271,98 +271,138 @@ ${tamanhos.map(t => `<option>${t}</option>`).join("")}
 
         /* ===== ENVIO ===== */
 
-        async function enviar() {
 
-            const nome = document.getElementById("nome").value;
-            const cpf = document.getElementById("cpf").value;
-            const telefone = document.getElementById("telefone").value;
-            const postoSel = document.getElementById("posto");
-            const posto = postoSel.options[postoSel.selectedIndex].text;
-            const obs = document.getElementById("observacao").value;
+let enviando = false; // trava global
 
-            if (!nome || cpf.length < 14 || telefone.length < 14 || !postoSel.value) {
-                alert("Preencha todos os dados.");
-                return;
-            }
+async function enviar(){
 
-            let lista = [];
+if(enviando) return; // impede segundo clique
 
-            document.querySelectorAll(".item").forEach(item => {
-                const check = item.querySelector("input");
-                const select = item.querySelector("select");
+const btn = document.getElementById("btnEnviar");
+enviando = true;
 
-                if (check.checked) {
-                    lista.push(
-                        select ? check.parentNode.innerText.trim() + " - " + select.value
-                            : check.parentNode.innerText.trim()
-                    );
-                }
-            });
+btn.disabled = true;
+btn.innerText = "ENVIANDO...";
+btn.style.opacity = "0.6";
+btn.style.cursor = "not-allowed";
 
-            if (lista.length === 0) {
-                alert("Selecione uniforme");
-                return;
-            }
-            /* GOOGLE SHEETS */
+try{
 
-            const assinatura = canvas.toDataURL("image/png");
+const nome = document.getElementById("nome").value;
+const cpf = document.getElementById("cpf").value;
+const telefone = document.getElementById("telefone").value;
+const postoSel = document.getElementById("posto");
+const posto = postoSel.options[postoSel.selectedIndex].text;
+const obs = document.getElementById("observacao").value;
 
-            await fetch("https://script.google.com/macros/s/AKfycbyHjQFsZc67E-VqYFHgTFpsn8sNolu_FVf7pA7_2JMTOARSopcWffE7Y8KGp4NXZOM2Gg/exec", {
-                method: "POST",
-                body: JSON.stringify({
-                    data: new Date().toLocaleString("pt-BR"),
-                    nome: nome,
-                    cpf: cpf,
-                    telefone: telefone,
-                    posto: posto,
-                    uniformes: lista.join(", "),
-                    observacao: obs,
-                    assinatura: assinatura
-                })
-            });
+if(!nome || cpf.length < 14 || telefone.length < 14 || !postoSel.value){
+alert("Preencha todos os dados.");
+resetarBotao();
+return;
+}
 
-            /* PDF */
+let lista=[];
 
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF();
+document.querySelectorAll(".item").forEach(item=>{
+const check=item.querySelector("input");
+const select=item.querySelector("select");
 
-            pdf.setFontSize(16);
-            pdf.text("COMPROVANTE DE SOLICITAÇÃO", 20, 20);
+if(check.checked){
+lista.push(
+select
+? check.parentNode.innerText.trim()+" - "+select.value
+: check.parentNode.innerText.trim()
+);
+}
+});
 
-            pdf.setFontSize(12);
-            pdf.text("Funcionário: " + nome, 20, 40);
-            pdf.text("CPF: " + cpf, 20, 50);
-            pdf.text("Telefone: " + telefone, 20, 60);
-            pdf.text("Posto: " + posto, 20, 70);
+if(lista.length===0){
+alert("Selecione uniforme");
+resetarBotao();
+return;
+}
 
-            let y = 85;
+const assinatura = canvas.toDataURL("image/png");
 
-            pdf.text("Uniformes solicitados:", 20, y);
-            y += 10;
+/* ===== ENVIO GOOGLE SHEETS ===== */
 
-            lista.forEach(u => {
-                const linhas = pdf.splitTextToSize("- " + u, 170);
-                linhas.forEach(l => {
-                    pdf.text(l, 20, y);
-                    y += 7;
-                    if (y > 270) { pdf.addPage(); y = 20; }
-                });
-            });
+await fetch("https://script.google.com/macros/s/AKfycbyHjQFsZc67E-VqYFHgTFpsn8sNolu_FVf7pA7_2JMTOARSopcWffE7Y8KGp4NXZOM2Gg/exec",{
+method:"POST",
+body:JSON.stringify({
+data:new Date().toLocaleString("pt-BR"),
+nome,
+cpf,
+telefone,
+posto,
+uniformes:lista.join(", "),
+observacao:obs,
+assinatura
+})
+});
 
-            pdf.text("Observação: " + (obs || "Nenhuma"), 20, y + 10);
+/* ===== PDF ===== */
 
-            pdf.text("Assinatura:", 20, y + 25);
-            pdf.addImage(assinatura, "PNG", 20, y + 30, 80, 40);
+const { jsPDF } = window.jspdf;
+const pdf = new jsPDF();
 
-            pdf.text("Data: " + new Date().toLocaleString("pt-BR"), 20, y + 75);
+pdf.setFontSize(16);
+pdf.text("COMPROVANTE DE SOLICITAÇÃO",20,20);
 
-            pdf.save("comprovante_uniforme.pdf");
+pdf.setFontSize(12);
+pdf.text("Funcionário: "+nome,20,40);
+pdf.text("CPF: "+cpf,20,50);
+pdf.text("Telefone: "+telefone,20,60);
+pdf.text("Posto: "+posto,20,70);
 
-            alert("Solicitação enviada com sucesso!");
+let y=85;
 
-        }
+pdf.text("Uniformes solicitados:",20,y);
+y+=10;
 
-    </script>
+lista.forEach(u=>{
+const linhas=pdf.splitTextToSize("- "+u,170);
+linhas.forEach(l=>{
+pdf.text(l,20,y);
+y+=7;
+if(y>270){pdf.addPage();y=20;}
+});
+});
+
+pdf.text("Observação: "+(obs||"Nenhuma"),20,y+10);
+
+pdf.text("Assinatura:",20,y+25);
+pdf.addImage(assinatura,"PNG",20,y+30,80,40);
+
+pdf.text("Data: "+new Date().toLocaleString("pt-BR"),20,y+75);
+
+pdf.save("comprovante_uniforme.pdf");
+
+btn.innerText="ENVIADO ✓";
+btn.style.background="#16a34a";
+
+alert("Solicitação enviada com sucesso!");
+
+}catch(err){
+
+alert("Erro ao enviar. Tente novamente.");
+resetarBotao();
+
+}
+
+}
+
+/* ===== RESET BOTÃO ===== */
+
+function resetarBotao(){
+const btn=document.getElementById("btnEnviar");
+enviando=false;
+btn.disabled=false;
+btn.innerText="ENVIAR SOLICITAÇÃO";
+btn.style.opacity="1";
+btn.style.cursor="pointer";
+}
+
+</script>
 
 </body>
 
