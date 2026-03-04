@@ -114,18 +114,37 @@
         <div class="campo">
             <select id="posto" onchange="carregarUniformes()">
                 <option value="">Selecione o Posto</option>
-                <option value="armado">Vigilante Armado - Geral</option>
-                <option value="nagumo">Vigilante Nagumo</option>
-                <option value="royal">Vigilante Royal</option>
-                <option value="porteiroHSJB">Porteiro HSJB</option>
-                <option value="porteiroGeral">Porteiro Geral</option>
-                <option value="projetoVida">Projeto Vida</option>
-                <option value="asg">ASG</option>
-                <option value="monitoramento">Monitoramento</option>
-                <option value="tecnica">Área Técnica</option>
-                <option value="administrativo">Administrativo</option>
-                <option value="gerencia">Administrativo Gerência</option>
-                <option value="comercial">Comercial</option>
+
+                <option value="A_Abreu">A Abreu</option>
+                <option value="Nagumo">Nagumo</option>
+                <option value="Royal">Royal</option>
+                <option value="Royal_3Rios">Royal 3 Rios</option>
+                <option value="ProjetoVida">Projeto Vida</option>
+                <option value="Monitoramento">Monitoramento</option>
+                <option value="Tecnica">Área Técnica</option>
+                <option value="Administrativo">Administrativo</option>
+                <option value="Gerencia">Gerência</option>
+                <option value="Comercial">Comercial</option>
+                <option value="Ceneged">Ceneged</option>
+                <option value="Ceneged_ASG">Ceneged ASG</option>
+                <option value="Cond_VilaVitoria">Cond. Vila Vitória</option>
+                <option value="Economy">Economy</option>
+                <option value="Edificio_CecisaI">Edifício Cecisa I</option>
+                <option value="Ed_Gran_Milano">Ed. Gran Milano</option>
+                <option value="Ed_Maximum">Ed. Maximum</option>
+                <option value="Ed_Maximum_ASG">Ed. Maximum ASG</option>
+                <option value="Estik_Filmes">Estik Filmes</option>
+                <option value="Estik_Filmes_ASG">Estik Filmes ASG</option>
+                <option value="Excelsior">Excelsior</option>
+                <option value="Massa_Falida">Massa Falida</option>
+                <option value="Gerdau">Gerdau</option>
+                <option value="Tachi_s">Tachi's</option>
+                <option value="Mata_do_amador">Mata do Amador</option>
+                <option value="Norsil">Norsil</option>
+                <option value="Scapini">Scapini</option>
+                <option value="Rest_zen">Rest Zen</option>
+                <option value="Perfiaço">Perfiaço</option>
+
             </select>
         </div>
 
@@ -175,29 +194,65 @@
         /* ================= UNIFORMES ================= */
 
         const postosUniformes = {
-            armado: ["Camisa vigilante bege", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
+            A_Abreu: ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
 
-            nagumo: ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante"],
+            Nagumo: ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante"],
 
-            royal: ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
+            Royal: ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
 
-            porteiroHSJB: ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom branco serviços"],
+            Royal_3Rios: ["Camisa social preta", "Calça social", "Casaco preto vigilância"],
 
-            porteiroGeral: ["Camisa porteiro cinza", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+            ProjetoVida: ["Blusa preta serviços", "Calça social", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
 
-            projetoVida: ["Blusa preta serviços", "Calça social", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+            Monitoramento: ["Blusa preta vigilância", "Casaco preto vigilância"],
 
-            asg: ["Camisa ASG cinza", "Calça elástico cinza", "Blusa preta serviços", "Casaco preto serviços", "Botina", "Galocha"],
+            Tecnica: ["Blusa preta vigilância", "Calça jeans", "Casaco preto vigilância", "Boné", "Par de Botina"],
 
-            monitoramento: ["Blusa preta vigilância", "Casaco preto vigilância"],
+            Administrativo: ["Blusa preta vigilância", "Casaco preto vigilância"],
 
-            tecnica: ["Blusa preta vigilância", "Calça jeans", "Casaco preto vigilância", "Boné", "Par de Botina"],
+            Gerencia: ["Camisa social preta", "Casaco preto vigilância"],
 
-            administrativo: ["Blusa preta vigilância", "Casaco preto vigilância"],
+            Comercial: ["Camisa social preta", "Casaco preto vigilância"],
 
-            gerencia: ["Camisa social preta", "Casaco preto vigilância"],
+            Ceneged: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
 
-            comercial: ["Camisa social preta", "Casaco preto vigilância"]
+            Ceneged_ASG: ["Camisa ASG", "Calça elástico cinza", "Blusa preta serviços", "Casaco preto serviços", "Botina", "Galocha"],
+
+            Cond_VilaVitoria: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+
+            Economy: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+
+            Edificio_CecisaI: ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Fiel", "Apito"],
+
+            Ed_Gran_Milano: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+
+            Ed_Maximum: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+
+            Ed_Maximum_ASG: ["Camisa ASG ", "Calça elástico cinza", "Blusa preta serviços", "Casaco preto serviços", "Botina", "Galocha"],
+
+            Estik_Filmes: ["Camisa porteiro cinza", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+
+            Estik_Filmes_ASG: ["Camisa ASG", "Calça elástico cinza", "Blusa preta serviços", "Casaco preto serviços", "Botina", "Galocha"],
+
+            Excelsior: ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
+
+            Massa_Falida: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+
+            Gerdau: ["Camisa ASG ", "Calça elástico cinza", "Blusa preta serviços", "Casaco preto serviços", "Botina", "Galocha"],
+
+            Tachi_s: ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
+
+            Mata_do_amador: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+
+            Norsil: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+
+            Scapini: ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
+
+            Rest_zen: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+
+            Perfiaço: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
+
+
         };
 
         /* ===== TAMANHOS ===== */
@@ -272,137 +327,137 @@ ${tamanhos.map(t => `<option>${t}</option>`).join("")}
         /* ===== ENVIO ===== */
 
 
-let enviando = false; // trava global
+        let enviando = false; // trava global
 
-async function enviar(){
+        async function enviar() {
 
-if(enviando) return; // impede segundo clique
+            if (enviando) return; // impede segundo clique
 
-const btn = document.getElementById("btnEnviar");
-enviando = true;
+            const btn = document.getElementById("btnEnviar");
+            enviando = true;
 
-btn.disabled = true;
-btn.innerText = "ENVIANDO...";
-btn.style.opacity = "0.6";
-btn.style.cursor = "not-allowed";
+            btn.disabled = true;
+            btn.innerText = "ENVIANDO...";
+            btn.style.opacity = "0.6";
+            btn.style.cursor = "not-allowed";
 
-try{
+            try {
 
-const nome = document.getElementById("nome").value;
-const cpf = document.getElementById("cpf").value;
-const telefone = document.getElementById("telefone").value;
-const postoSel = document.getElementById("posto");
-const posto = postoSel.options[postoSel.selectedIndex].text;
-const obs = document.getElementById("observacao").value;
+                const nome = document.getElementById("nome").value;
+                const cpf = document.getElementById("cpf").value;
+                const telefone = document.getElementById("telefone").value;
+                const postoSel = document.getElementById("posto");
+                const posto = postoSel.options[postoSel.selectedIndex].text;
+                const obs = document.getElementById("observacao").value;
 
-if(!nome || cpf.length < 14 || telefone.length < 14 || !postoSel.value){
-alert("Preencha todos os dados.");
-resetarBotao();
-return;
-}
+                if (!nome || cpf.length < 14 || telefone.length < 14 || !postoSel.value) {
+                    alert("Preencha todos os dados.");
+                    resetarBotao();
+                    return;
+                }
 
-let lista=[];
+                let lista = [];
 
-document.querySelectorAll(".item").forEach(item=>{
-const check=item.querySelector("input");
-const select=item.querySelector("select");
+                document.querySelectorAll(".item").forEach(item => {
+                    const check = item.querySelector("input");
+                    const select = item.querySelector("select");
 
-if(check.checked){
-lista.push(
-select
-? check.parentNode.innerText.trim()+" - "+select.value
-: check.parentNode.innerText.trim()
-);
-}
-});
+                    if (check.checked) {
+                        lista.push(
+                            select
+                                ? check.parentNode.innerText.trim() + " - " + select.value
+                                : check.parentNode.innerText.trim()
+                        );
+                    }
+                });
 
-if(lista.length===0){
-alert("Selecione uniforme");
-resetarBotao();
-return;
-}
+                if (lista.length === 0) {
+                    alert("Selecione uniforme");
+                    resetarBotao();
+                    return;
+                }
 
-const assinatura = canvas.toDataURL("image/png");
+                const assinatura = canvas.toDataURL("image/png");
 
-/* ===== ENVIO GOOGLE SHEETS ===== */
+                /* ===== ENVIO GOOGLE SHEETS ===== */
 
-await fetch("https://script.google.com/macros/s/AKfycbyHjQFsZc67E-VqYFHgTFpsn8sNolu_FVf7pA7_2JMTOARSopcWffE7Y8KGp4NXZOM2Gg/exec",{
-method:"POST",
-body:JSON.stringify({
-data:new Date().toLocaleString("pt-BR"),
-nome,
-cpf,
-telefone,
-posto,
-uniformes:lista.join(", "),
-observacao:obs,
-assinatura
-})
-});
+                await fetch("https://script.google.com/macros/s/AKfycbyHjQFsZc67E-VqYFHgTFpsn8sNolu_FVf7pA7_2JMTOARSopcWffE7Y8KGp4NXZOM2Gg/exec", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        data: new Date().toLocaleString("pt-BR"),
+                        nome,
+                        cpf,
+                        telefone,
+                        posto,
+                        uniformes: lista.join(", "),
+                        observacao: obs,
+                        assinatura
+                    })
+                });
 
-/* ===== PDF ===== */
+                /* ===== PDF ===== */
 
-const { jsPDF } = window.jspdf;
-const pdf = new jsPDF();
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF();
 
-pdf.setFontSize(16);
-pdf.text("COMPROVANTE DE SOLICITAÇÃO",20,20);
+                pdf.setFontSize(16);
+                pdf.text("COMPROVANTE DE SOLICITAÇÃO", 20, 20);
 
-pdf.setFontSize(12);
-pdf.text("Funcionário: "+nome,20,40);
-pdf.text("CPF: "+cpf,20,50);
-pdf.text("Telefone: "+telefone,20,60);
-pdf.text("Posto: "+posto,20,70);
+                pdf.setFontSize(12);
+                pdf.text("Funcionário: " + nome, 20, 40);
+                pdf.text("CPF: " + cpf, 20, 50);
+                pdf.text("Telefone: " + telefone, 20, 60);
+                pdf.text("Posto: " + posto, 20, 70);
 
-let y=85;
+                let y = 85;
 
-pdf.text("Uniformes solicitados:",20,y);
-y+=10;
+                pdf.text("Uniformes solicitados:", 20, y);
+                y += 10;
 
-lista.forEach(u=>{
-const linhas=pdf.splitTextToSize("- "+u,170);
-linhas.forEach(l=>{
-pdf.text(l,20,y);
-y+=7;
-if(y>270){pdf.addPage();y=20;}
-});
-});
+                lista.forEach(u => {
+                    const linhas = pdf.splitTextToSize("- " + u, 170);
+                    linhas.forEach(l => {
+                        pdf.text(l, 20, y);
+                        y += 7;
+                        if (y > 270) { pdf.addPage(); y = 20; }
+                    });
+                });
 
-pdf.text("Observação: "+(obs||"Nenhuma"),20,y+10);
+                pdf.text("Observação: " + (obs || "Nenhuma"), 20, y + 10);
 
-pdf.text("Assinatura:",20,y+25);
-pdf.addImage(assinatura,"PNG",20,y+30,80,40);
+                pdf.text("Assinatura:", 20, y + 25);
+                pdf.addImage(assinatura, "PNG", 20, y + 30, 80, 40);
 
-pdf.text("Data: "+new Date().toLocaleString("pt-BR"),20,y+75);
+                pdf.text("Data: " + new Date().toLocaleString("pt-BR"), 20, y + 75);
 
-pdf.save("comprovante_uniforme.pdf");
+                pdf.save("comprovante_uniforme.pdf");
 
-btn.innerText="ENVIADO ✓";
-btn.style.background="#16a34a";
+                btn.innerText = "ENVIADO ✓";
+                btn.style.background = "#16a34a";
 
-alert("Solicitação enviada com sucesso!");
+                alert("Solicitação enviada com sucesso!");
 
-}catch(err){
+            } catch (err) {
 
-alert("Erro ao enviar. Tente novamente.");
-resetarBotao();
+                alert("Erro ao enviar. Tente novamente.");
+                resetarBotao();
 
-}
+            }
 
-}
+        }
 
-/* ===== RESET BOTÃO ===== */
+        /* ===== RESET BOTÃO ===== */
 
-function resetarBotao(){
-const btn=document.getElementById("btnEnviar");
-enviando=false;
-btn.disabled=false;
-btn.innerText="ENVIAR SOLICITAÇÃO";
-btn.style.opacity="1";
-btn.style.cursor="pointer";
-}
+        function resetarBotao() {
+            const btn = document.getElementById("btnEnviar");
+            enviando = false;
+            btn.disabled = false;
+            btn.innerText = "ENVIAR SOLICITAÇÃO";
+            btn.style.opacity = "1";
+            btn.style.cursor = "pointer";
+        }
 
-</script>
+    </script>
 
 </body>
 
