@@ -4,57 +4,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Solicitação de Uniforme</title>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Arial;
-            background: radial-gradient(circle at top, #1c1c1c, #000);
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, #1a1a1a, #000);
             color: #e5e5e5;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 25px 0;
+            box-sizing: border-box;
         }
 
+        /* CARD COM GLASSMORPHISM */
         .container {
+            background: rgba(40, 40, 40, 0.65);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(200, 200, 200, 0.2);
+            border-radius: 20px;
+            width: 100%;
             max-width: 420px;
-            margin: 25px auto;
-            padding: 22px;
-            border-radius: 18px;
-            background: #121212;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .8);
+            padding: 25px;
+            box-shadow: 0 0 25px rgba(200, 200, 200, 0.2);
+            animation: fadeIn 0.8s ease;
+            position: relative;
+            box-sizing: border-box;
         }
 
-        .logo {
-            width: 180px;
+        /* BORDA BRILHO */
+        .container::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(120deg, rgba(255,255,255,0.4), transparent);
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        img.logo {
+            width: 130px;
+            display: block;
+            margin: 0 auto 15px;
+            filter: drop-shadow(0 0 10px rgba(200,200,200,0.6));
+        }
+
+        h2, h3, h4 {
+            text-align: center;
+            letter-spacing: 1px;
             margin-bottom: 10px;
         }
 
-        .campo {
-            display: flex;
-            justify-content: center;
-        }
+        h3 { color: #d1d5db; margin-top: 20px; }
+        h4 { color: #d1d5db; margin-top: 15px; }
 
-        .campo input,
-        .campo select,
-        .campo textarea,
-        canvas,
-        button {
-            width: 100%;
-            max-width: 360px;
-        }
-
+        /* TODOS OS CAMPOS IGUAIS */
         input,
         select,
         textarea {
-            padding: 14px;
-            margin-top: 10px;
-            background: #0b0b0b;
-            border: 1px solid #333;
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px;
             border-radius: 10px;
-            color: white;
+            border: 1px solid #444;
+            background: rgba(0, 0, 0, 0.6);
+            color: #e5e5e5;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
         }
 
         textarea {
@@ -62,403 +89,425 @@
             resize: none;
         }
 
+        input:focus,
+        select:focus,
+        textarea:focus {
+            transform: translateY(-2px);
+            border: 1px solid #c0c0c0;
+            box-shadow: 0 0 10px #c0c0c0;
+        }
+
+        /* ITENS DE UNIFORME */
         .item {
-            background: #0e0e0e;
+            background: rgba(0,0,0,0.4);
             border: 1px solid #2a2a2a;
             padding: 12px;
             border-radius: 12px;
             margin: 8px 0;
             text-align: left;
+            box-sizing: border-box;
         }
 
+        .item label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            accent-color: #c0c0c0;
+        }
+
+        .item select {
+            margin-top: 8px;
+        }
+
+        /* CANVAS */
         canvas {
-            height: 160px;
-            background: white;
+            width: 100%;
+            height: 150px;
+            background: rgba(255,255,255,0.95);
             border-radius: 12px;
             margin-top: 10px;
+            box-shadow: 0 0 10px rgba(200,200,200,0.4);
             touch-action: none;
+            display: block;
+            box-sizing: border-box;
         }
 
+        /* BOTÃO BRILHO PRATA */
         button {
-            padding: 15px;
+            width: 100%;
             margin-top: 15px;
-            border: none;
+            padding: 12px;
             border-radius: 12px;
+            border: none;
+            background: linear-gradient(90deg, #c0c0c0, #e5e5e5);
+            color: black;
             font-weight: bold;
-            background: linear-gradient(135deg, #e0e0e0, #7a7a7a);
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.8), transparent);
+            transition: 0.5s;
+        }
+
+        button:hover::before { left: 100%; }
+        button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px #c0c0c0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
 <body>
-
-    <div class="container">
-
-        <img src="assets/vegaslogo.jpg" class="logo">
-
-        <h3>Solicitação de Uniforme</h3>
-
-        <div class="campo">
-            <input id="nome" placeholder="Nome do funcionário">
-        </div>
-
-        <div class="campo">
-            <input id="cpf" placeholder="CPF">
-        </div>
-
-        <div class="campo">
-            <input id="telefone" placeholder="Telefone">
-        </div>
-
-        <div class="campo">
-            <select id="posto" onchange="carregarUniformes()">
-                <option value="">Selecione o Posto</option>
-
-                <option value="A_Abreu">A Abreu</option>
-                <option value="Nagumo">Nagumo</option>
-                <option value="Royal">Royal</option>
-                <option value="Royal_3Rios">Royal 3 Rios</option>
-                <option value="ProjetoVida">Projeto Vida</option>
-                <option value="Monitoramento">Monitoramento</option>
-                <option value="Tecnica">Área Técnica</option>
-                <option value="Administrativo">Administrativo</option>
-                <option value="Gerencia">Gerência</option>
-                <option value="Comercial">Comercial</option>
-                <option value="Ceneged">Ceneged</option>
-                <option value="Ceneged_ASG">Ceneged ASG</option>
-                <option value="Cond_VilaVitoria">Cond. Vila Vitória</option>
-                <option value="Economy">Economy</option>
-                <option value="Edificio_CecisaI">Edifício Cecisa I</option>
-                <option value="Ed_Gran_Milano">Ed. Gran Milano</option>
-                <option value="Ed_Maximum">Ed. Maximum</option>
-                <option value="Ed_Maximum_ASG">Ed. Maximum ASG</option>
-                <option value="Estik_Filmes">Estik Filmes</option>
-                <option value="Estik_Filmes_ASG">Estik Filmes ASG</option>
-                <option value="Excelsior">Excelsior</option>
-                <option value="Massa_Falida">Massa Falida</option>
-                <option value="Gerdau">Gerdau</option>
-                <option value="Tachi_s">Tachi's</option>
-                <option value="Mata_do_amador">Mata do Amador</option>
-                <option value="Norsil">Norsil</option>
-                <option value="Scapini">Scapini</option>
-                <option value="Rest_zen">Rest Zen</option>
-                <option value="Perfiaço">Perfiaço</option>
-
-            </select>
-        </div>
-
-        <div id="uniformes"></div>
-
-        <h4>Observação</h4>
-        <div class="campo">
-            <textarea id="observacao"></textarea>
-        </div>
-
-        <h4>Assinatura</h4>
-        <div class="campo">
-            <canvas id="assinatura"></canvas>
-        </div>
-
-        <div class="campo">
-            <button onclick="limpar()">Limpar assinatura</button>
-        </div>
-
-        <button id="btnEnviar" onclick="enviar()">
-            ENVIAR SOLICITAÇÃO
-        </button>
-
-    </div>
-
-    <script>
-
-        /* ======= MASCARAS ======= */
-
-        cpf.oninput = e => {
-            let v = e.target.value.replace(/\D/g, '').slice(0, 11);
-            v = v.replace(/(\d{3})(\d)/, '$1.$2');
-            v = v.replace(/(\d{3})(\d)/, '$1.$2');
-            v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-            e.target.value = v;
-        };
-
-        telefone.oninput = e => {
-            let v = e.target.value.replace(/\D/g, '').slice(0, 11);
-            if (v.length > 10)
-                v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-            else
-                v = v.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-            e.target.value = v;
-        };
-
-        /* ================= UNIFORMES ================= */
-
-        const postosUniformes = {
-            A_Abreu: ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
-
-            Nagumo: ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante"],
-
-            Royal: ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-
-            Royal_3Rios: ["Camisa social preta", "Calça social", "Casaco preto vigilância"],
-
-            ProjetoVida: ["Blusa preta serviços", "Calça social", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-            Monitoramento: ["Blusa preta vigilância", "Casaco preto vigilância"],
-
-            Tecnica: ["Blusa preta vigilância", "Calça jeans", "Casaco preto vigilância", "Boné", "Par de Botina"],
-
-            Administrativo: ["Blusa preta vigilância", "Casaco preto vigilância"],
-
-            Gerencia: ["Camisa social preta", "Casaco preto vigilância"],
-
-            Comercial: ["Camisa social preta", "Casaco preto vigilância"],
-
-            Ceneged: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-            Ceneged_ASG: ["Camisa ASG", "Calça elástico cinza", "Blusa preta serviços", "Casaco preto serviços", "Botina", "Galocha"],
-
-            Cond_VilaVitoria: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-            Economy: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-            Edificio_CecisaI: ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Fiel", "Apito"],
-
-            Ed_Gran_Milano: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-            Ed_Maximum: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-            Ed_Maximum_ASG: ["Camisa ASG ", "Calça elástico cinza", "Blusa preta serviços", "Casaco preto serviços", "Botina", "Galocha"],
-
-            Estik_Filmes: ["Camisa porteiro cinza", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-            Estik_Filmes_ASG: ["Camisa ASG", "Calça elástico cinza", "Blusa preta serviços", "Casaco preto serviços", "Botina", "Galocha"],
-
-            Excelsior: ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
-
-            Massa_Falida: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-            Gerdau: ["Camisa ASG ", "Calça elástico cinza", "Blusa preta serviços", "Casaco preto serviços", "Botina", "Galocha"],
-
-            Tachi_s: ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
-
-            Mata_do_amador: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-            Norsil: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-            Scapini: ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
-
-            Rest_zen: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-            Perfiaço: ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-
-
-        };
-
-        /* ===== TAMANHOS ===== */
-
-        function carregarUniformes() {
-
-            const posto = document.getElementById("posto").value;
-            const div = document.getElementById("uniformes");
-            div.innerHTML = "";
-
-            if (!postosUniformes[posto]) return;
-
-            postosUniformes[posto].forEach(nome => {
-
-                let tamanhos = null;
-
-                if (/sapato|botina|coturno|galocha/i.test(nome))
-                    tamanhos = Array.from({ length: 15 }, (_, i) => i + 34);
-
-                else if (/camisa social/i.test(nome))
-                    tamanhos = ["N2", "N3", "N4", "N5", "N6", "N7", "N8"];
-
-                else if (posto === "asg" && /calça/i.test(nome))
-                    tamanhos = ["P", "M", "G", "GG", "XG", "EXG", "EXGG"];
-
-                else if (/calça/i.test(nome))
-                    tamanhos = Array.from({ length: 10 }, (_, i) => i + 38);
-
-                else if (/camisa|blusa|casaco/i.test(nome))
-                    tamanhos = ["P", "M", "G", "GG", "EG"];
-
-                div.innerHTML += `
-<div class="item">
-<label><input type="checkbox"> ${nome}</label>
-${tamanhos ? `
-<select>
-<option>Tamanho</option>
-${tamanhos.map(t => `<option>${t}</option>`).join("")}
-</select>`: ""}
-</div>`;
-            });
-
+<div class="container">
+
+    <img src="assets/vegaslogo.jpg" class="logo">
+    <h2>Solicitação de Uniforme</h2>
+
+    <input id="nome" placeholder="Nome do funcionário">
+    <input id="cpf" placeholder="CPF">
+    <input id="telefone" placeholder="Telefone">
+
+    <!-- CIDADE (igual ao formulário de materiais) -->
+    <select id="cidade" onchange="carregarPostos()">
+        <option value="">Selecione a Cidade</option>
+        <option value="Queimados">Queimados</option>
+        <option value="Três Rios">Três Rios</option>
+        <option value="Volta Redonda">Volta Redonda</option>
+        <option value="Barra Mansa">Barra Mansa</option>
+        <option value="Nova Iguaçu">Nova Iguaçu</option>
+        <option value="Resende">Resende</option>
+        <option value="Barra do Piraí">Barra do Piraí</option>
+        <option value="Sapucaia">Sapucaia</option>
+        <option value="Miguel Pereira">Miguel Pereira</option>
+        <option value="Valença">Valença</option>
+        <option value="Pinheiral">Pinheiral</option>
+        <option value="Porto Real">Porto Real</option>
+        <option value="Piraí">Piraí</option>
+    </select>
+
+    <!-- POSTO filtrado pela cidade -->
+    <select id="posto" onchange="carregarUniformes()">
+        <option value="">Selecione o Posto</option>
+    </select>
+
+    <div id="uniformes"></div>
+
+    <h4>Observação</h4>
+    <textarea id="observacao"></textarea>
+
+    <h3>Assinatura</h3>
+    <canvas id="assinatura"></canvas>
+
+    <button onclick="limpar()">Limpar Assinatura</button>
+    <button id="btnEnviar" onclick="enviar()">ENVIAR SOLICITAÇÃO</button>
+
+</div>
+
+<script>
+
+/* ======= MÁSCARAS ======= */
+document.getElementById("cpf").oninput = e => {
+    let v = e.target.value.replace(/\D/g,'').slice(0,11);
+    v = v.replace(/(\d{3})(\d)/,'$1.$2');
+    v = v.replace(/(\d{3})(\d)/,'$1.$2');
+    v = v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+    e.target.value = v;
+};
+
+document.getElementById("telefone").oninput = e => {
+    let v = e.target.value.replace(/\D/g,'').slice(0,11);
+    if(v.length > 10)
+        v = v.replace(/(\d{2})(\d{5})(\d{4})/,'($1) $2-$3');
+    else
+        v = v.replace(/(\d{2})(\d{4})(\d{4})/,'($1) $2-$3');
+    e.target.value = v;
+};
+
+/* ======= CIDADES → POSTOS ======= */
+const cidadesPostos = {
+    "Queimados":      ["Lanlimp"],
+    "Três Rios":      ["Royal 3 Rios", "Ceneged"],
+    "Volta Redonda":  ["Nagumo","Royal Vila Sta Cecilia","Royal Retiro","Royal Sessenta",
+                       "Royal Aterrado","Royal Amaral Peixoto","Vincol","Gerdau",
+                       "Projeto Vida","Edifício Cecisa I","Condomínio Maximum",
+                       "Sind. Met. Sul Fluminense","A. Abreu Beneficiamento",
+                       "Arena Emirados","Transporte Excelsior","Economy","Gran Milano"],
+    "Barra Mansa":    ["Royal Centro","Royal Boa Vista","Julho BF","Ceneged",
+                       "Transporte Excelsior","Estik Filmes","Expresso Massa Falida","Rede Aliança"],
+    "Nova Iguaçu":    ["Royal"],
+    "Resende":        ["Tachi-S Brasil","Nagumo","Brabus","Zen Cozinha Oriental",
+                       "Udiaço","Scapini","Royal Campos Elisio","Royal Manejo"],
+    "Barra do Piraí": ["MCI Reciclagem"],
+    "Sapucaia":       ["Ceneged"],
+    "Miguel Pereira": ["Ceneged"],
+    "Valença":        ["Ceneged"],
+    "Pinheiral":      ["Norsil","Perfiaço"],
+    "Porto Real":     ["Vila Vitória"],
+    "Piraí":          ["Peter","Mata do Amador"]
+};
+
+/* ======= POSTOS → UNIFORMES ======= */
+const postosUniformes = {
+    "A. Abreu Beneficiamento": ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+    "Nagumo":           ["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
+    "Royal Vila Sta Cecilia": ["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+    "Royal Retiro":     ["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+    "Royal Sessenta":   ["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+    "Royal Aterrado":   ["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+    "Royal Amaral Peixoto": ["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+    "Royal 3 Rios":     ["Camisa social preta","Calça social","Casaco preto vigilância"],
+    "Royal Centro":     ["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+    "Royal Boa Vista":  ["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+    "Royal Campos Elisio": ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+    "Royal Manejo":     ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+    "Royal":            ["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+    "Projeto Vida":     ["Blusa preta serviços","Calça social","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Monitoramento":    ["Blusa preta vigilância","Casaco preto vigilância"],
+    "Área Técnica":     ["Blusa preta vigilância","Calça jeans","Casaco preto vigilância","Boné","Par de Botina"],
+    "Administrativo":   ["Blusa preta vigilância","Casaco preto vigilância"],
+    "Gerência":         ["Camisa social preta","Casaco preto vigilância"],
+    "Comercial":        ["Camisa social preta","Casaco preto vigilância"],
+    "Ceneged":          ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Ceneged ASG":      ["Camisa ASG","Calça elástico cinza","Blusa preta serviços","Casaco preto serviços","Botina","Galocha"],
+    "Vila Vitória":     ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Economy":          ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Edifício Cecisa I":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Fiel","Apito"],
+    "Gran Milano":      ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Condomínio Maximum":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Estik Filmes":     ["Camisa porteiro cinza","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Expresso Massa Falida": ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Gerdau":           ["Camisa ASG","Calça elástico cinza","Blusa preta serviços","Casaco preto serviços","Botina","Galocha"],
+    "Tachi-S Brasil":   ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+    "Mata do Amador":   ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Norsil":           ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Scapini":          ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+    "Zen Cozinha Oriental": ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Perfiaço":         ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "MCI Reciclagem":   ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Lanlimp":          ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Vincol":           ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Peter":            ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Brabus":           ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+    "Udiaço":           ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Rede Aliança":     ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Julho BF":         ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Transporte Excelsior": ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+    "Sind. Met. Sul Fluminense": ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Arena Emirados":   ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+};
+
+function carregarPostos() {
+    const cidade = document.getElementById("cidade").value;
+    const selectPosto = document.getElementById("posto");
+    selectPosto.innerHTML = '<option value="">Selecione o Posto</option>';
+    document.getElementById("uniformes").innerHTML = "";
+
+    if (cidadesPostos[cidade]) {
+        cidadesPostos[cidade].forEach(posto => {
+            const opt = document.createElement("option");
+            opt.value = posto;
+            opt.textContent = posto;
+            selectPosto.appendChild(opt);
+        });
+    }
+}
+
+function carregarUniformes() {
+    const posto = document.getElementById("posto").value;
+    const div = document.getElementById("uniformes");
+    div.innerHTML = "";
+
+    if (!postosUniformes[posto]) return;
+
+    postosUniformes[posto].forEach(nome => {
+        let tamanhos = null;
+
+        if (/sapato|botina|coturno|galocha/i.test(nome))
+            tamanhos = Array.from({length:15},(_,i)=>i+34);
+        else if (/camisa social/i.test(nome))
+            tamanhos = ["N2","N3","N4","N5","N6","N7","N8"];
+        else if (/calça elástico/i.test(nome))
+            tamanhos = ["P","M","G","GG","XG","EXG","EXGG"];
+        else if (/calça/i.test(nome))
+            tamanhos = Array.from({length:10},(_,i)=>i+38);
+        else if (/camisa|blusa|casaco|blazer/i.test(nome))
+            tamanhos = ["P","M","G","GG","EG"];
+
+        div.innerHTML += `
+        <div class="item">
+            <label><input type="checkbox"> ${nome}</label>
+            ${tamanhos ? `
+            <select>
+                <option>Tamanho</option>
+                ${tamanhos.map(t=>`<option>${t}</option>`).join("")}
+            </select>` : ""}
+        </div>`;
+    });
+}
+
+/* ======= ASSINATURA ======= */
+const canvas = document.getElementById("assinatura");
+const ctx = canvas.getContext("2d");
+canvas.width = 370;
+canvas.height = 150;
+
+let desenhando = false;
+
+canvas.addEventListener("mousedown", e => {
+    desenhando = true;
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+});
+canvas.addEventListener("mouseup", () => desenhando = false);
+canvas.addEventListener("mousemove", e => {
+    if (!desenhando) return;
+    ctx.lineWidth = 2; ctx.lineCap = "round";
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+});
+canvas.addEventListener("touchstart", e => {
+    e.preventDefault();
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches[0];
+    desenhando = true;
+    ctx.beginPath();
+    ctx.moveTo(t.clientX - r.left, t.clientY - r.top);
+});
+canvas.addEventListener("touchend", () => desenhando = false);
+canvas.addEventListener("touchmove", e => {
+    e.preventDefault();
+    if (!desenhando) return;
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches[0];
+    ctx.lineWidth = 2; ctx.lineCap = "round";
+    ctx.lineTo(t.clientX - r.left, t.clientY - r.top);
+    ctx.stroke();
+});
+
+function limpar() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+/* ======= ENVIO ======= */
+let enviando = false;
+
+async function enviar() {
+    if (enviando) return;
+    const btn = document.getElementById("btnEnviar");
+    enviando = true;
+    btn.disabled = true;
+    btn.innerText = "ENVIANDO...";
+    btn.style.opacity = "0.6";
+
+    try {
+        const nome      = document.getElementById("nome").value;
+        const cpf       = document.getElementById("cpf").value;
+        const telefone  = document.getElementById("telefone").value;
+        const postoSel  = document.getElementById("posto");
+        const posto     = postoSel.options[postoSel.selectedIndex].text;
+        const obs       = document.getElementById("observacao").value;
+
+        if (!nome || cpf.length < 14 || telefone.length < 14 || !postoSel.value) {
+            alert("Preencha todos os dados.");
+            resetarBotao(); return;
         }
 
-        /* ===== ASSINATURA ===== */
-
-        const canvas = document.getElementById("assinatura");
-        const ctx = canvas.getContext("2d");
-
-        canvas.width = 360;
-        canvas.height = 160;
-
-        let desenhando = false;
-
-        canvas.onpointerdown = () => desenhando = true;
-        canvas.onpointerup = () => { desenhando = false; ctx.beginPath(); };
-        canvas.onpointermove = e => {
-            if (!desenhando) return;
-            const r = canvas.getBoundingClientRect();
-            ctx.lineWidth = 2;
-            ctx.lineCap = "round";
-            ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(e.clientX - r.left, e.clientY - r.top);
-        };
-
-        function limpar() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        /* ===== ENVIO ===== */
-
-
-        let enviando = false; // trava global
-
-        async function enviar() {
-
-            if (enviando) return; // impede segundo clique
-
-            const btn = document.getElementById("btnEnviar");
-            enviando = true;
-
-            btn.disabled = true;
-            btn.innerText = "ENVIANDO...";
-            btn.style.opacity = "0.6";
-            btn.style.cursor = "not-allowed";
-
-            try {
-
-                const nome = document.getElementById("nome").value;
-                const cpf = document.getElementById("cpf").value;
-                const telefone = document.getElementById("telefone").value;
-                const postoSel = document.getElementById("posto");
-                const posto = postoSel.options[postoSel.selectedIndex].text;
-                const obs = document.getElementById("observacao").value;
-
-                if (!nome || cpf.length < 14 || telefone.length < 14 || !postoSel.value) {
-                    alert("Preencha todos os dados.");
-                    resetarBotao();
-                    return;
-                }
-
-                let lista = [];
-
-                document.querySelectorAll(".item").forEach(item => {
-                    const check = item.querySelector("input");
-                    const select = item.querySelector("select");
-
-                    if (check.checked) {
-                        lista.push(
-                            select
-                                ? check.parentNode.innerText.trim() + " - " + select.value
-                                : check.parentNode.innerText.trim()
-                        );
-                    }
-                });
-
-                if (lista.length === 0) {
-                    alert("Selecione uniforme");
-                    resetarBotao();
-                    return;
-                }
-
-                const assinatura = canvas.toDataURL("image/png");
-
-                /* ===== ENVIO GOOGLE SHEETS ===== */
-
-                await fetch("https://script.google.com/macros/s/AKfycbyHjQFsZc67E-VqYFHgTFpsn8sNolu_FVf7pA7_2JMTOARSopcWffE7Y8KGp4NXZOM2Gg/exec", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        data: new Date().toLocaleString("pt-BR"),
-                        nome,
-                        cpf,
-                        telefone,
-                        posto,
-                        uniformes: lista.join(", "),
-                        observacao: obs,
-                        assinatura
-                    })
-                });
-
-                /* ===== PDF ===== */
-
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF();
-
-                pdf.setFontSize(16);
-                pdf.text("COMPROVANTE DE SOLICITAÇÃO", 20, 20);
-
-                pdf.setFontSize(12);
-                pdf.text("Funcionário: " + nome, 20, 40);
-                pdf.text("CPF: " + cpf, 20, 50);
-                pdf.text("Telefone: " + telefone, 20, 60);
-                pdf.text("Posto: " + posto, 20, 70);
-
-                let y = 85;
-
-                pdf.text("Uniformes solicitados:", 20, y);
-                y += 10;
-
-                lista.forEach(u => {
-                    const linhas = pdf.splitTextToSize("- " + u, 170);
-                    linhas.forEach(l => {
-                        pdf.text(l, 20, y);
-                        y += 7;
-                        if (y > 270) { pdf.addPage(); y = 20; }
-                    });
-                });
-
-                pdf.text("Observação: " + (obs || "Nenhuma"), 20, y + 10);
-
-                pdf.text("Assinatura:", 20, y + 25);
-                pdf.addImage(assinatura, "PNG", 20, y + 30, 80, 40);
-
-                pdf.text("Data: " + new Date().toLocaleString("pt-BR"), 20, y + 75);
-
-                pdf.save("comprovante_uniforme.pdf");
-
-                btn.innerText = "ENVIADO ✓";
-                btn.style.background = "#16a34a";
-
-                alert("Solicitação enviada com sucesso!");
-
-            } catch (err) {
-
-                alert("Erro ao enviar. Tente novamente.");
-                resetarBotao();
-
+        let lista = [];
+        document.querySelectorAll(".item").forEach(item => {
+            const check  = item.querySelector("input");
+            const select = item.querySelector("select");
+            if (check.checked) {
+                lista.push(select
+                    ? check.parentNode.innerText.trim() + " - " + select.value
+                    : check.parentNode.innerText.trim());
             }
+        });
 
+        if (lista.length === 0) {
+            alert("Selecione ao menos um uniforme.");
+            resetarBotao(); return;
         }
 
-        /* ===== RESET BOTÃO ===== */
+        const assinatura = canvas.toDataURL("image/png");
 
-        function resetarBotao() {
-            const btn = document.getElementById("btnEnviar");
-            enviando = false;
-            btn.disabled = false;
-            btn.innerText = "ENVIAR SOLICITAÇÃO";
-            btn.style.opacity = "1";
-            btn.style.cursor = "pointer";
-        }
+        await fetch("https://script.google.com/macros/s/AKfycbyHjQFsZc67E-VqYFHgTFpsn8sNolu_FVf7pA7_2JMTOARSopcWffE7Y8KGp4NXZOM2Gg/exec", {
+            method: "POST",
+            body: JSON.stringify({
+                data: new Date().toLocaleString("pt-BR"),
+                nome, cpf, telefone, posto,
+                uniformes: lista.join(", "),
+                observacao: obs,
+                assinatura
+            })
+        });
 
-    </script>
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+        pdf.setFontSize(16);
+        pdf.text("COMPROVANTE DE SOLICITAÇÃO", 20, 20);
+        pdf.setFontSize(12);
+        pdf.text("Funcionário: " + nome, 20, 40);
+        pdf.text("CPF: " + cpf, 20, 50);
+        pdf.text("Telefone: " + telefone, 20, 60);
+        pdf.text("Posto: " + posto, 20, 70);
+        let y = 85;
+        pdf.text("Uniformes solicitados:", 20, y); y += 10;
+        lista.forEach(u => {
+            const linhas = pdf.splitTextToSize("- " + u, 170);
+            linhas.forEach(l => {
+                pdf.text(l, 20, y); y += 7;
+                if (y > 270) { pdf.addPage(); y = 20; }
+            });
+        });
+        pdf.text("Observação: " + (obs || "Nenhuma"), 20, y + 10);
+        pdf.text("Assinatura:", 20, y + 25);
+        pdf.addImage(assinatura, "PNG", 20, y + 30, 80, 40);
+        pdf.text("Data: " + new Date().toLocaleString("pt-BR"), 20, y + 75);
+        pdf.save("comprovante_uniforme.pdf");
 
+        btn.innerText = "ENVIADO ✓";
+        btn.style.background = "#16a34a";
+        btn.style.opacity = "1";
+        alert("Solicitação enviada com sucesso!");
+
+    } catch(err) {
+        alert("Erro ao enviar. Tente novamente.");
+        resetarBotao();
+    }
+}
+
+function resetarBotao() {
+    const btn = document.getElementById("btnEnviar");
+    enviando = false;
+    btn.disabled = false;
+    btn.innerText = "ENVIAR SOLICITAÇÃO";
+    btn.style.opacity = "1";
+    btn.style.cursor = "pointer";
+    btn.style.background = "linear-gradient(90deg, #c0c0c0, #e5e5e5)";
+}
+
+</script>
 </body>
-
 </html>
