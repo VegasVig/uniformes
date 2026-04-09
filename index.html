@@ -254,7 +254,7 @@ const cidadesPostos = {
                        "Projeto Vida","Edifício Cecisa I","Condomínio Maximum",
                        "Sind. Met. Sul Fluminense","A. Abreu Beneficiamento",
                        "Arena Emirados","Transporte Excelsior","Economy","Gran Milano"],
-    "Barra Mansa":    ["Royal Centro","Royal Boa Vista","Julho BF","Ceneged",
+    "Barra Mansa":    ["Royal Centro","Royal Boa Vista","Ju lio BF","Ceneged",
                        "Transporte Excelsior","Estik Filmes","Expresso Massa Falida","Rede Aliança"],
     "Nova Iguaçu":    ["Royal"],
     "Resende":        ["Tachi-S Brasil","Nagumo","Brabus","Zen Cozinha Oriental",
@@ -263,9 +263,9 @@ const cidadesPostos = {
     "Sapucaia":       ["Ceneged"],
     "Miguel Pereira": ["Ceneged"],
     "Valença":        ["Ceneged"],
-    "Pinheiral":      ["Norsil","Perfiaço"],
+    "Pinheiral":      ["Norsil","Perfyaço"],
     "Porto Real":     ["Vila Vitória"],
-    "Piraí":          ["Peter","Mata do Amador"]
+    "Piraí":          ["Peter's House ","Mata do Amador"]
 };
 
 /* ======= POSTOS → UNIFORMES ======= */
@@ -452,7 +452,7 @@ async function enviar() {
 
         const assinatura = canvas.toDataURL("image/png");
 
-        await fetch("https://script.google.com/macros/s/AKfycbyHjQFsZc67E-VqYFHgTFpsn8sNolu_FVf7pA7_2JMTOARSopcWffE7Y8KGp4NXZOM2Gg/exec", {
+        await fetch("https://https://script.google.com/macros/s/AKfycbzShsqxbC--wyUm41iunQ_nrIbEynfPW9pp8qVmie42_hZ-i27chbUGJX1QXkTbQQGW/exec", {
             method: "POST",
             body: JSON.stringify({
                 data: new Date().toLocaleString("pt-BR"),
