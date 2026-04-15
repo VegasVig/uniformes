@@ -455,14 +455,15 @@ async function enviar() {
 
         const assinatura = canvas.toDataURL("image/png");
 
-      await fetch("https://script.google.com/macros/s/AKfycbxtEBJK6M56Bb3-IRLGst2GSiBnFIrSHRqAQmwUcWtPdFNO8bb92kB6KCX_Fl0vppZpxw/exec",
+     await fetch("https://script.google.com/macros/s/AKfycbxtEBJK6M56Bb3-IRLGst2GSiBnFIrSHRqAQmwUcWtPdFNO8bb92kB6KCX_Fl0vppZpxw/exec",
 {
     method: "POST",
+    mode: "no-cors", // 🔥 resolve CORS
     headers: {
         "Content-Type": "application/json"
     },
     body: JSON.stringify({
-        func: "salvarUniforme", // 🔥 ESSENCIAL
+        func: "salvarUniforme",
         data: new Date().toLocaleString("pt-BR"),
         nome,
         cpf,
