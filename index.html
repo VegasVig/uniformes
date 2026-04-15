@@ -455,7 +455,8 @@ async function enviar() {
 
         const assinatura = canvas.toDataURL("image/png");
 
-        await fetch("https://script.google.com/macros/s/AKfycby_8SeHCUUr2DeL-dr5gUIYmbvTVwRkBBwWWnbGUyCjzfRmmKa09FURGbquiw0sSO2eaQ/exec", {
+        await fetch("https://script.google.com/macros/s/AKfycbw1-RG-1a_scCMIlMqFWUtz-u6wIjlfiKykyal_lWF6jWc5Qr7M-6O7ZNrc48C4_tIh3w/exec",
+         {
             method: "POST",
             body: JSON.stringify({
                 data: new Date().toLocaleString("pt-BR"),
@@ -500,6 +501,14 @@ async function enviar() {
         resetarBotao();
     }
 }
+body: JSON.stringify({
+    func: "salvarUniforme", // 👈 adiciona isso
+    data: new Date().toLocaleString("pt-BR"),
+    nome, cpf, telefone, posto,
+    uniformes: lista.join(", "),
+    observacao: obs,
+    assinatura
+})
 
 function resetarBotao() {
     const btn = document.getElementById("btnEnviar");
