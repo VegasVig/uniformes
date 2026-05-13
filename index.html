@@ -21,7 +21,6 @@
             box-sizing: border-box;
         }
 
-        /* CARD COM GLASSMORPHISM */
         .container {
             background: rgba(40, 40, 40, 0.65);
             backdrop-filter: blur(15px);
@@ -36,7 +35,6 @@
             box-sizing: border-box;
         }
 
-        /* BORDA BRILHO */
         .container::before {
             content: "";
             position: absolute;
@@ -44,9 +42,7 @@
             border-radius: 20px;
             padding: 1px;
             background: linear-gradient(120deg, rgba(255,255,255,0.4), transparent);
-            -webkit-mask:
-                linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             pointer-events: none;
@@ -68,10 +64,7 @@
         h3 { color: #d1d5db; margin-top: 20px; }
         h4 { color: #d1d5db; margin-top: 15px; }
 
-        /* TODOS OS CAMPOS IGUAIS */
-        input,
-        select,
-        textarea {
+        input, select, textarea {
             width: 100%;
             margin-top: 12px;
             padding: 10px;
@@ -84,20 +77,133 @@
             box-sizing: border-box;
         }
 
-        textarea {
-            height: 90px;
-            resize: none;
-        }
+        textarea { height: 90px; resize: none; }
 
-        input:focus,
-        select:focus,
-        textarea:focus {
+        input:focus, select:focus, textarea:focus {
             transform: translateY(-2px);
             border: 1px solid #c0c0c0;
             box-shadow: 0 0 10px #c0c0c0;
         }
 
-        /* ITENS DE UNIFORME */
+        /* ===== PROTOCOLO BADGE ===== */
+        .protocolo-box {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(192,192,192,0.5);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .protocolo-label {
+            font-size: 11px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .protocolo-valor {
+            font-size: 15px;
+            font-weight: bold;
+            color: #e5e5e5;
+            letter-spacing: 2px;
+            font-family: 'Courier New', monospace;
+        }
+        .protocolo-icon {
+            font-size: 22px;
+            opacity: 0.7;
+        }
+
+        /* ===== UPLOAD DE FOTO ===== */
+        .upload-area {
+            margin-top: 14px;
+            border: 2px dashed rgba(192,192,192,0.4);
+            border-radius: 12px;
+            padding: 18px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            background: rgba(0,0,0,0.3);
+        }
+        .upload-area:hover {
+            border-color: #c0c0c0;
+            background: rgba(192,192,192,0.07);
+        }
+        .upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+        }
+        .upload-icon { font-size: 28px; margin-bottom: 6px; }
+        .upload-text { font-size: 13px; color: #9ca3af; }
+        .upload-text strong { color: #d1d5db; }
+
+        /* Preview das fotos */
+        .fotos-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .foto-thumb {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #444;
+            flex-shrink: 0;
+        }
+        .foto-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+        .foto-thumb .remover {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.75);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+        }
+        .foto-thumb .remover:hover {
+            background: #dc2626;
+            transform: none;
+            box-shadow: none;
+        }
+        .foto-contador {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 6px;
+        }
+
+        /* ===== ITENS DE UNIFORME ===== */
         .item {
             background: rgba(0,0,0,0.4);
             border: 1px solid #2a2a2a;
@@ -107,25 +213,20 @@
             text-align: left;
             box-sizing: border-box;
         }
-
         .item label {
             display: flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
         }
-
         .item input[type="checkbox"] {
             width: auto;
             margin: 0;
             accent-color: #c0c0c0;
         }
+        .item select { margin-top: 8px; }
 
-        .item select {
-            margin-top: 8px;
-        }
-
-        /* CANVAS */
+        /* ===== CANVAS ===== */
         canvas {
             width: 100%;
             height: 150px;
@@ -138,7 +239,7 @@
             box-sizing: border-box;
         }
 
-        /* BOTÃO BRILHO PRATA */
+        /* ===== BOTÕES ===== */
         button {
             width: 100%;
             margin-top: 15px;
@@ -154,7 +255,6 @@
             box-sizing: border-box;
             transition: 0.3s;
         }
-
         button::before {
             content: "";
             position: absolute;
@@ -165,7 +265,6 @@
             background: linear-gradient(120deg, transparent, rgba(255,255,255,0.8), transparent);
             transition: 0.5s;
         }
-
         button:hover::before { left: 100%; }
         button:hover {
             transform: scale(1.02);
@@ -185,11 +284,19 @@
     <img src="assets/vegaslogo.jpg" class="logo">
     <h2>Solicitação de Uniforme</h2>
 
+    <!-- PROTOCOLO GERADO AUTOMATICAMENTE -->
+    <div class="protocolo-box">
+        <div>
+            <div class="protocolo-label">Protocolo</div>
+            <div class="protocolo-valor" id="protocolo-display">---</div>
+        </div>
+        <div class="protocolo-icon">🔖</div>
+    </div>
+
     <input id="nome" placeholder="Nome do funcionário">
     <input id="cpf" placeholder="CPF">
     <input id="telefone" placeholder="Telefone">
 
-    <!-- CIDADE (igual ao formulário de materiais) -->
     <select id="cidade" onchange="carregarPostos()">
         <option value="">Selecione a Cidade</option>
         <option value="Queimados">Queimados</option>
@@ -207,7 +314,6 @@
         <option value="Piraí">Piraí</option>
     </select>
 
-    <!-- POSTO filtrado pela cidade -->
     <select id="posto" onchange="carregarUniformes()">
         <option value="">Selecione o Posto</option>
     </select>
@@ -216,6 +322,16 @@
 
     <h4>Observação</h4>
     <textarea id="observacao"></textarea>
+
+    <!-- ===== UPLOAD DE FOTO DE AVARIA ===== -->
+    <h4>📷 Foto do Uniforme com Avaria</h4>
+    <div class="upload-area" id="uploadArea">
+        <input type="file" id="fotoAvaria" accept="image/*" multiple onchange="adicionarFotos(event)">
+        <div class="upload-icon">📁</div>
+        <div class="upload-text"><strong>Toque para selecionar</strong><br>ou arraste as fotos aqui<br><span style="font-size:11px;color:#6b7280;">JPG, PNG, WEBP – máx. 3 fotos</span></div>
+    </div>
+    <div class="fotos-preview" id="fotosPreview"></div>
+    <div class="foto-contador" id="fotoContador"></div>
 
     <h3>Assinatura</h3>
     <canvas id="assinatura"></canvas>
@@ -226,6 +342,19 @@
 </div>
 
 <script>
+
+/* ======= PROTOCOLO ======= */
+function gerarProtocolo() {
+    const now = new Date();
+    const dd   = String(now.getDate()).padStart(2,'0');
+    const mm   = String(now.getMonth()+1).padStart(2,'0');
+    const yyyy = now.getFullYear();
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    return `VGS-${yyyy}${mm}${dd}-${rand}`;
+}
+
+const PROTOCOLO = gerarProtocolo();
+document.getElementById("protocolo-display").textContent = PROTOCOLO;
 
 /* ======= MÁSCARAS ======= */
 document.getElementById("cpf").oninput = e => {
@@ -244,6 +373,62 @@ document.getElementById("telefone").oninput = e => {
         v = v.replace(/(\d{2})(\d{4})(\d{4})/,'($1) $2-$3');
     e.target.value = v;
 };
+
+/* ======= FOTOS DE AVARIA ======= */
+let fotosBase64 = [];
+
+function adicionarFotos(event) {
+    const arquivos = Array.from(event.target.files);
+    const max = 3;
+
+    if (fotosBase64.length >= max) {
+        alert("Máximo de 3 fotos permitido.");
+        event.target.value = "";
+        return;
+    }
+
+    const restantes = max - fotosBase64.length;
+    const paraProcessar = arquivos.slice(0, restantes);
+
+    if (arquivos.length > restantes) {
+        alert(`Somente ${restantes} foto(s) adicionada(s). Limite de 3 fotos atingido.`);
+    }
+
+    paraProcessar.forEach(arquivo => {
+        if (!arquivo.type.startsWith("image/")) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            fotosBase64.push({ base64: e.target.result, nome: arquivo.name });
+            renderizarPreviews();
+        };
+        reader.readAsDataURL(arquivo);
+    });
+
+    event.target.value = "";
+}
+
+function removerFoto(index) {
+    fotosBase64.splice(index, 1);
+    renderizarPreviews();
+}
+
+function renderizarPreviews() {
+    const div = document.getElementById("fotosPreview");
+    const contador = document.getElementById("fotoContador");
+    div.innerHTML = "";
+
+    fotosBase64.forEach((foto, i) => {
+        div.innerHTML += `
+        <div class="foto-thumb">
+            <img src="${foto.base64}" alt="Foto ${i+1}">
+            <button class="remover" onclick="removerFoto(${i})" title="Remover">✕</button>
+        </div>`;
+    });
+
+    contador.textContent = fotosBase64.length > 0
+        ? `${fotosBase64.length} foto(s) selecionada(s)`
+        : "";
+}
 
 /* ======= CIDADES → POSTOS ======= */
 const cidadesPostos = {
@@ -312,23 +497,20 @@ const postosUniformes = {
     "Vincol":           ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
     "Brabus":           ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
     "Udiaço":           ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
-    "Rede Aliança":     ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
-    "Julho BF":         ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+    "Rede Aliança":     ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca engels vigilância"],
+    "Julio BF":         ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
     "Transporte Excelsior": ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
     "Sind. Met. Sul Fluminense": ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
     "Arena Emirados":   ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
     "Peter's House":    ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
-    "Julio BF":         ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"]
-
+    "Perfyaço":         ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"]
 };
-
 
 function carregarPostos() {
     const cidade = document.getElementById("cidade").value;
     const selectPosto = document.getElementById("posto");
     selectPosto.innerHTML = '<option value="">Selecione o Posto</option>';
     document.getElementById("uniformes").innerHTML = "";
-
     if (cidadesPostos[cidade]) {
         cidadesPostos[cidade].forEach(posto => {
             const opt = document.createElement("option");
@@ -343,12 +525,10 @@ function carregarUniformes() {
     const posto = document.getElementById("posto").value;
     const div = document.getElementById("uniformes");
     div.innerHTML = "";
-
     if (!postosUniformes[posto]) return;
 
     postosUniformes[posto].forEach(nome => {
         let tamanhos = null;
-
         if (/sapato|botina|coturno|galocha/i.test(nome))
             tamanhos = Array.from({length:15},(_,i)=>i+34);
         else if (/camisa social/i.test(nome))
@@ -374,46 +554,33 @@ function carregarUniformes() {
 
 /* ======= ASSINATURA ======= */
 const canvas = document.getElementById("assinatura");
-const ctx = canvas.getContext("2d");
-canvas.width = 370;
+const ctx    = canvas.getContext("2d");
+canvas.width  = 370;
 canvas.height = 150;
 
 let desenhando = false;
-
-canvas.addEventListener("mousedown", e => {
-    desenhando = true;
-    ctx.beginPath();
-    ctx.moveTo(e.offsetX, e.offsetY);
-});
-canvas.addEventListener("mouseup", () => desenhando = false);
+canvas.addEventListener("mousedown", e => { desenhando = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+canvas.addEventListener("mouseup",   () => desenhando = false);
 canvas.addEventListener("mousemove", e => {
     if (!desenhando) return;
     ctx.lineWidth = 2; ctx.lineCap = "round";
-    ctx.lineTo(e.offsetX, e.offsetY);
-    ctx.stroke();
+    ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke();
 });
 canvas.addEventListener("touchstart", e => {
     e.preventDefault();
-    const r = canvas.getBoundingClientRect();
-    const t = e.touches[0];
-    desenhando = true;
-    ctx.beginPath();
-    ctx.moveTo(t.clientX - r.left, t.clientY - r.top);
+    const r = canvas.getBoundingClientRect(); const t = e.touches[0];
+    desenhando = true; ctx.beginPath(); ctx.moveTo(t.clientX - r.left, t.clientY - r.top);
 });
-canvas.addEventListener("touchend", () => desenhando = false);
-canvas.addEventListener("touchmove", e => {
+canvas.addEventListener("touchend",   () => desenhando = false);
+canvas.addEventListener("touchmove",  e => {
     e.preventDefault();
     if (!desenhando) return;
-    const r = canvas.getBoundingClientRect();
-    const t = e.touches[0];
+    const r = canvas.getBoundingClientRect(); const t = e.touches[0];
     ctx.lineWidth = 2; ctx.lineCap = "round";
-    ctx.lineTo(t.clientX - r.left, t.clientY - r.top);
-    ctx.stroke();
+    ctx.lineTo(t.clientX - r.left, t.clientY - r.top); ctx.stroke();
 });
 
-function limpar() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
+function limpar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
 /* ======= ENVIO ======= */
 let enviando = false;
@@ -427,12 +594,12 @@ async function enviar() {
     btn.style.opacity = "0.6";
 
     try {
-        const nome      = document.getElementById("nome").value;
-        const cpf       = document.getElementById("cpf").value;
-        const telefone  = document.getElementById("telefone").value;
-        const postoSel  = document.getElementById("posto");
-        const posto     = postoSel.options[postoSel.selectedIndex].text;
-        const obs       = document.getElementById("observacao").value;
+        const nome     = document.getElementById("nome").value.trim();
+        const cpf      = document.getElementById("cpf").value;
+        const telefone = document.getElementById("telefone").value;
+        const postoSel = document.getElementById("posto");
+        const posto    = postoSel.options[postoSel.selectedIndex].text;
+        const obs      = document.getElementById("observacao").value;
 
         if (!nome || cpf.length < 14 || telefone.length < 14 || !postoSel.value) {
             alert("Preencha todos os dados.");
@@ -457,69 +624,97 @@ async function enviar() {
 
         const assinatura = canvas.toDataURL("image/png");
 
-     await fetch("https://script.google.com/macros/s/AKfycbxtEBJK6M56Bb3-IRLGst2GSiBnFIrSHRqAQmwUcWtPdFNO8bb92kB6KCX_Fl0vppZpxw/exec",
-{
-    method: "POST",
-    mode: "no-cors", // 🔥 resolve CORS
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        func: "salvarUniforme",
-        data: new Date().toLocaleString("pt-BR"),
-        nome,
-        cpf,
-        telefone,
-        posto,
-        uniformes: lista.join(", "),
-        observacao: obs,
-        assinatura
-    })
-});
+        // Monta payload — fotos como array de base64
+        const payload = {
+            func:        "salvarUniforme",
+            protocolo:   PROTOCOLO,
+            data:        new Date().toLocaleString("pt-BR"),
+            nome,
+            cpf,
+            telefone,
+            posto,
+            uniformes:   lista.join(", "),
+            observacao:  obs,
+            assinatura,
+            fotos:       fotosBase64.map(f => f.base64)   // array de base64 strings
+        };
 
+        await fetch(
+            "https://script.google.com/macros/s/AKfycbxtEBJK6M56Bb3-IRLGst2GSiBnFIrSHRqAQmwUcWtPdFNO8bb92kB6KCX_Fl0vppZpxw/exec",
+            { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }
+        );
+
+        /* ===== GERA PDF COM PROTOCOLO E FOTOS ===== */
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF();
+
+        // Cabeçalho
         pdf.setFontSize(16);
         pdf.text("COMPROVANTE DE SOLICITAÇÃO", 20, 20);
+
+        // Protocolo destacado
+        pdf.setFillColor(30, 30, 30);
+        pdf.roundedRect(15, 26, 180, 14, 4, 4, 'F');
+        pdf.setTextColor(220, 220, 220);
+        pdf.setFontSize(11);
+        pdf.text("Protocolo: " + PROTOCOLO, 20, 35);
+        pdf.setTextColor(0, 0, 0);
+
         pdf.setFontSize(12);
-        pdf.text("Funcionário: " + nome, 20, 40);
-        pdf.text("CPF: " + cpf, 20, 50);
-        pdf.text("Telefone: " + telefone, 20, 60);
-        pdf.text("Posto: " + posto, 20, 70);
-        let y = 85;
+        pdf.text("Funcionário: " + nome,     20, 52);
+        pdf.text("CPF: " + cpf,              20, 62);
+        pdf.text("Telefone: " + telefone,    20, 72);
+        pdf.text("Posto: " + posto,          20, 82);
+
+        let y = 95;
         pdf.text("Uniformes solicitados:", 20, y); y += 10;
         lista.forEach(u => {
             const linhas = pdf.splitTextToSize("- " + u, 170);
             linhas.forEach(l => {
                 pdf.text(l, 20, y); y += 7;
-                if (y > 270) { pdf.addPage(); y = 20; }
+                if (y > 265) { pdf.addPage(); y = 20; }
             });
         });
-        pdf.text("Observação: " + (obs || "Nenhuma"), 20, y + 10);
-        pdf.text("Assinatura:", 20, y + 25);
-        pdf.addImage(assinatura, "PNG", 20, y + 30, 80, 40);
-        pdf.text("Data: " + new Date().toLocaleString("pt-BR"), 20, y + 75);
-        pdf.save("comprovante_uniforme.pdf");
 
-        btn.innerText = "ENVIADO ✓";
+        if (obs) {
+            y += 5;
+            pdf.text("Observação: " + obs, 20, y); y += 10;
+        }
+
+        // Fotos de avaria no PDF
+        if (fotosBase64.length > 0) {
+            if (y > 200) { pdf.addPage(); y = 20; }
+            pdf.text("Fotos de avaria:", 20, y); y += 8;
+            for (const foto of fotosBase64) {
+                if (y > 220) { pdf.addPage(); y = 20; }
+                try {
+                    pdf.addImage(foto.base64, "JPEG", 20, y, 80, 60);
+                } catch {
+                    pdf.addImage(foto.base64, "PNG", 20, y, 80, 60);
+                }
+                y += 68;
+            }
+        }
+
+        // Assinatura
+        if (y > 220) { pdf.addPage(); y = 20; }
+        pdf.text("Assinatura:", 20, y + 10);
+        pdf.addImage(assinatura, "PNG", 20, y + 15, 80, 40);
+        pdf.text("Data: " + new Date().toLocaleString("pt-BR"), 20, y + 60);
+
+        pdf.save("comprovante_uniforme_" + PROTOCOLO + ".pdf");
+
+        btn.innerText      = "ENVIADO ✓";
         btn.style.background = "#16a34a";
-        btn.style.opacity = "1";
-        alert("Solicitação enviada com sucesso!");
+        btn.style.opacity  = "1";
+        alert("Solicitação enviada!\nProtocolo: " + PROTOCOLO);
 
     } catch(err) {
+        console.error(err);
         alert("Erro ao enviar. Tente novamente.");
         resetarBotao();
     }
 }
-body: JSON.stringify({
-    func: "salvarUniforme", // 👈 ESSENCIAL
-    data: new Date().toLocaleString("pt-BR"),
-    nome, cpf, telefone, posto,
-    uniformes: lista.join(", "),
-    observacao: obs,
-    assinatura
-
-})
 
 function resetarBotao() {
     const btn = document.getElementById("btnEnviar");
