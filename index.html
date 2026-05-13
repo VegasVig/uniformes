@@ -694,7 +694,7 @@
                     fotos: fotosBase64.map(f => f.base64)   // array de base64 strings
                 };
 
-                await fetch("https://script.google.com/macros/s/AKfycbyeLEArd8rKYVWKbVnWpj8qgQT6tPrNKVd-SWxIp6AO6EUBDbu_OGYdNkYoGp-jm2PmAA/exec",
+                await fetch("https://script.google.com/macros/s/AKfycbxQ6H-X_ZZSr_41cTRLWb_c1hgVySZnLKG1TITAG87FHH4PLhSHy7irOJkBmNika-7Q/exec",
                     { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }
                 );
 
