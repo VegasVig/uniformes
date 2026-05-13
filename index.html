@@ -745,10 +745,6 @@
                             pdf.addImage(foto.base64, "JPEG", 20, y, 80, 60);
                         } catch {
                             pdf.addImage(foto.base64, "PNG", 20, y, 80, 60);
-                        }y += 68;
-                        if (arquivo.size > 5 * 1024 * 1024) {
-                            alert("Cada foto deve ter no máximo 5MB.");
-                            return;
                         }
                     }
                 }
