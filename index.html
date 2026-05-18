@@ -380,10 +380,10 @@
         <!-- ===== UPLOAD DE FOTO DE AVARIA ===== -->
         <h4>📷 Foto do Uniforme com Avaria</h4>
         <div class="upload-area" id="uploadArea">
-            <input type="file" id="fotoAvaria" accept="image/*" multiple onchange="adicionarFoto(event)">
+            <input type="file" id="fotoAvaria" accept="image/*" multiple onchange="adicionarFotos(event)">
             <div class="upload-icon">📁</div>
             <div class="upload-text"><strong>Toque para selecionar</strong><br>ou arraste as fotos aqui<br><span
-                    style="font-size:11px;color:#6b7280;">JPG, PNG, WEBP – máx. 1 foto</span></div>
+                    style="font-size:11px;color:#6b7280;">JPG, PNG, WEBP – máx. 3 fotos</span></div>
         </div>
         <div class="fotos-preview" id="fotosPreview"></div>
         <div class="foto-contador" id="fotoContador"></div>
@@ -428,31 +428,62 @@
                 v = v.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
             e.target.value = v;
         };
-      /* Reduz a foto antes de enviar */
-        let fotoBase64 = "";
-        if (fotoInput) {
-            fotoBase64 = await new Promise(resolve => {
+
+        /* ======= FOTOS DE AVARIA ======= */
+        let fotosBase64 = [];
+
+        function adicionarFotos(event) {
+            const arquivos = Array.from(event.target.files);
+            const max = 1;
+
+            if (fotosBase64.length >= max) {
+                alert("Máximo de 1 foto permitido.");
+                event.target.value = "";
+                return;
+            }
+
+            const restantes = max - fotosBase64.length;
+            const paraProcessar = arquivos.slice(0, restantes);
+
+            if (arquivos.length > restantes) {
+                alert(`Somente ${restantes} foto adicionada. Limite de 1 foto atingido.`);
+            }
+
+            paraProcessar.forEach(arquivo => {
+                if (!arquivo.type.startsWith("image/")) return;
                 const reader = new FileReader();
-                reader.onload = ev => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const c = document.createElement("canvas");
-                        const maxSize = 800;
-                        let w = img.width, h = img.height;
-                        if (w > maxSize || h > maxSize) {
-                            if (w > h) { h = (h * maxSize) / w; w = maxSize; }
-                            else { w = (w * maxSize) / h; h = maxSize; }
-                        }
-                        c.width = w; c.height = h;
-                        c.getContext("2d").drawImage(img, 0, 0, w, h);
-                        resolve(c.toDataURL("image/jpeg", 0.6));
-                    };
-                    img.src = ev.target.result;
+                reader.onload = e => {
+                    fotosBase64.push({ base64: e.target.result, nome: arquivo.name });
+                    renderizarPreviews();
                 };
-                reader.readAsDataURL(fotoInput);
+                reader.readAsDataURL(arquivo);
             });
+
+            event.target.value = "";
         }
 
+        function removerFoto(index) {
+            fotosBase64.splice(index, 1);
+            renderizarPreviews();
+        }
+
+        function renderizarPreviews() {
+            const div = document.getElementById("fotosPreview");
+            const contador = document.getElementById("fotoContador");
+            div.innerHTML = "";
+
+            fotosBase64.forEach((foto, i) => {
+                div.innerHTML += `
+        <div class="foto-thumb">
+            <img src="${foto.base64}" alt="Foto ${i + 1}">
+            <button class="remover" onclick="removerFoto(${i})" title="Remover">✕</button>
+        </div>`;
+            });
+
+            contador.textContent = fotosBase64.length > 0
+                ? `${fotosBase64.length} foto(s) selecionada(s)`
+                : "";
+        }
 
         /* ======= CIDADES → POSTOS ======= */
         const cidadesPostos = {
@@ -663,8 +694,7 @@
                     fotos: fotosBase64.map(f => f.base64)   // array de base64 strings
                 };
 
-                await fetch(
-                    "https://script.google.com/macros/s/AKfycbxtEBJK6M56Bb3-IRLGst2GSiBnFIrSHRqAQmwUcWtPdFNO8bb92kB6KCX_Fl0vppZpxw/exec",
+                await fetch("https://script.google.com/macros/s/AKfycbxQ6H-X_ZZSr_41cTRLWb_c1hgVySZnLKG1TITAG87FHH4PLhSHy7irOJkBmNika-7Q/exec",
                     { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }
                 );
 
@@ -715,10 +745,6 @@
                             pdf.addImage(foto.base64, "JPEG", 20, y, 80, 60);
                         } catch {
                             pdf.addImage(foto.base64, "PNG", 20, y, 80, 60);
-                        }y += 68;
-                        if (arquivo.size > 5 * 1024 * 1024) {
-                            alert("Cada foto deve ter no máximo 5MB.");
-                            return;
                         }
                     }
                 }
