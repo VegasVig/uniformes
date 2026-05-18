@@ -459,15 +459,19 @@
 
         function renderizarPreviews() {
             const div = document.getElementById("fotosPreview");
+
             div.innerHTML = fotosBase64.map((foto, i) => `
-            <div class="foto-thumb">
-                ${item.fotos.map(f =>
-                `<img src="${f}" style="width:100px;border-radius:10px;">`
-            ).join("")}
-                <button class="remover" onclick="removerFoto(${i})">✕</button>
-            </div>`).join("");
+        <div class="foto-thumb">
+            <img src="${foto.base64}" alt="Preview">
+            <button class="remover" onclick="removerFoto(${i})">✕</button>
+        </div>
+    `).join("");
+
             document.getElementById("fotoContador").textContent =
-                fotosBase64.length > 0 ? `${fotosBase64.length} foto(s) selecionada(s)` : "";
+                fotosBase64.length > 0
+                    ? `${fotosBase64.length} foto(s) selecionada(s)`
+                    : "";
+
         }
 
         /* ── POSTOS / UNIFORMES ── */
