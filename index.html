@@ -429,61 +429,59 @@
             e.target.value = v;
         };
 
-        /* ======= FOTOS DE AVARIA ======= */
-        let fotosBase64 = [];
+        /* ======= FOTO DE AVARIA ======= */
+let fotosBase64 = [];
 
-        function adicionarFotos(event) {
-            const arquivos = Array.from(event.target.files);
-            const max = 1;
+function adicionarFotos(event) {
+    const arquivo = event.target.files[0];
 
-            if (fotosBase64.length >= max) {
-                alert("Máximo de 1 foto permitido.");
-                event.target.value = "";
-                return;
-            }
+    if (!arquivo) return;
 
-            const restantes = max - fotosBase64.length;
-            const paraProcessar = arquivos.slice(0, restantes);
+    if (!arquivo.type.startsWith("image/")) {
+        alert("Selecione apenas imagens.");
+        return;
+    }
 
-            if (arquivos.length > restantes) {
-                alert(`Somente ${restantes} foto adicionada. Limite de 1 foto atingido.`);
-            }
+    const reader = new FileReader();
 
-            paraProcessar.forEach(arquivo => {
-                if (!arquivo.type.startsWith("image/")) return;
-                const reader = new FileReader();
-                reader.onload = e => {
-                    fotosBase64.push({ base64: e.target.result, nome: arquivo.name });
-                    renderizarPreviews();
-                };
-                reader.readAsDataURL(arquivo);
-            });
+    reader.onload = e => {
+        fotosBase64 = [{
+            base64: e.target.result,
+            nome: arquivo.name
+        }];
 
-            event.target.value = "";
-        }
+        renderizarPreviews();
+    };
 
-        function removerFoto(index) {
-            fotosBase64.splice(index, 1);
-            renderizarPreviews();
-        }
+    reader.readAsDataURL(arquivo);
 
-        function renderizarPreviews() {
-            const div = document.getElementById("fotosPreview");
-            const contador = document.getElementById("fotoContador");
-            div.innerHTML = "";
+    event.target.value = "";
+}
 
-            fotosBase64.forEach((foto, i) => {
-                div.innerHTML += `
+function removerFoto(index) {
+    fotosBase64.splice(index, 1);
+    renderizarPreviews();
+}
+
+function renderizarPreviews() {
+    const div = document.getElementById("fotosPreview");
+    const contador = document.getElementById("fotoContador");
+
+    div.innerHTML = "";
+
+    fotosBase64.forEach((foto, i) => {
+        div.innerHTML += `
         <div class="foto-thumb">
-            <img src="${foto.base64}" alt="Foto ${i + 1}">
-            <button class="remover" onclick="removerFoto(${i})" title="Remover">✕</button>
+            <img src="${foto.base64}" alt="Foto">
+            <button class="remover" onclick="removerFoto(${i})">✕</button>
         </div>`;
-            });
+    });
 
-            contador.textContent = fotosBase64.length > 0
-                ? `${fotosBase64.length} foto selecionada`
-                : "";
-        }
+    contador.textContent =
+        fotosBase64.length > 0
+            ? "1 foto selecionada"
+            : "";
+}
 
         /* ======= CIDADES → POSTOS ======= */
         const cidadesPostos = {
