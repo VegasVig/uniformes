@@ -458,19 +458,20 @@
         function removerFoto(index) { fotosBase64.splice(index, 1); renderizarPreviews(); }
 
         function renderizarPreviews() {
-            const div = document.getElementById("fotosPreview");
+    const div = document.getElementById("fotosPreview");
 
-            div.innerHTML = fotosBase64.map((foto, i) => `
+    div.innerHTML = fotosBase64.map((foto, i) => `
         <div class="foto-thumb">
-            <img src="${foto.base64}" alt="Preview">
+            <img src="${foto.base64}">
             <button class="remover" onclick="removerFoto(${i})">✕</button>
         </div>
     `).join("");
 
-            document.getElementById("fotoContador").textContent =
-                fotosBase64.length > 0
-                    ? `${fotosBase64.length} foto(s) selecionada(s)`
-                    : "";
+    document.getElementById("fotoContador").textContent =
+        fotosBase64.length > 0
+            ? `${fotosBase64.length} foto(s) selecionada(s)`
+            : "";
+
 
         }
 
