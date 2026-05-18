@@ -1,785 +1,376 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitação_de_Uniforme</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
     <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: radial-gradient(circle at top, #1a1a1a, #000);
-            color: #e5e5e5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 25px 0;
-            box-sizing: border-box;
-        }
-
-        .container {
-            background: rgba(40, 40, 40, 0.65);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(200, 200, 200, 0.2);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 420px;
-            padding: 25px;
-            box-shadow: 0 0 25px rgba(200, 200, 200, 0.2);
-            animation: fadeIn 0.8s ease;
-            position: relative;
-            box-sizing: border-box;
-        }
-
-        .container::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: 20px;
-            padding: 1px;
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.4), transparent);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-
-        img.logo {
-            width: 130px;
-            display: block;
-            margin: 0 auto 15px;
-            filter: drop-shadow(0 0 10px rgba(200, 200, 200, 0.6));
-        }
-
-        h2,
-        h3,
-        h4 {
-            text-align: center;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        h3 {
-            color: #d1d5db;
-            margin-top: 20px;
-        }
-
-        h4 {
-            color: #d1d5db;
-            margin-top: 15px;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            margin-top: 12px;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #444;
-            background: rgba(0, 0, 0, 0.6);
-            color: #e5e5e5;
-            outline: none;
-            transition: 0.3s;
-            box-sizing: border-box;
-        }
-
-        textarea {
-            height: 90px;
-            resize: none;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            transform: translateY(-2px);
-            border: 1px solid #c0c0c0;
-            box-shadow: 0 0 10px #c0c0c0;
-        }
-
-        /* ===== PROTOCOLO BADGE ===== */
-        .protocolo-box {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(192, 192, 192, 0.5);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-top: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .protocolo-label {
-            font-size: 11px;
-            color: #9ca3af;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .protocolo-valor {
-            font-size: 15px;
-            font-weight: bold;
-            color: #e5e5e5;
-            letter-spacing: 2px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .protocolo-icon {
-            font-size: 22px;
-            opacity: 0.7;
-        }
-
-        /* ===== UPLOAD DE FOTO ===== */
-        .upload-area {
-            margin-top: 14px;
-            border: 2px dashed rgba(192, 192, 192, 0.4);
-            border-radius: 12px;
-            padding: 18px 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-            position: relative;
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .upload-area:hover {
-            border-color: #c0c0c0;
-            background: rgba(192, 192, 192, 0.07);
-        }
-
-        .upload-area input[type="file"] {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: transparent;
-        }
-
-        .upload-icon {
-            font-size: 28px;
-            margin-bottom: 6px;
-        }
-
-        .upload-text {
-            font-size: 13px;
-            color: #9ca3af;
-        }
-
-        .upload-text strong {
-            color: #d1d5db;
-        }
-
-        /* Preview das fotos */
-        .fotos-preview {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .foto-thumb {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #444;
-            flex-shrink: 0;
-        }
-
-        .foto-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            margin: 0;
-            padding: 0;
-            border: none;
-            border-radius: 0;
-        }
-
-        .foto-thumb .remover {
-            position: absolute;
-            top: 2px;
-            right: 2px;
-            background: rgba(0, 0, 0, 0.75);
-            border: none;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 12px;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin: 0;
-            padding: 0;
-            line-height: 1;
-        }
-
-        .foto-thumb .remover:hover {
-            background: #dc2626;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .foto-contador {
-            font-size: 12px;
-            color: #9ca3af;
-            margin-top: 6px;
-        }
-
-        /* ===== ITENS DE UNIFORME ===== */
-        .item {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid #2a2a2a;
-            padding: 12px;
-            border-radius: 12px;
-            margin: 8px 0;
-            text-align: left;
-            box-sizing: border-box;
-        }
-
-        .item label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .item input[type="checkbox"] {
-            width: auto;
-            margin: 0;
-            accent-color: #c0c0c0;
-        }
-
-        .item select {
-            margin-top: 8px;
-        }
-
-        /* ===== CANVAS ===== */
-        canvas {
-            width: 100%;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            margin-top: 10px;
-            box-shadow: 0 0 10px rgba(200, 200, 200, 0.4);
-            touch-action: none;
-            display: block;
-            box-sizing: border-box;
-        }
-
-        /* ===== BOTÕES ===== */
-        button {
-            width: 100%;
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 12px;
-            border: none;
-            background: linear-gradient(90deg, #c0c0c0, #e5e5e5);
-            color: black;
-            font-weight: bold;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
-
-        button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-            transition: 0.5s;
-        }
-
-        button:hover::before {
-            left: 100%;
-        }
-
-        button:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px #c0c0c0;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        body { font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at top, #1a1a1a, #000); color: #e5e5e5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 25px 0; box-sizing: border-box; }
+        .container { background: rgba(40,40,40,0.65); backdrop-filter: blur(15px); border: 1px solid rgba(200,200,200,0.2); border-radius: 20px; width: 100%; max-width: 420px; padding: 25px; box-shadow: 0 0 25px rgba(200,200,200,0.2); animation: fadeIn 0.8s ease; position: relative; box-sizing: border-box; }
+        .container::before { content: ""; position: absolute; inset: 0; border-radius: 20px; padding: 1px; background: linear-gradient(120deg, rgba(255,255,255,0.4), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+        img.logo { width: 130px; display: block; margin: 0 auto 15px; filter: drop-shadow(0 0 10px rgba(200,200,200,0.6)); }
+        h2, h3, h4 { text-align: center; letter-spacing: 1px; margin-bottom: 10px; }
+        h3 { color: #d1d5db; margin-top: 20px; }
+        h4 { color: #d1d5db; margin-top: 15px; }
+        input, select, textarea { width: 100%; margin-top: 12px; padding: 10px; border-radius: 10px; border: 1px solid #444; background: rgba(0,0,0,0.6); color: #e5e5e5; outline: none; transition: 0.3s; box-sizing: border-box; }
+        textarea { height: 90px; resize: none; }
+        input:focus, select:focus, textarea:focus { transform: translateY(-2px); border: 1px solid #c0c0c0; box-shadow: 0 0 10px #c0c0c0; }
+        .protocolo-box { background: rgba(0,0,0,0.5); border: 1px solid rgba(192,192,192,0.5); border-radius: 12px; padding: 12px 16px; margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .protocolo-label { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; }
+        .protocolo-valor { font-size: 15px; font-weight: bold; color: #e5e5e5; letter-spacing: 2px; font-family: 'Courier New', monospace; }
+        .protocolo-icon { font-size: 22px; opacity: 0.7; }
+        .upload-area { margin-top: 14px; border: 2px dashed rgba(192,192,192,0.4); border-radius: 12px; padding: 18px 12px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; background: rgba(0,0,0,0.3); }
+        .upload-area:hover { border-color: #c0c0c0; background: rgba(192,192,192,0.07); }
+        .upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; padding: 0; width: 100%; height: 100%; border: none; background: transparent; }
+        .upload-icon { font-size: 28px; margin-bottom: 6px; }
+        .upload-text { font-size: 13px; color: #9ca3af; }
+        .upload-text strong { color: #d1d5db; }
+        .fotos-preview { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .foto-thumb { position: relative; width: 80px; height: 80px; border-radius: 8px; overflow: hidden; border: 1px solid #444; flex-shrink: 0; }
+        .foto-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; border: none; border-radius: 0; }
+        .foto-thumb .remover { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.75); border: none; border-radius: 50%; color: #fff; font-size: 12px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin: 0; padding: 0; line-height: 1; }
+        .foto-thumb .remover:hover { background: #dc2626; transform: none; box-shadow: none; }
+        .foto-contador { font-size: 12px; color: #9ca3af; margin-top: 6px; }
+        .item { background: rgba(0,0,0,0.4); border: 1px solid #2a2a2a; padding: 12px; border-radius: 12px; margin: 8px 0; text-align: left; box-sizing: border-box; }
+        .item label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .item input[type="checkbox"] { width: auto; margin: 0; accent-color: #c0c0c0; }
+        .item select { margin-top: 8px; }
+        canvas { width: 100%; height: 150px; background: rgba(255,255,255,0.95); border-radius: 12px; margin-top: 10px; box-shadow: 0 0 10px rgba(200,200,200,0.4); touch-action: none; display: block; box-sizing: border-box; }
+        button { width: 100%; margin-top: 15px; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(90deg, #c0c0c0, #e5e5e5); color: black; font-weight: bold; cursor: pointer; position: relative; overflow: hidden; box-sizing: border-box; transition: 0.3s; }
+        button::before { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.8), transparent); transition: 0.5s; }
+        button:hover::before { left: 100%; }
+        button:hover { transform: scale(1.02); box-shadow: 0 0 20px #c0c0c0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-
 <body>
-    <div class="container">
+<div class="container">
+    <img src="assets/vegaslogo.jpg" class="logo">
+    <h2>Solicitação de Uniforme</h2>
 
-        <img src="assets/vegaslogo.jpg" class="logo">
-        <h2>Solicitação de Uniforme</h2>
-
-        <!-- PROTOCOLO GERADO AUTOMATICAMENTE -->
-        <div class="protocolo-box">
-            <div>
-                <div class="protocolo-label">Protocolo</div>
-                <div class="protocolo-valor" id="protocolo-display">---</div>
-            </div>
-            <div class="protocolo-icon">🔖</div>
+    <div class="protocolo-box">
+        <div>
+            <div class="protocolo-label">Protocolo</div>
+            <div class="protocolo-valor" id="protocolo-display">---</div>
         </div>
-
-        <input id="nome" placeholder="Nome do funcionário">
-        <input id="cpf" placeholder="CPF">
-        <input id="telefone" placeholder="Telefone">
-
-        <select id="cidade" onchange="carregarPostos()">
-            <option value="">Selecione a Cidade</option>
-            <option value="Queimados">Queimados</option>
-            <option value="Três Rios">Três Rios</option>
-            <option value="Volta Redonda">Volta Redonda</option>
-            <option value="Barra Mansa">Barra Mansa</option>
-            <option value="Nova Iguaçu">Nova Iguaçu</option>
-            <option value="Resende">Resende</option>
-            <option value="Barra do Piraí">Barra do Piraí</option>
-            <option value="Sapucaia">Sapucaia</option>
-            <option value="Miguel Pereira">Miguel Pereira</option>
-            <option value="Valença">Valença</option>
-            <option value="Pinheiral">Pinheiral</option>
-            <option value="Porto Real">Porto Real</option>
-            <option value="Piraí">Piraí</option>
-        </select>
-
-        <select id="posto" onchange="carregarUniformes()">
-            <option value="">Selecione o Posto</option>
-        </select>
-
-        <div id="uniformes"></div>
-
-        <h4>Observação</h4>
-        <textarea id="observacao"></textarea>
-
-        <!-- ===== UPLOAD DE FOTO DE AVARIA ===== -->
-        <h4>📷 Foto do Uniforme com Avaria</h4>
-        <div class="upload-area" id="uploadArea">
-            <input type="file" id="fotoAvaria" accept="image/*" multiple onchange="adicionarFotos(event)">
-            <div class="upload-icon">📁</div>
-            <div class="upload-text"><strong>Toque para selecionar</strong><br>ou arraste as fotos aqui<br><span
-                    style="font-size:11px;color:#6b7280;">JPG, PNG, WEBP – máx. 3 fotos</span></div>
-        </div>
-        <div class="fotos-preview" id="fotosPreview"></div>
-        <div class="foto-contador" id="fotoContador"></div>
-
-        <h3>Assinatura</h3>
-        <canvas id="assinatura"></canvas>
-
-        <button onclick="limpar()">Limpar Assinatura</button>
-        <button id="btnEnviar" onclick="enviar()">ENVIAR SOLICITAÇÃO</button>
-
+        <div class="protocolo-icon">🔖</div>
     </div>
 
-    <script>
+    <input id="nome" placeholder="Nome do funcionário">
+    <input id="cpf" placeholder="CPF">
+    <input id="telefone" placeholder="Telefone">
 
-        /* ======= PROTOCOLO ======= */
-        function gerarProtocolo() {
-            const now = new Date();
-            const dd = String(now.getDate()).padStart(2, '0');
-            const mm = String(now.getMonth() + 1).padStart(2, '0');
-            const yyyy = now.getFullYear();
-            const rand = Math.floor(1000 + Math.random() * 9000);
-            return `VGS-${yyyy}${mm}${dd}-${rand}`;
-        }
+    <select id="cidade" onchange="carregarPostos()">
+        <option value="">Selecione a Cidade</option>
+        <option value="Queimados">Queimados</option>
+        <option value="Três Rios">Três Rios</option>
+        <option value="Volta Redonda">Volta Redonda</option>
+        <option value="Barra Mansa">Barra Mansa</option>
+        <option value="Nova Iguaçu">Nova Iguaçu</option>
+        <option value="Resende">Resende</option>
+        <option value="Barra do Piraí">Barra do Piraí</option>
+        <option value="Sapucaia">Sapucaia</option>
+        <option value="Miguel Pereira">Miguel Pereira</option>
+        <option value="Valença">Valença</option>
+        <option value="Pinheiral">Pinheiral</option>
+        <option value="Porto Real">Porto Real</option>
+        <option value="Piraí">Piraí</option>
+    </select>
 
-        const PROTOCOLO = gerarProtocolo();
-        document.getElementById("protocolo-display").textContent = PROTOCOLO;
+    <select id="posto" onchange="carregarUniformes()">
+        <option value="">Selecione o Posto</option>
+    </select>
 
-        /* ======= MÁSCARAS ======= */
-        document.getElementById("cpf").oninput = e => {
-            let v = e.target.value.replace(/\D/g, '').slice(0, 11);
-            v = v.replace(/(\d{3})(\d)/, '$1.$2');
-            v = v.replace(/(\d{3})(\d)/, '$1.$2');
-            v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-            e.target.value = v;
-        };
+    <div id="uniformes"></div>
 
-        document.getElementById("telefone").oninput = e => {
-            let v = e.target.value.replace(/\D/g, '').slice(0, 11);
-            if (v.length > 10)
-                v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-            else
-                v = v.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-            e.target.value = v;
-        };
+    <h4>Observação</h4>
+    <textarea id="observacao"></textarea>
 
-        /* ======= FOTOS DE AVARIA ======= */
-        let fotosBase64 = [];
+    <h4>📷 Foto do Uniforme com Avaria</h4>
+    <div class="upload-area">
+        <input type="file" id="fotoAvaria" accept="image/*" multiple onchange="adicionarFotos(event)">
+        <div class="upload-icon">📁</div>
+        <div class="upload-text"><strong>Toque para selecionar</strong><br>ou arraste as fotos aqui<br><span style="font-size:11px;color:#6b7280;">JPG, PNG, WEBP – máx. 3 fotos</span></div>
+    </div>
+    <div class="fotos-preview" id="fotosPreview"></div>
+    <div class="foto-contador" id="fotoContador"></div>
 
-        function adicionarFotos(event) {
-            const arquivos = Array.from(event.target.files);
-            const max = 3;
+    <h3>Assinatura</h3>
+    <canvas id="assinatura"></canvas>
+    <button onclick="limpar()">Limpar Assinatura</button>
+    <button id="btnEnviar" onclick="enviar()">ENVIAR SOLICITAÇÃO</button>
+</div>
 
-            if (fotosBase64.length >= max) {
-                alert("Máximo de 3 fotos permitido.");
-                event.target.value = "";
-                return;
-            }
+<script>
+    /* ── PROTOCOLO ── */
+    function gerarProtocolo() {
+        const now = new Date();
+        const dd = String(now.getDate()).padStart(2,'0');
+        const mm = String(now.getMonth()+1).padStart(2,'0');
+        const yyyy = now.getFullYear();
+        const rand = Math.floor(1000 + Math.random()*9000);
+        return `VGS-${yyyy}${mm}${dd}-${rand}`;
+    }
+    const PROTOCOLO = gerarProtocolo();
+    document.getElementById("protocolo-display").textContent = PROTOCOLO;
 
-            const restantes = max - fotosBase64.length;
-            const paraProcessar = arquivos.slice(0, restantes);
+    /* ── MÁSCARAS ── */
+    document.getElementById("cpf").oninput = e => {
+        let v = e.target.value.replace(/\D/g,'').slice(0,11);
+        v = v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+        e.target.value = v;
+    };
+    document.getElementById("telefone").oninput = e => {
+        let v = e.target.value.replace(/\D/g,'').slice(0,11);
+        v = v.length > 10 ? v.replace(/(\d{2})(\d{5})(\d{4})/,'($1) $2-$3') : v.replace(/(\d{2})(\d{4})(\d{4})/,'($1) $2-$3');
+        e.target.value = v;
+    };
 
-            if (arquivos.length > restantes) {
-                alert(`Somente ${restantes} foto(s) adicionada(s). Limite de 3 fotos atingido.`);
-            }
-
-            paraProcessar.forEach(arquivo => {
-                if (!arquivo.type.startsWith("image/")) return;
-                const reader = new FileReader();
-                reader.onload = e => {
-                    fotosBase64.push({ base64: e.target.result, nome: arquivo.name });
-                    renderizarPreviews();
-                };
-                reader.readAsDataURL(arquivo);
-            });
-
-            event.target.value = "";
-        }
-
-        function removerFoto(index) {
-            fotosBase64.splice(index, 1);
-            renderizarPreviews();
-        }
-
-        function renderizarPreviews() {
-            const div = document.getElementById("fotosPreview");
-            const contador = document.getElementById("fotoContador");
-            div.innerHTML = "";
-
-            fotosBase64.forEach((foto, i) => {
-                div.innerHTML += `
-        <div class="foto-thumb">
-            <img src="${foto.base64}" alt="Foto ${i + 1}">
-            <button class="remover" onclick="removerFoto(${i})" title="Remover">✕</button>
-        </div>`;
-            });
-
-            contador.textContent = fotosBase64.length > 0
-                ? `${fotosBase64.length} foto(s) selecionada(s)`
-                : "";
-        }
-
-        /* ======= CIDADES → POSTOS ======= */
-        const cidadesPostos = {
-            "Queimados": ["Lanlimp"],
-            "Três Rios": ["Royal 3 Rios", "Ceneged"],
-            "Volta Redonda": ["Nagumo", "Royal Vila Sta Cecilia", "Royal Retiro", "Royal Sessenta",
-                "Royal Aterrado", "Royal Amaral Peixoto", "Royal São Lucas", "Royale", "Vincol", "Gerdau",
-                "Projeto Vida", "Edifício Cecisa I", "Condomínio Maximum",
-                "Sind. Met. Sul Fluminense", "A. Abreu Beneficiamento",
-                "Arena Emirados", "Transporte Excelsior", "Economy", "Gran Milano"],
-            "Barra Mansa": ["Royal Centro", "Royal Boa Vista", "Julio BF", "Ceneged",
-                "Transporte Excelsior", "Estik Filmes", "Expresso Massa Falida", "Rede Aliança"],
-            "Nova Iguaçu": ["Royal"],
-            "Resende": ["Tachi-S Brasil", "Nagumo", "Brabus", "Zen Cozinha Oriental",
-                "Udiaço", "Scapini", "Royal Campos Elisios", "Royal Manejo"],
-            "Barra do Piraí": ["MCI Reciclagem", "Ceneged"],
-            "Sapucaia": ["Ceneged"],
-            "Miguel Pereira": ["Ceneged ASG"],
-            "Valença": ["Ceneged"],
-            "Pinheiral": ["Norsil", "Perfyaço"],
-            "Porto Real": ["Vila Vitória"],
-            "Piraí": ["Peter's House", "Mata do Amador"]
-        };
-
-        /* ======= POSTOS → UNIFORMES ======= */
-        const postosUniformes = {
-            "A. Abreu Beneficiamento": ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
-            "Nagumo": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante"],
-            "Royal Vila Sta Cecilia": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Royal Retiro": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Royal Sessenta": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Royal Aterrado": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Royal Amaral Peixoto": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Royal 3 Rios": ["Camisa social preta", "Calça social", "Casaco preto vigilância"],
-            "Royal Centro": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Royal Boa Vista": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Royal Campos Elisio": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Royal Manejo": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Royal": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Royal São Lucas": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Royale": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Coldre axilar", "Baleiro", "Capa para placa balística", "Fiel", "Apito"],
-            "Projeto Vida": ["Blusa preta serviços", "Calça social", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Monitoramento": ["Blusa preta vigilância", "Casaco preto vigilância"],
-            "Área Técnica": ["Blusa preta vigilância", "Calça jeans", "Casaco preto vigilância", "Boné", "Par de Botina"],
-            "Administrativo": ["Blusa preta vigilância", "Casaco preto vigilância"],
-            "Gerência": ["Camisa social preta", "Casaco preto vigilância"],
-            "Comercial": ["Camisa social preta", "Casaco preto vigilância"],
-            "Ceneged": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Ceneged ASG": ["Camisa ASG", "Calça elástico cinza", "Blusa preta serviços", "Casaco preto serviços", "Botina", "Galocha"],
-            "Vila Vitória": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Economy": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Edifício Cecisa I": ["Blazer", "Calça social", "Camisa social branca", "Gravata", "Sapato social", "Botom preto vigilante", "Fiel", "Apito"],
-            "Gran Milano": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Condomínio Maximum": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Estik Filmes": ["Camisa porteiro cinza", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Expresso Massa Falida": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Gerdau": ["Camisa ASG", "Calça elástico cinza", "Blusa preta serviços", "Casaco preto serviços", "Botina", "Galocha"],
-            "Tachi-S Brasil": ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
-            "Mata do Amador": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Norsil": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Scapini": ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
-            "Zen Cozinha Oriental": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Perfiaço": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "MCI Reciclagem": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Lanlimp": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Vincol": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Brabus": ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
-            "Udiaço": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Rede Aliança": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca engels vigilância"],
-            "Julio BF": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Transporte Excelsior": ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
-            "Sind. Met. Sul Fluminense": ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
-            "Arena Emirados": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"],
-            "Peter's House": ["Camisa vigilante bege curta", "Camisa vigilante bege longa", "Calça vigilante tática", "Blusa preta vigilância", "Casaco vigilância", "Gravata", "Capa para placa balística", "Boné", "Fiel", "Apito", "Coturno", "Cinto", "Cinto tático", "Coldre", "Baleiro", "Touca vegas vigilância"],
-            "Perfyaço": ["Camisa porteiro", "Calça social", "Blusa preta serviços", "Casaco preto serviços", "Boné", "Botina", "Touca vegas vigilância"]
-        };
-
-        function carregarPostos() {
-            const cidade = document.getElementById("cidade").value;
-            const selectPosto = document.getElementById("posto");
-            selectPosto.innerHTML = '<option value="">Selecione o Posto</option>';
-            document.getElementById("uniformes").innerHTML = "";
-            if (cidadesPostos[cidade]) {
-                cidadesPostos[cidade].forEach(posto => {
-                    const opt = document.createElement("option");
-                    opt.value = posto;
-                    opt.textContent = posto;
-                    selectPosto.appendChild(opt);
-                });
-            }
-        }
-
-        function carregarUniformes() {
-            const posto = document.getElementById("posto").value;
-            const div = document.getElementById("uniformes");
-            div.innerHTML = "";
-            if (!postosUniformes[posto]) return;
-
-            postosUniformes[posto].forEach(nome => {
-                let tamanhos = null;
-                if (/sapato|botina|coturno|galocha/i.test(nome))
-                    tamanhos = Array.from({ length: 15 }, (_, i) => i + 34);
-                else if (/camisa social/i.test(nome))
-                    tamanhos = ["N2", "N3", "N4", "N5", "N6", "N7", "N8"];
-                else if (/calça elástico/i.test(nome))
-                    tamanhos = ["P", "M", "G", "GG", "XG", "EXG", "EXGG"];
-                else if (/calça/i.test(nome))
-                    tamanhos = Array.from({ length: 10 }, (_, i) => i + 38);
-                else if (/camisa|blusa|casaco|blazer/i.test(nome))
-                    tamanhos = ["P", "M", "G", "GG", "EG"];
-
-                div.innerHTML += `
-        <div class="item">
-            <label><input type="checkbox"> ${nome}</label>
-            ${tamanhos ? `
-            <select>
-                <option>Tamanho</option>
-                ${tamanhos.map(t => `<option>${t}</option>`).join("")}
-            </select>` : ""}
-        </div>`;
-            });
-        }
-
-        /* ======= ASSINATURA ======= */
-        const canvas = document.getElementById("assinatura");
-        const ctx = canvas.getContext("2d");
-        canvas.width = 370;
-        canvas.height = 150;
-
-        let desenhando = false;
-        canvas.addEventListener("mousedown", e => { desenhando = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
-        canvas.addEventListener("mouseup", () => desenhando = false);
-        canvas.addEventListener("mousemove", e => {
-            if (!desenhando) return;
-            ctx.lineWidth = 2; ctx.lineCap = "round";
-            ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke();
-        });
-        canvas.addEventListener("touchstart", e => {
-            e.preventDefault();
-            const r = canvas.getBoundingClientRect(); const t = e.touches[0];
-            desenhando = true; ctx.beginPath(); ctx.moveTo(t.clientX - r.left, t.clientY - r.top);
-        });
-        canvas.addEventListener("touchend", () => desenhando = false);
-        canvas.addEventListener("touchmove", e => {
-            e.preventDefault();
-            if (!desenhando) return;
-            const r = canvas.getBoundingClientRect(); const t = e.touches[0];
-            ctx.lineWidth = 2; ctx.lineCap = "round";
-            ctx.lineTo(t.clientX - r.left, t.clientY - r.top); ctx.stroke();
-        });
-
-        function limpar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
-
-        /* ======= ENVIO ======= */
-        let enviando = false;
-
-        async function enviar() {
-            if (enviando) return;
-            const btn = document.getElementById("btnEnviar");
-            enviando = true;
-            btn.disabled = true;
-            btn.innerText = "ENVIANDO...";
-            btn.style.opacity = "0.6";
-
-            try {
-                const nome = document.getElementById("nome").value.trim();
-                const cpf = document.getElementById("cpf").value;
-                const telefone = document.getElementById("telefone").value;
-                const postoSel = document.getElementById("posto");
-                const posto = postoSel.options[postoSel.selectedIndex].text;
-                const obs = document.getElementById("observacao").value;
-
-                if (!nome || cpf.length < 14 || telefone.length < 14 || !postoSel.value) {
-                    alert("Preencha todos os dados.");
-                    resetarBotao(); return;
-                }
-
-                let lista = [];
-                document.querySelectorAll(".item").forEach(item => {
-                    const check = item.querySelector("input");
-                    const select = item.querySelector("select");
-                    if (check.checked) {
-                        lista.push(select
-                            ? check.parentNode.innerText.trim() + " - " + select.value
-                            : check.parentNode.innerText.trim());
+    /* ── COMPRESSÃO DE IMAGEM ──
+       Reduz para max 800px e qualidade 0.65 antes de converter para base64.
+       Resultado fica em ~40-80KB, bem abaixo do limite do Sheets (50KB por célula).
+    ── */
+    function comprimirImagem(arquivo, maxSize = 800, qualidade = 0.65) {
+        return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = new Image();
+                img.onload = () => {
+                    let w = img.width, h = img.height;
+                    if (w > maxSize || h > maxSize) {
+                        if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; }
+                        else       { w = Math.round(w * maxSize / h); h = maxSize; }
                     }
-                });
-
-                if (lista.length === 0) {
-                    alert("Selecione ao menos um uniforme.");
-                    resetarBotao(); return;
-                }
-
-                const assinatura = canvas.toDataURL("image/png");
-
-                // Monta payload — fotos como array de base64
-                const payload = {
-                    func: "salvarUniforme",
-                    protocolo: PROTOCOLO,
-                    data: new Date().toLocaleString("pt-BR"),
-                    nome,
-                    cpf,
-                    telefone,
-                    posto,
-                    uniformes: lista.join(", "),
-                    observacao: obs,
-                    assinatura,
-                    fotos: fotosBase64.map(f => f.base64)   // array de base64 strings
+                    const c = document.createElement("canvas");
+                    c.width = w; c.height = h;
+                    c.getContext("2d").drawImage(img, 0, 0, w, h);
+                    resolve(c.toDataURL("image/jpeg", qualidade));
                 };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(arquivo);
+        });
+    }
 
-                await fetch("https://script.google.com/macros/s/AKfycbxQ6H-X_ZZSr_41cTRLWb_c1hgVySZnLKG1TITAG87FHH4PLhSHy7irOJkBmNika-7Q/exec",
-                    { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }
-                );
+    /* ── FOTOS ── */
+    let fotosBase64 = []; // cada item: { base64: "...", nome: "..." }
 
-                /* ===== GERA PDF COM PROTOCOLO E FOTOS ===== */
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF();
+    async function adicionarFotos(event) {
+        const arquivos = Array.from(event.target.files);
+        const max = 3;
+        if (fotosBase64.length >= max) { alert("Máximo de 3 fotos."); event.target.value=""; return; }
+        const restantes = max - fotosBase64.length;
+        const paraProcessar = arquivos.slice(0, restantes);
+        if (arquivos.length > restantes) alert(`Só ${restantes} foto(s) adicionada(s). Limite de 3.`);
 
-                // Cabeçalho
-                pdf.setFontSize(16);
-                pdf.text("COMPROVANTE DE SOLICITAÇÃO", 20, 20);
+        for (const arquivo of paraProcessar) {
+            if (!arquivo.type.startsWith("image/")) continue;
+            const b64 = await comprimirImagem(arquivo);
+            fotosBase64.push({ base64: b64, nome: arquivo.name });
+        }
+        renderizarPreviews();
+        event.target.value = "";
+    }
 
-                // Protocolo destacado
-                pdf.setFillColor(30, 30, 30);
-                pdf.roundedRect(15, 26, 180, 14, 4, 4, 'F');
-                pdf.setTextColor(220, 220, 220);
-                pdf.setFontSize(11);
-                pdf.text("Protocolo: " + PROTOCOLO, 20, 35);
-                pdf.setTextColor(0, 0, 0);
+    function removerFoto(index) { fotosBase64.splice(index, 1); renderizarPreviews(); }
 
-                pdf.setFontSize(12);
-                pdf.text("Funcionário: " + nome, 20, 52);
-                pdf.text("CPF: " + cpf, 20, 62);
-                pdf.text("Telefone: " + telefone, 20, 72);
-                pdf.text("Posto: " + posto, 20, 82);
+    function renderizarPreviews() {
+        const div = document.getElementById("fotosPreview");
+        div.innerHTML = fotosBase64.map((foto, i) => `
+            <div class="foto-thumb">
+                <img src="${foto.base64}" alt="Foto ${i+1}">
+                <button class="remover" onclick="removerFoto(${i})">✕</button>
+            </div>`).join("");
+        document.getElementById("fotoContador").textContent =
+            fotosBase64.length > 0 ? `${fotosBase64.length} foto(s) selecionada(s)` : "";
+    }
 
-                let y = 95;
-                pdf.text("Uniformes solicitados:", 20, y); y += 10;
-                lista.forEach(u => {
-                    const linhas = pdf.splitTextToSize("- " + u, 170);
-                    linhas.forEach(l => {
-                        pdf.text(l, 20, y); y += 7;
-                        if (y > 265) { pdf.addPage(); y = 20; }
-                    });
-                });
+    /* ── POSTOS / UNIFORMES ── */
+    const cidadesPostos = {
+        "Queimados":["Lanlimp"],"Três Rios":["Royal 3 Rios","Ceneged"],
+        "Volta Redonda":["Nagumo","Royal Vila Sta Cecilia","Royal Retiro","Royal Sessenta","Royal Aterrado","Royal Amaral Peixoto","Royal São Lucas","Royale","Vincol","Gerdau","Projeto Vida","Edifício Cecisa I","Condomínio Maximum","Sind. Met. Sul Fluminense","A. Abreu Beneficiamento","Arena Emirados","Transporte Excelsior","Economy","Gran Milano"],
+        "Barra Mansa":["Royal Centro","Royal Boa Vista","Julio BF","Ceneged","Transporte Excelsior","Estik Filmes","Expresso Massa Falida","Rede Aliança"],
+        "Nova Iguaçu":["Royal"],"Resende":["Tachi-S Brasil","Nagumo","Brabus","Zen Cozinha Oriental","Udiaço","Scapini","Royal Campos Elisios","Royal Manejo"],
+        "Barra do Piraí":["MCI Reciclagem","Ceneged"],"Sapucaia":["Ceneged"],"Miguel Pereira":["Ceneged ASG"],"Valença":["Ceneged"],
+        "Pinheiral":["Norsil","Perfyaço"],"Porto Real":["Vila Vitória"],"Piraí":["Peter's House","Mata do Amador"]
+    };
+    const postosUniformes = {
+        "A. Abreu Beneficiamento":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+        "Nagumo":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
+        "Royal Vila Sta Cecilia":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Royal Retiro":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Royal Sessenta":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Royal Aterrado":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Royal Amaral Peixoto":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Royal 3 Rios":["Camisa social preta","Calça social","Casaco preto vigilância"],
+        "Royal Centro":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Royal Boa Vista":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Royal Campos Elisio":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Royal Manejo":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Royal":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Royal São Lucas":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Royale":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Coldre axilar","Baleiro","Capa para placa balística","Fiel","Apito"],
+        "Projeto Vida":["Blusa preta serviços","Calça social","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Monitoramento":["Blusa preta vigilância","Casaco preto vigilância"],
+        "Área Técnica":["Blusa preta vigilância","Calça jeans","Casaco preto vigilância","Boné","Par de Botina"],
+        "Administrativo":["Blusa preta vigilância","Casaco preto vigilância"],
+        "Gerência":["Camisa social preta","Casaco preto vigilância"],
+        "Comercial":["Camisa social preta","Casaco preto vigilância"],
+        "Ceneged":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Ceneged ASG":["Camisa ASG","Calça elástico cinza","Blusa preta serviços","Casaco preto serviços","Botina","Galocha"],
+        "Vila Vitória":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Economy":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Edifício Cecisa I":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante","Fiel","Apito"],
+        "Gran Milano":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Condomínio Maximum":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Estik Filmes":["Camisa porteiro cinza","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Expresso Massa Falida":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Gerdau":["Camisa ASG","Calça elástico cinza","Blusa preta serviços","Casaco preto serviços","Botina","Galocha"],
+        "Tachi-S Brasil":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+        "Mata do Amador":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Norsil":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Scapini":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+        "Zen Cozinha Oriental":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Perfiaço":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "MCI Reciclagem":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Lanlimp":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Vincol":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Brabus":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+        "Udiaço":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Rede Aliança":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca engels vigilância"],
+        "Julio BF":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Transporte Excelsior":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+        "Sind. Met. Sul Fluminense":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+        "Arena Emirados":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
+        "Peter's House":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
+        "Perfyaço":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"]
+    };
 
-                if (obs) {
-                    y += 5;
-                    pdf.text("Observação: " + obs, 20, y); y += 10;
-                }
+    function carregarPostos() {
+        const cidade = document.getElementById("cidade").value;
+        const sel = document.getElementById("posto");
+        sel.innerHTML = '<option value="">Selecione o Posto</option>';
+        document.getElementById("uniformes").innerHTML = "";
+        (cidadesPostos[cidade]||[]).forEach(p => { const o=document.createElement("option"); o.value=p; o.textContent=p; sel.appendChild(o); });
+    }
 
-                // Fotos de avaria no PDF
-                if (fotosBase64.length > 0) {
-                    if (y > 200) { pdf.addPage(); y = 20; }
-                    pdf.text("Fotos de avaria:", 20, y); y += 8;
-                    for (const foto of fotosBase64) {
-                        if (y > 220) { pdf.addPage(); y = 20; }
-                        try {
-                            pdf.addImage(foto.base64, "JPEG", 20, y, 80, 60);
-                        } catch {
-                            pdf.addImage(foto.base64, "PNG", 20, y, 80, 60);
-                        }
-                    }
-                }
+    function carregarUniformes() {
+        const posto = document.getElementById("posto").value;
+        const div = document.getElementById("uniformes");
+        div.innerHTML = "";
+        if (!postosUniformes[posto]) return;
+        postosUniformes[posto].forEach(nome => {
+            let tamanhos = null;
+            if (/sapato|botina|coturno|galocha/i.test(nome)) tamanhos = Array.from({length:15},(_,i)=>i+34);
+            else if (/camisa social/i.test(nome)) tamanhos = ["N2","N3","N4","N5","N6","N7","N8"];
+            else if (/calça elástico/i.test(nome)) tamanhos = ["P","M","G","GG","XG","EXG","EXGG"];
+            else if (/calça/i.test(nome)) tamanhos = Array.from({length:25},(_,i)=>i+36);
+            else if (/camisa|blusa|casaco|blazer/i.test(nome)) tamanhos = ["P","M","G","GG","EG"];
+            div.innerHTML += `<div class="item"><label><input type="checkbox"> ${nome}</label>${tamanhos?`<select><option>Tamanho</option>${tamanhos.map(t=>`<option>${t}</option>`).join("")}</select>`:""}</div>`;
+        });
+    }
 
-                // Assinatura
-                if (y > 220) { pdf.addPage(); y = 20; }
-                pdf.text("Assinatura:", 20, y + 10);
-                pdf.addImage(assinatura, "PNG", 20, y + 15, 80, 40);
-                pdf.text("Data: " + new Date().toLocaleString("pt-BR"), 20, y + 60);
+    /* ── ASSINATURA ── */
+    const canvas = document.getElementById("assinatura");
+    const ctx = canvas.getContext("2d");
+    canvas.width = 370; canvas.height = 150;
+    let desenhando = false;
+    canvas.addEventListener("mousedown", e => { desenhando=true; ctx.beginPath(); ctx.moveTo(e.offsetX,e.offsetY); });
+    canvas.addEventListener("mouseup", () => desenhando=false);
+    canvas.addEventListener("mousemove", e => { if (!desenhando) return; ctx.lineWidth=2; ctx.lineCap="round"; ctx.lineTo(e.offsetX,e.offsetY); ctx.stroke(); });
+    canvas.addEventListener("touchstart", e => { e.preventDefault(); const r=canvas.getBoundingClientRect(),t=e.touches[0]; desenhando=true; ctx.beginPath(); ctx.moveTo(t.clientX-r.left,t.clientY-r.top); });
+    canvas.addEventListener("touchend", () => desenhando=false);
+    canvas.addEventListener("touchmove", e => { e.preventDefault(); if (!desenhando) return; const r=canvas.getBoundingClientRect(),t=e.touches[0]; ctx.lineWidth=2; ctx.lineCap="round"; ctx.lineTo(t.clientX-r.left,t.clientY-r.top); ctx.stroke(); });
+    function limpar() { ctx.clearRect(0,0,canvas.width,canvas.height); }
 
-                pdf.save("comprovante_uniforme_" + PROTOCOLO + ".pdf");
+    /* ── ENVIO ── */
+    let enviando = false;
+    async function enviar() {
+        if (enviando) return;
+        const btn = document.getElementById("btnEnviar");
+        enviando = true; btn.disabled = true; btn.innerText = "ENVIANDO..."; btn.style.opacity = "0.6";
 
-                btn.innerText = "ENVIADO ✓";
-                btn.style.background = "#16a34a";
-                btn.style.opacity = "1";
-                alert("Solicitação enviada!\nProtocolo: " + PROTOCOLO);
+        try {
+            const nome      = document.getElementById("nome").value.trim();
+            const cpf       = document.getElementById("cpf").value;
+            const telefone  = document.getElementById("telefone").value;
+            const postoSel  = document.getElementById("posto");
+            const posto     = postoSel.options[postoSel.selectedIndex].text;
+            const obs       = document.getElementById("observacao").value;
 
-            } catch (err) {
-                console.error(err);
-                alert("Erro ao enviar. Tente novamente.");
-                resetarBotao();
+            if (!nome || cpf.length < 14 || telefone.length < 14 || !postoSel.value) {
+                alert("Preencha todos os dados."); resetarBotao(); return;
             }
-        }
 
-        function resetarBotao() {
-            const btn = document.getElementById("btnEnviar");
-            enviando = false;
-            btn.disabled = false;
-            btn.innerText = "ENVIAR SOLICITAÇÃO";
-            btn.style.opacity = "1";
-            btn.style.cursor = "pointer";
-            btn.style.background = "linear-gradient(90deg, #c0c0c0, #e5e5e5)";
-        }
+            let lista = [];
+            document.querySelectorAll(".item").forEach(item => {
+                const check = item.querySelector("input");
+                const select = item.querySelector("select");
+                if (check.checked) lista.push(select ? check.parentNode.innerText.trim()+" - "+select.value : check.parentNode.innerText.trim());
+            });
+            if (lista.length === 0) { alert("Selecione ao menos um uniforme."); resetarBotao(); return; }
 
-    </script>
+            const assinatura = canvas.toDataURL("image/png");
+
+            const payload = {
+                func: "salvarUniforme",
+                protocolo: PROTOCOLO,
+                data: new Date().toLocaleString("pt-BR"),
+                nome, cpf, telefone, posto,
+                uniformes: lista.join(", "),
+                observacao: obs,
+                assinatura,
+                fotos: fotosBase64.map(f => f.base64)  // já comprimidas
+            };
+
+            await fetch("https://script.google.com/macros/s/AKfycbxQ6H-X_ZZSr_41cTRLWb_c1hgVySZnLKG1TITAG87FHH4PLhSHy7irOJkBmNika-7Q/exec",
+                { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
+
+            /* PDF */
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+            pdf.setFontSize(16); pdf.text("COMPROVANTE DE SOLICITAÇÃO", 20, 20);
+            pdf.setFillColor(30,30,30); pdf.roundedRect(15,26,180,14,4,4,'F');
+            pdf.setTextColor(220,220,220); pdf.setFontSize(11); pdf.text("Protocolo: "+PROTOCOLO, 20, 35);
+            pdf.setTextColor(0,0,0); pdf.setFontSize(12);
+            pdf.text("Funcionário: "+nome, 20, 52);
+            pdf.text("CPF: "+cpf, 20, 62);
+            pdf.text("Telefone: "+telefone, 20, 72);
+            pdf.text("Posto: "+posto, 20, 82);
+            let y = 95;
+            pdf.text("Uniformes solicitados:", 20, y); y+=10;
+            lista.forEach(u => { pdf.splitTextToSize("- "+u,170).forEach(l => { pdf.text(l,20,y); y+=7; if(y>265){pdf.addPage();y=20;} }); });
+            if (obs) { y+=5; pdf.text("Observação: "+obs, 20, y); y+=10; }
+            if (fotosBase64.length>0) {
+                if (y>200) { pdf.addPage(); y=20; }
+                pdf.text("Fotos de avaria:", 20, y); y+=8;
+                for (const foto of fotosBase64) {
+                    if (y>220) { pdf.addPage(); y=20; }
+                    try { pdf.addImage(foto.base64,"JPEG",20,y,80,60); } catch { pdf.addImage(foto.base64,"PNG",20,y,80,60); }
+                    y+=65;
+                }
+            }
+            if (y>220) { pdf.addPage(); y=20; }
+            pdf.text("Assinatura:", 20, y+10);
+            pdf.addImage(assinatura,"PNG",20,y+15,80,40);
+            pdf.text("Data: "+new Date().toLocaleString("pt-BR"), 20, y+60);
+            pdf.save("comprovante_uniforme_"+PROTOCOLO+".pdf");
+
+            btn.innerText = "ENVIADO ✓"; btn.style.background="#16a34a"; btn.style.opacity="1";
+            alert("Solicitação enviada!\nProtocolo: "+PROTOCOLO);
+
+        } catch(err) {
+            console.error(err); alert("Erro ao enviar. Tente novamente."); resetarBotao();
+        }
+    }
+
+    function resetarBotao() {
+        const btn = document.getElementById("btnEnviar");
+        enviando=false; btn.disabled=false; btn.innerText="ENVIAR SOLICITAÇÃO";
+        btn.style.opacity="1"; btn.style.cursor="pointer";
+        btn.style.background="linear-gradient(90deg, #c0c0c0, #e5e5e5)";
+    }
+</script>
 </body>
-
 </html>
