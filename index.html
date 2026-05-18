@@ -499,11 +499,11 @@
 
             const arquivos = Array.from(event.target.files);
 
-            const max = 3;
+            const max = 1;
 
             if (fotosBase64.length >= max) {
 
-                alert("Máximo de 3 fotos.");
+                alert("Máximo de 1 fotos.");
                 event.target.value = "";
 
                 return;
@@ -515,7 +515,7 @@
 
             if (arquivos.length > restantes) {
 
-                alert(`Só ${restantes} foto(s) adicionada(s). Limite de 3.`);
+                alert(`Só ${restantes} foto(s) adicionada(s). Limite de 1.`);
             }
 
             for (const arquivo of paraProcessar) {
