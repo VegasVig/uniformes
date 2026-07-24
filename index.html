@@ -394,6 +394,14 @@
         <button onclick="limpar()">Limpar Assinatura</button>
         <button id="btnEnviar" onclick="enviar()">ENVIAR SOLICITAÇÃO</button>
 
+        <div id="avisoDuplicado" style="display:none; background:#fdecea; border:2px solid #d32f2f;
+                    color:#d32f2f; padding:16px 20px; border-radius:8px; font-size:1.05rem;
+                    font-weight:700; text-align:center; margin:16px 0; line-height:1.5;">
+            ⚠️ ATENÇÃO: esta solicitação já foi enviada e possui protocolo gerado.
+            NÃO envie novamente. Pedidos duplicados estão sujeitos a
+            punição administrativa.
+        </div>
+
     </div>
 
     <script>
@@ -754,6 +762,7 @@ function renderizarPreviews() {
                 btn.innerText = "ENVIADO ✓";
                 btn.style.background = "#16a34a";
                 btn.style.opacity = "1";
+                document.getElementById("avisoDuplicado").style.display = "block";
                 alert("Solicitação enviada!\nProtocolo: " + PROTOCOLO);
 
             } catch (err) {
