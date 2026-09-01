@@ -492,109 +492,35 @@ function renderizarPreviews() {
 }
 
             /* ── POSTOS / UNIFORMES ── */
-    const cidadesPostos = 
-    
-  "Barra do Piraí"; [
-    "Ceneged BP",
-    "MCI Reciclagem"
-  ],
+    const cidadesPostos = {
+       "Barra do Piraí":["MCI Reciclagem","Ceneged BP"],
 
-  "Barra Mansa"; [
-    "Ceneged BM",
-    "Estik Filmes",
-    "Estik Filmes ASG",
-    "Expresso Massa Falida",
-    "Julio BF",
-    "Rede Aliança",
-    "Royal Boa Vista",
-    "Royal Centro BM",
-    "Transporte Excelsior"
-  ],
+"Barra Mansa":["Royal Centro BM","Royal Boa Vista","Julio BF","Ceneged BM","Transporte Excelsior","Estik Filmes","Estik Filmes ASG","Expresso Massa Falida","Rede Aliança"],
 
-  "Miguel Pereira"; [
-    "Ceneged ASG Miguel Pereira"
-  ],
+"Miguel Pereira":["Ceneged ASG Miguel Pereira"],
 
-  "Niterói"; [
-    "Sede Vegas Vigilância"
-  ],
+"Niterói":["Sede Vegas Vigilância"],
 
-  "Nova Iguaçu"; [
-    "Royal"
-  ],
+"Nova Iguaçu":["Royal"],
 
-  "Piraí"; [
-    "Mata do Amador",
-    "Peter's House"
-  ],
+"Pinheiral":["Norsil","Perfyaço"],
 
-  "Pinheiral"; [
-    "Norsil",
-    "Perfyaço"
-  ],
+"Piraí":["Peter's House","Mata do Amador"],
 
-  "Porto Real"; [
-    "Vila Vitória"
-  ],
+"Porto Real":["Vila Vitória"],
 
-  "Queimados"; [
-    "Lanlimp"
-  ],
+"Queimados":["Lanlimp"],
 
-  "Resende"; [
-    "Brabus",
-    "Nagumo",
-    "Royal Campos Elisios",
-    "Royal Manejo",
-    "Scapini",
-    "Tachi-S Brasil Porteiro",
-    "Tachi-S Brasil Vigilante",
-    "Udiaço",
-    "Zen Cozinha Oriental"
-  ],
+"Resende":["Tachi-S Brasil Porteiro","Tachi-S Brasil Vigilante","Nagumo","Brabus","Zen Cozinha Oriental","Udiaço","Scapini","Royal Campos Elisios","Royal Manejo"],
 
-  "Sapucaia"; [
-    "Ceneged Sapucaia"
-  ],
+"Sapucaia":["Ceneged Sapucaia"],
 
-  "Três Rios"; [
-    "Ceneged TR",
-    "Royal 3 Rios"
-  ],
+"Três Rios":["Royal 3 Rios","Ceneged TR"],
 
-  "Valença"; [
-    "Ceneged"
-  ],
+"Valença":["Ceneged"],
 
-  "Volta Redonda"; [
-    "A. Abreu Beneficiamento",
-    "Administrativo",
-    "Arena Emirados",
-    "Area Técnica",
-    "Cicuta",
-    "Comercial",
-    "Condomínio Maximum",
-    "Edifício Cecisa I",
-    "Economy",
-    "Fast Broker",
-    "Gerdau",
-    "Gran Milano",
-    "Lauer Engenharia",
-    "Monitoramento",
-    "Nagumo",
-    "Projeto Vida",
-    "Royal Amaral Peixoto",
-    "Royal Aterrado",
-    "Royal Retiro",
-    "Royal São Lucas",
-    "Royal Sessenta",
-    "Royal Vila Sta Cecilia",
-    "Royale",
-    "Sind. Met. Sul Fluminense",
-    "Transporte Excelsior",
-    "Vincol"
-  ]
-    ;
+"Volta Redonda":["Fast Broker","Cicuta","Lauer Engenharia","Administrativo","Area Técnica","Monitoramento","Comercial","Nagumo","Royal Vila Sta Cecilia","Royal Retiro","Royal Sessenta","Royal Aterrado","Royal Amaral Peixoto","Royal São Lucas","Royale","Vincol","Gerdau","Projeto Vida","Edifício Cecisa I","Condomínio Maximum","Sind. Met. Sul Fluminense","A. Abreu Beneficiamento","Arena Emirados","Transporte Excelsior","Economy","Gran Milano"],
+    };
     const postosUniformes = {
 
         "A. Abreu Beneficiamento":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
@@ -656,7 +582,7 @@ function renderizarPreviews() {
         "Lauer Engenharia":["Blusa cinza","Calça Tática","Casaco preto serviços","Coturno",],
         "Cicuta":["Blusa cinza","Calça social","Casaco preto serviços","Sapato social","Gandola","Cinto"],
         "Fast Broker":["Camisa porteiro preta","Calça social","Casaco preto serviços","Sapato social","Gandola","Cinto"],
-        "Sede Vegas Vigilância":["Calça Tática","Coturno","Blusa Preta","Casaco Preto"],
+        "Sede Vegas Vigilncia":["Calça Tática","Coturno","Blusa Preta","Casaco Preto"],
     };
 
         function carregarPostos() {
