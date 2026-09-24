@@ -684,6 +684,7 @@ function renderizarPreviews() {
                 const telefone = document.getElementById("telefone").value;
                 const postoSel = document.getElementById("posto");
                 const posto = postoSel.options[postoSel.selectedIndex].text;
+                const cidade = document.getElementById("cidade").value;
                 const obs = document.getElementById("observacao").value;
 
                 if (!nome || cpf.length < 14 || telefone.length < 14 || !postoSel.value) {
@@ -717,6 +718,7 @@ function renderizarPreviews() {
                     nome,
                     cpf,
                     telefone,
+                    cidade,
                     posto,
                     uniformes: lista.join(", "),
                     observacao: obs,
