@@ -1,818 +1,633 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitação_de_Uniforme</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Solicitação de Uniforme · Vegas Vigilância</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.31/dist/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root{
+  --preto:#000;--fundo:#060708;--grafite:#121417;--grafite2:#1b1e22;--grafite3:#262a2f;
+  --linha:rgba(214,218,224,.13);--linha2:rgba(214,218,224,.26);
+  --prata:#cdd1d6;--prata2:#9aa0a7;--texto:#eceef0;--suave:#a3a9b0;--fraco:#6f757c;
+  --cromo:linear-gradient(180deg,#fbfcfc 0%,#d3d7db 38%,#7c8289 52%,#c3c7cc 70%,#eef0f2 100%);
+  --cromo-btn:linear-gradient(180deg,#f2f3f4 0%,#c9cdd2 48%,#9ea4ab 52%,#d7dadd 100%);
+  --ok:#86c29b;--aviso:#d8a94a;--erro:#e46d72;
+  --r1:6px;--r2:12px;--r3:18px;
+  --display:'Saira Condensed','Arial Narrow',sans-serif;--corpo:'Barlow','Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--preto);color:var(--texto);font-family:var(--corpo);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  background:
+    radial-gradient(1200px 600px at 70% -10%,rgba(205,209,214,.10),transparent 60%),
+    linear-gradient(115deg,transparent 0 62%,rgba(255,255,255,.035) 62% 63%,transparent 63%),
+    linear-gradient(180deg,#0a0b0d,#000 60%)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--prata);outline-offset:2px}
 
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: radial-gradient(circle at top, #1a1a1a, #000);
-            color: #e5e5e5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 25px 0;
-            box-sizing: border-box;
-        }
+/* topo */
+.topo{display:flex;align-items:center;gap:22px;max-width:1180px;margin:0 auto;padding:22px 20px 18px}
+.escudo{width:86px;height:86px;flex:none;border-radius:50%;object-fit:cover;background:#000;
+  box-shadow:0 0 0 1px var(--linha2),0 10px 30px rgba(0,0,0,.8),0 0 40px rgba(205,209,214,.12)}
+.marca{display:flex;flex-direction:column;line-height:.9}
+.marca b{font-family:var(--display);font-weight:800;font-size:clamp(44px,8vw,78px);letter-spacing:.02em;
+  background:var(--cromo);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.9)) drop-shadow(0 0 18px rgba(220,224,228,.12))}
+.marca span{font-family:var(--display);font-weight:600;font-size:clamp(13px,2.2vw,20px);letter-spacing:.24em;color:var(--prata);margin-top:6px}
+.lema{margin-left:auto;padding-left:22px;border-left:1px solid var(--linha2);color:var(--suave);font-family:var(--display);font-size:18px;letter-spacing:.06em;line-height:1.25}
+.lema strong{display:block;color:var(--texto);font-weight:700}
 
-        .container {
-            background: rgba(40, 40, 40, 0.65);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(200, 200, 200, 0.2);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 420px;
-            padding: 25px;
-            box-shadow: 0 0 25px rgba(200, 200, 200, 0.2);
-            animation: fadeIn 0.8s ease;
-            position: relative;
-            box-sizing: border-box;
-        }
+/* grade */
+.grade{max-width:1180px;margin:0 auto;padding:0 20px 40px;display:grid;grid-template-columns:270px minmax(0,1fr);gap:28px;align-items:start}
+.lado{position:sticky;top:20px;padding:6px 4px}
+.lado h1{margin:0;font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:.14em;color:var(--prata2);line-height:1.1}
+.lado h1 strong{display:block;font-size:52px;letter-spacing:.02em;font-weight:800;color:var(--texto)}
+.lado p{color:var(--suave);margin:14px 0 24px;max-width:28ch}
+.pilares{list-style:none;padding:20px 0 0;margin:0;border-top:1px solid var(--linha);display:grid;gap:18px}
+.pilares li{display:flex;gap:14px;align-items:center;color:var(--prata);font-family:var(--display);font-size:16px;letter-spacing:.06em;line-height:1.2}
+.pilares svg{width:34px;height:34px;flex:none;stroke:var(--prata);fill:none;stroke-width:1.4}
 
-        .container::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: 20px;
-            padding: 1px;
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.4), transparent);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
+/* painel principal */
+.painel{position:relative;background:linear-gradient(180deg,rgba(30,33,37,.92),rgba(12,13,15,.96));border-radius:var(--r3);
+  box-shadow:0 30px 80px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.08);padding:26px}
+.painel::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+  background:linear-gradient(160deg,rgba(255,255,255,.45),rgba(255,255,255,.05) 35%,rgba(255,255,255,.02) 65%,rgba(255,255,255,.3));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.abas{display:flex;gap:4px;padding:4px;background:#000;border:1px solid var(--linha);border-radius:999px;width:max-content;max-width:100%;margin-bottom:22px}
+.abas button{border:0;background:none;padding:9px 18px;border-radius:999px;cursor:pointer;color:var(--suave);font-weight:600}
+.abas button[aria-selected=true]{background:var(--cromo-btn);color:#0b0c0d;box-shadow:inset 0 1px 0 #fff}
+.cab{display:flex;gap:16px;align-items:center;margin-bottom:22px}
+.cab svg{width:52px;height:52px;flex:none;stroke:var(--prata);fill:none;stroke-width:1.3}
+.cab h2{margin:0;font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:.02em}
+.cab p{margin:2px 0 0;color:var(--suave)}
 
-        img.logo {
-            width: 130px;
-            display: block;
-            margin: 0 auto 15px;
-            filter: drop-shadow(0 0 10px rgba(200, 200, 200, 0.6));
-        }
+.etapa{border:1px solid var(--linha);border-radius:var(--r2);background:linear-gradient(180deg,rgba(255,255,255,.025),transparent 60%),var(--grafite);padding:18px 18px 20px;margin-top:14px}
+.etapa>header{display:flex;align-items:center;gap:14px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--linha)}
+.num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none;font-family:var(--display);font-weight:800;font-size:18px;color:#0b0c0d;background:var(--cromo-btn);box-shadow:0 0 0 3px #000,0 0 0 4px var(--linha2)}
+.etapa h3{margin:0;font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.1em;text-transform:uppercase}
+.etapa h3 small{display:block;font-family:var(--corpo);font-size:13px;letter-spacing:0;text-transform:none;color:var(--suave);font-weight:400}
 
-        h2,
-        h3,
-        h4 {
-            text-align: center;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
+.campos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.campos .inteiro{grid-column:1/-1}
+label.c{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--suave);font-weight:500}
+input,select,textarea{width:100%;background:#050607;border:1px solid var(--linha2);border-radius:var(--r1);padding:11px 12px;min-height:44px;transition:border-color .15s,box-shadow .15s}
+input::placeholder,textarea::placeholder{color:var(--fraco)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--prata);box-shadow:0 0 0 3px rgba(205,209,214,.12)}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--prata) 50%),linear-gradient(135deg,var(--prata) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:34px}
+textarea{min-height:90px;resize:vertical}
+.invalido{border-color:var(--erro)!important}
 
-        h3 {
-            color: #d1d5db;
-            margin-top: 20px;
-        }
+/* peças */
+.pecas{display:grid;gap:8px}
+.peca{display:grid;grid-template-columns:minmax(0,1fr) 120px 128px;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--linha);border-radius:var(--r1);background:#08090a}
+.peca.ativa{border-color:var(--linha2);background:linear-gradient(90deg,rgba(205,209,214,.07),#08090a 70%)}
+.peca .nm{font-weight:600}
+.peca .disp{display:block;font-size:12px;color:var(--fraco);font-weight:400}
+.peca .disp.baixo{color:var(--aviso)} .peca .disp.zero{color:var(--erro)}
+.peca .aviso-falta{grid-column:1/-1;font-size:13px;color:var(--aviso)}
+.peca select{min-height:40px;padding:8px 30px 8px 10px}
+.qtd{display:flex;align-items:center;border:1px solid var(--linha2);border-radius:var(--r1);overflow:hidden;height:40px}
+.qtd button{width:40px;height:100%;border:0;background:var(--grafite3);cursor:pointer;font-size:18px}
+.qtd button:disabled{opacity:.35;cursor:not-allowed}
+.qtd output{flex:1;text-align:center;font-weight:600;font-variant-numeric:tabular-nums}
+.vazio{padding:16px;border:1px dashed var(--linha2);border-radius:var(--r1);color:var(--suave);text-align:center}
+details.outras{margin-top:10px}
+details.outras summary{cursor:pointer;color:var(--prata);padding:8px 0;font-weight:500}
+.resumo{margin-top:14px;padding:12px 14px;border-radius:var(--r1);background:#000;border:1px solid var(--linha);font-size:14px}
+.resumo b{font-family:var(--display);letter-spacing:.06em}
 
-        h4 {
-            color: #d1d5db;
-            margin-top: 15px;
-        }
+/* foto / assinatura */
+.botoes2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:10px 18px;border-radius:var(--r1);border:1px solid var(--linha2);background:var(--grafite2);cursor:pointer;font-weight:600;letter-spacing:.02em}
+.btn:hover{border-color:var(--prata2)}
+.btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6}
+.btn.primario{width:100%;margin-top:20px;min-height:54px;border:0;border-radius:var(--r2);color:#0b0c0d;font-family:var(--display);font-size:19px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  background:var(--cromo-btn);box-shadow:inset 0 1px 0 #fff,0 10px 30px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.2)}
+.btn.primario:hover{filter:brightness(1.06)}
+.btn:disabled{opacity:.55;cursor:wait}
+.previa{display:flex;gap:10px;margin-top:10px;align-items:center}
+.previa[hidden]{display:none}
+.previa img{width:84px;height:84px;object-fit:cover;border-radius:var(--r1);border:1px solid var(--linha2)}
+canvas{display:block;width:100%;height:160px;background:#f4f5f6;border-radius:var(--r1);touch-action:none;box-shadow:inset 0 2px 6px rgba(0,0,0,.25)}
+.linha-ass{display:flex;justify-content:space-between;align-items:center;margin-top:8px;color:var(--fraco);font-size:13px}
+.link{background:none;border:0;color:var(--prata);cursor:pointer;text-decoration:underline;padding:6px}
+.msg{margin-top:14px;padding:12px 14px;border-radius:var(--r1);border:1px solid;font-size:14px}
+.msg.erro{border-color:rgba(228,109,114,.5);background:rgba(228,109,114,.08);color:#f2b8bb}
+.msg.ok{border-color:rgba(134,194,155,.5);background:rgba(134,194,155,.08);color:#cfe9d7}
+.msg[hidden]{display:none}
 
-        input,
-        select,
-        textarea {
-            width: 100%;
-            margin-top: 12px;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #444;
-            background: rgba(0, 0, 0, 0.6);
-            color: #e5e5e5;
-            outline: none;
-            transition: 0.3s;
-            box-sizing: border-box;
-        }
+/* resultado e consulta */
+.protocolo{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-radius:var(--r2);background:#000;border:1px solid var(--linha2)}
+.protocolo span{color:var(--suave);font-size:13px}
+.protocolo strong{display:block;font-family:var(--display);font-size:34px;letter-spacing:.08em;background:var(--cromo);-webkit-background-clip:text;background-clip:text;color:transparent}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--linha)}
+th{color:var(--suave);font-weight:500;font-size:12px}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.selo{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--linha2);color:var(--prata);white-space:nowrap}
+.selo.ok{color:var(--ok);border-color:rgba(134,194,155,.45)} .selo.aviso{color:var(--aviso);border-color:rgba(216,169,74,.45)} .selo.erro{color:var(--erro);border-color:rgba(228,109,114,.45)}
+.pedido{border:1px solid var(--linha);border-radius:var(--r2);padding:16px;margin-top:12px;background:var(--grafite)}
+.pedido header{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.pedido header b{font-family:var(--display);font-size:20px;letter-spacing:.06em}
+.trilha{display:flex;gap:4px;margin:6px 0 12px}
+.trilha i{flex:1;height:4px;border-radius:2px;background:var(--grafite3)}
+.trilha i.on{background:var(--cromo-btn)}
+.bloco-t{font-family:var(--display);font-size:18px;letter-spacing:.06em;margin:22px 0 4px}
+.rodape{max-width:1180px;margin:0 auto;padding:22px 20px 40px;border-top:1px solid var(--linha);display:flex;justify-content:space-between;gap:16px;color:var(--fraco);font-size:13px;flex-wrap:wrap}
 
-        textarea {
-            height: 90px;
-            resize: none;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            transform: translateY(-2px);
-            border: 1px solid #c0c0c0;
-            box-shadow: 0 0 10px #c0c0c0;
-        }
-
-        /* ===== PROTOCOLO BADGE ===== */
-        .protocolo-box {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(192, 192, 192, 0.5);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-top: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .protocolo-label {
-            font-size: 11px;
-            color: #9ca3af;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .protocolo-valor {
-            font-size: 15px;
-            font-weight: bold;
-            color: #e5e5e5;
-            letter-spacing: 2px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .protocolo-icon {
-            font-size: 22px;
-            opacity: 0.7;
-        }
-
-        /* ===== UPLOAD DE FOTO ===== */
-        .upload-area {
-            margin-top: 14px;
-            border: 2px dashed rgba(192, 192, 192, 0.4);
-            border-radius: 12px;
-            padding: 18px 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-            position: relative;
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .upload-area:hover {
-            border-color: #c0c0c0;
-            background: rgba(192, 192, 192, 0.07);
-        }
-
-        .upload-area input[type="file"] {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: transparent;
-        }
-
-        .upload-icon {
-            font-size: 28px;
-            margin-bottom: 6px;
-        }
-
-        .upload-text {
-            font-size: 13px;
-            color: #9ca3af;
-        }
-
-        .upload-text strong {
-            color: #d1d5db;
-        }
-
-        /* Preview das fotos */
-        .fotos-preview {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .foto-thumb {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #444;
-            flex-shrink: 0;
-        }
-
-        .foto-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            margin: 0;
-            padding: 0;
-            border: none;
-            border-radius: 0;
-        }
-
-        .foto-thumb .remover {
-            position: absolute;
-            top: 2px;
-            right: 2px;
-            background: rgba(0, 0, 0, 0.75);
-            border: none;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 12px;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin: 0;
-            padding: 0;
-            line-height: 1;
-        }
-
-        .foto-thumb .remover:hover {
-            background: #dc2626;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .foto-contador {
-            font-size: 12px;
-            color: #9ca3af;
-            margin-top: 6px;
-        }
-
-        /* ===== ITENS DE UNIFORME ===== */
-        .item {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid #2a2a2a;
-            padding: 12px;
-            border-radius: 12px;
-            margin: 8px 0;
-            text-align: left;
-            box-sizing: border-box;
-        }
-
-        .item label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .item input[type="checkbox"] {
-            width: auto;
-            margin: 0;
-            accent-color: #c0c0c0;
-        }
-
-        .item select {
-            margin-top: 8px;
-        }
-
-        /* ===== CANVAS ===== */
-        canvas {
-            width: 100%;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            margin-top: 10px;
-            box-shadow: 0 0 10px rgba(200, 200, 200, 0.4);
-            touch-action: none;
-            display: block;
-            box-sizing: border-box;
-        }
-
-        /* ===== BOTÕES ===== */
-        button {
-            width: 100%;
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 12px;
-            border: none;
-            background: linear-gradient(90deg, #c0c0c0, #e5e5e5);
-            color: black;
-            font-weight: bold;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
-
-        button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-            transition: 0.5s;
-        }
-
-        button:hover::before {
-            left: 100%;
-        }
-
-        button:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px #c0c0c0;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+@media (max-width:980px){
+  .grade{grid-template-columns:1fr}
+  .lado{position:static;padding:0}
+  .lado p,.pilares{display:none}
+  .lado h1{font-size:16px}.lado h1 strong{font-size:36px}
+  .lema{display:none}
+}
+@media (max-width:600px){
+  .lado{display:none}
+  .topo{gap:14px;padding:16px 14px 12px}.escudo{width:62px;height:62px}
+  .grade{padding:0 10px 30px}
+  .painel{padding:16px 12px;border-radius:var(--r2)}
+  .etapa{padding:14px 12px 16px}
+  .campos{grid-template-columns:1fr}
+  .peca{grid-template-columns:1fr 1fr}
+  .peca .nm{grid-column:1/-1}
+  .cab svg{display:none}.cab h2{font-size:23px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .painel{animation:surgir .5s ease-out both}
+  @keyframes surgir{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+}
+</style>
 </head>
-
 <body>
-    <div class="container">
 
-        <img src="assets/vegaslogo.jpg" class="logo">
-        <h2>Solicitação de Uniforme</h2>
+<header class="topo">
+  <img class="escudo" src="assets/vegaslogo.jpg" alt="Escudo Vegas Vigilância e Segurança">
+  <div class="marca"><b>VEGAS</b><span>VIGILÂNCIA E SEGURANÇA</span></div>
+  <div class="lema">Profissionais bem equipados<strong>fazem a diferença.</strong></div>
+</header>
 
-        <!-- PROTOCOLO GERADO AUTOMATICAMENTE -->
-        <div class="protocolo-box">
-            <div>
-                <div class="protocolo-label">Protocolo</div>
-                <div class="protocolo-valor" id="protocolo-display">---</div>
-            </div>
-            <div class="protocolo-icon">🔖</div>
-        </div>
+<div class="grade">
+  <aside class="lado">
+    <h1>Solicitação de <strong>Uniforme</strong></h1>
+    <p>Peça seu uniforme pelo celular, veja o que tem em estoque e acompanhe o pedido pelo protocolo.</p>
+    <ul class="pilares">
+      <li><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Padronização da equipe</li>
+      <li><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6"/></svg>Mais profissionalismo</li>
+      <li><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Qualidade e conforto</li>
+      <li><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c.7-3 3-5 6-5s5.3 2 6 5M12 15.5c1-.4 2.5-.5 4-.5 3 0 5.3 2 6 5"/></svg>Equipe sempre equipada</li>
+    </ul>
+  </aside>
 
-        <input id="nome" placeholder="Nome do funcionário">
-        <input id="cpf" placeholder="CPF">
-        <input id="telefone" placeholder="Telefone">
-
-        <select id="cidade" onchange="carregarPostos()">
-            <option value="">Selecione a Cidade</option>
-        </select>
-
-        <select id="posto" onchange="carregarUniformes()">
-            <option value="">Selecione o Posto</option>
-        </select>
-
-        <div id="uniformes"></div>
-
-        <h4>Observação</h4>
-        <textarea id="observacao"></textarea>
-
-        <!-- ===== UPLOAD DE FOTO DE AVARIA ===== -->
-        <h4>📷 Foto do Uniforme com Avaria</h4>
-        <div class="upload-area" id="uploadArea">
-            <input type="file" id="fotoAvaria" accept="image/*" onchange="adicionarFotos(event)">
-            <div class="upload-icon">📁</div>
-            <div class="upload-text"><strong>Toque para selecionar</strong><br>ou arraste as fotos aqui<br><span
-                    style="font-size:11px;color:#6b7280;">JPG, PNG, WEBP – máx. 1 foto</span></div>
-        </div>
-        <div class="fotos-preview" id="fotosPreview"></div>
-        <div class="foto-contador" id="fotoContador"></div>
-
-        <h3>Assinatura</h3>
-        <canvas id="assinatura"></canvas>
-
-        <button onclick="limpar()">Limpar Assinatura</button>
-        <button id="btnEnviar" onclick="enviar()">ENVIAR SOLICITAÇÃO</button>
-
-        <div id="avisoDuplicado" style="display:none; background:#fdecea; border:2px solid #d32f2f;
-                    color:#d32f2f; padding:16px 20px; border-radius:8px; font-size:1.05rem;
-                    font-weight:700; text-align:center; margin:16px 0; line-height:1.5;">
-            ⚠️ ATENÇÃO: esta solicitação já foi enviada e possui protocolo gerado.
-            NÃO envie novamente. Pedidos duplicados estão sujeitos a
-            punição administrativa.
-        </div>
-
+  <main class="painel">
+    <div class="abas" role="tablist">
+      <button role="tab" id="abaNova" aria-selected="true" onclick="mostrar('nova')">Nova solicitação</button>
+      <button role="tab" id="abaMeus" aria-selected="false" onclick="mostrar('meus')">Meus pedidos</button>
     </div>
 
-    <script>
+    <!-- NOVA SOLICITAÇÃO -->
+    <section id="telaNova">
+      <div class="cab">
+        <svg viewBox="0 0 48 48"><path d="M24 3l18 7v13c0 10-7 17-18 22C13 40 6 33 6 23V10z"/><path d="M18 15l-5 3 2 5 3-1v12h12V22l3 1 2-5-5-3c-1 2-3 3-5 3s-4-1-5-3z"/></svg>
+        <div><h2>Solicitação de uniforme</h2><p>Preencha as cinco etapas. A quantidade fica limitada ao que existe no estoque.</p></div>
+      </div>
 
-        /* ======= PROTOCOLO ======= */
-        function gerarProtocolo() {
-            const now = new Date();
-            const dd = String(now.getDate()).padStart(2, '0');
-            const mm = String(now.getMonth() + 1).padStart(2, '0');
-            const yyyy = now.getFullYear();
-            const rand = Math.floor(1000 + Math.random() * 9000);
-            return `VGS-${yyyy}${mm}${dd}-${rand}`;
-        }
+      <div class="etapa">
+        <header><span class="num">1</span><h3>Seus dados</h3></header>
+        <div class="campos">
+          <label class="c inteiro">Nome completo<input id="nome" autocomplete="name" placeholder="Digite seu nome completo"></label>
+          <label class="c">CPF<input id="cpf" inputmode="numeric" placeholder="000.000.000-00"></label>
+          <label class="c">Telefone<input id="telefone" inputmode="tel" autocomplete="tel" placeholder="(24) 9 0000-0000"></label>
+          <label class="c inteiro">Função<input id="funcao" list="funcoes" placeholder="Ex.: Vigilante"></label>
+          <datalist id="funcoes"><option>Vigilante</option><option>Porteiro</option><option>Vigia</option><option>Controlador de acesso</option><option>Auxiliar de serviços gerais</option><option>Fiscal</option><option>Técnico</option><option>Monitoramento</option><option>Administrativo</option><option>Supervisor</option></datalist>
+        </div>
+      </div>
 
-        const PROTOCOLO = gerarProtocolo();
-        document.getElementById("protocolo-display").textContent = PROTOCOLO;
+      <div class="etapa">
+        <header><span class="num">2</span><h3>Posto de trabalho</h3></header>
+        <div class="campos">
+          <label class="c">Cidade<select id="cidade" onchange="carregarPostos()"><option value="">Selecione a cidade</option></select></label>
+          <label class="c">Posto<select id="posto" onchange="montarPecas()"><option value="">Selecione o posto</option></select></label>
+        </div>
+      </div>
 
-        /* ======= MÁSCARAS ======= */
-        document.getElementById("cpf").oninput = e => {
-            let v = e.target.value.replace(/\D/g, '').slice(0, 11);
-            v = v.replace(/(\d{3})(\d)/, '$1.$2');
-            v = v.replace(/(\d{3})(\d)/, '$1.$2');
-            v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-            e.target.value = v;
-        };
+      <div class="etapa">
+        <header><span class="num">3</span><h3>Peças e quantidades<small>Escolha o tamanho e use + e − para a quantidade.</small></h3></header>
+        <div id="pecas" class="pecas"><div class="vazio">Escolha a cidade e o posto para ver as peças do seu uniforme.</div></div>
+        <div id="resumo" class="resumo" hidden></div>
+      </div>
 
-        document.getElementById("telefone").oninput = e => {
-            let v = e.target.value.replace(/\D/g, '').slice(0, 11);
-            if (v.length > 10)
-                v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-            else
-                v = v.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-            e.target.value = v;
-        };
+      <div class="etapa">
+        <header><span class="num">4</span><h3>Observações e foto<small>Opcional. Use para mostrar uma avaria ou explicar a troca.</small></h3></header>
+        <textarea id="observacao" maxlength="1000" placeholder="Ex.: calça rasgou no joelho, preciso trocar."></textarea>
+        <div class="botoes2" style="margin-top:12px">
+          <label class="btn"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Tirar foto<input type="file" accept="image/*" capture="environment" hidden onchange="lerFoto(this)"></label>
+          <label class="btn"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg>Escolher arquivo<input type="file" accept="image/*" hidden onchange="lerFoto(this)"></label>
+        </div>
+        <div class="previa" id="previa" hidden><img id="previaImg" alt="Foto anexada"><button class="link" onclick="removerFoto()">Remover foto</button></div>
+      </div>
 
-        /* ======= FOTO DE AVARIA ======= */
-let fotosBase64 = [];
+      <div class="etapa">
+        <header><span class="num">5</span><h3>Assinatura<small>Assine com o dedo ou o mouse no quadro.</small></h3></header>
+        <canvas id="assinatura"></canvas>
+        <div class="linha-ass"><span>Ao assinar, você confirma o recebimento conforme as regras da empresa.</span><button class="link" onclick="limparAssinatura()">Limpar</button></div>
+      </div>
 
-function adicionarFotos(event) {
-    const arquivo = event.target.files[0];
+      <div id="erroEnvio" class="msg erro" hidden></div>
+      <button class="btn primario" id="btnEnviar" onclick="enviar()">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M3 11l18-8-8 18-2-8z"/></svg>Enviar solicitação</button>
+    </section>
 
-    if (!arquivo) return;
+    <!-- RESULTADO -->
+    <section id="telaOk" hidden>
+      <div class="cab"><div><h2>Solicitação enviada</h2><p>Guarde o protocolo. Ele e o seu CPF dão acesso aos seus pedidos.</p></div></div>
+      <div class="protocolo"><div><span>Protocolo</span><strong id="okProtocolo"></strong></div><span class="selo aviso" id="okStatus"></span></div>
+      <table style="margin-top:16px"><thead><tr><th>Peça</th><th>Tamanho</th><th class="n">Qtd</th></tr></thead><tbody id="okItens"></tbody></table>
+      <div class="msg erro" style="margin-top:18px">Não envie esta solicitação de novo. Pedidos duplicados ficam bloqueados enquanto este estiver em análise.</div>
+      <div class="botoes2" style="margin-top:16px">
+        <button class="btn" onclick="baixarComprovante()"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Baixar comprovante</button>
+        <button class="btn" onclick="irParaConsulta()">Acompanhar pedido</button>
+      </div>
+    </section>
 
-    if (!arquivo.type.startsWith("image/")) {
-        alert("Selecione apenas imagens.");
-        return;
+    <!-- MEUS PEDIDOS -->
+    <section id="telaMeus" hidden>
+      <div class="cab"><div><h2>Meus pedidos</h2><p>Informe o CPF e o protocolo de qualquer pedido seu.</p></div></div>
+      <div class="campos">
+        <label class="c">CPF<input id="cCpf" inputmode="numeric" placeholder="000.000.000-00"></label>
+        <label class="c">Protocolo<input id="cProt" placeholder="VGS-2026-0001" style="text-transform:uppercase"></label>
+      </div>
+      <button class="btn primario" id="btnConsultar" onclick="consultar()">Consultar</button>
+      <div id="erroConsulta" class="msg erro" hidden></div>
+      <div id="resultadoConsulta"></div>
+    </section>
+  </main>
+</div>
+
+<footer class="rodape"><span>Vegas Vigilância e Segurança</span><span>Disciplina · Respeito · Compromisso</span></footer>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbwexMtw2Ttr_OoIc24r7g7qyVeoJu-RTFhRopbou6sO_MwfXSGpwxFkE6mH6eB09AVbkA/exec";
+
+/* Cidades, postos e o kit de cada posto. As peças aparecem só se estiverem
+   cadastradas no estoque com o mesmo nome (maiúsculas e acentos não importam). */
+const cidadesPostos = {
+  "Barra do Piraí":["MCI Reciclagem","Ceneged BP"],
+  "Barra Mansa":["Royal Centro BM","Royal Boa Vista","Julio BF","Ceneged BM","Transporte Excelsior","Estik Filmes","Estik Filmes ASG","Expresso Massa Falida","Rede Aliança"],
+  "Miguel Pereira":["Ceneged ASG Miguel Pereira"],
+  "Niterói":["Sede Vegas Vigilância"],
+  "Nova Iguaçu":["Royal"],
+  "Pinheiral":["Norsil","Perfyaço"],
+  "Piraí":["Peter's House","Mata do Amador"],
+  "Porto Real":["Vila Vitória"],
+  "Queimados":["Lanlimp"],
+  "Resende":["Tachi-S Brasil Porteiro","Tachi-S Brasil Vigilante","Nagumo","Brabus","Zen Cozinha Oriental Vigia","Zen Cozinha Oriental Vigilante","Udiaço","Scapini","Royal Campos Elisios","Royal Manejo"],
+  "Sapucaia":["Ceneged Sapucaia"],
+  "Três Rios":["Royal 3 Rios","Ceneged TR"],
+  "Valença":["Ceneged"],
+  "Volta Redonda":["Fast Broker","Cicuta","Lauer Engenharia","Administrativo","Área Técnica","Monitoramento","Comercial","Nagumo","Royal Vila Sta Cecilia","Royal Retiro","Royal Sessenta","Royal Aterrado","Royal Amaral Peixoto","Royal São Lucas","Royale","Vincol","Gerdau","Projeto Vida","Edifício Cecisa I","Condomínio Maximum","Sind. Met. Sul Fluminense","A. Abreu Beneficiamento","Arena Emirados","Transporte Excelsior","Economy","Gran Milano"]
+};
+const K_VIG = ["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"];
+const K_SOC = ["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"];
+const K_TAT = ["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"];
+const K_TAT7 = ["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Coturno"];
+const K_TATC = ["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Cinza","Coturno"];
+const K_ASG = ["Camisa ASG","Calça elástico cinza","Blusa preta serviços","Casaco preto serviços","Coturno","Galocha"];
+const K_PORT = ["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"];
+const postosUniformes = {
+  "A. Abreu Beneficiamento":K_VIG,"Tachi-S Brasil Vigilante":K_VIG,"Scapini":K_VIG,"Transporte Excelsior":K_VIG,"Sind. Met. Sul Fluminense":K_VIG,"Peter's House":K_VIG,
+  "Nagumo":K_SOC,"Royal Vila Sta Cecilia":K_SOC,"Royal Retiro":K_SOC,"Royal Sessenta":K_SOC,"Royal Aterrado":K_SOC,"Royal Amaral Peixoto":K_SOC,"Royal 3 Rios":K_SOC,
+  "Royal Centro BM":K_SOC,"Royal Boa Vista":K_SOC,"Royal Campos Elisios":K_SOC,"Royal Manejo":K_SOC,"Royal":K_SOC,"Royal São Lucas":K_SOC,"Royale":K_SOC,"Zen Cozinha Oriental Vigilante":K_SOC,
+  "Projeto Vida":K_TAT,"Vila Vitória":K_TAT,"Estik Filmes":K_TAT,"Expresso Massa Falida":K_TAT,"Tachi-S Brasil Porteiro":K_TAT,"Zen Cozinha Oriental Vigia":K_TAT,"Perfyaço":K_TAT,
+  "Udiaço":K_TAT,"Ceneged BM":K_TAT,"Fast Broker":K_TAT,
+  "Economy":K_TAT7,"Gerdau":K_TAT7,"Mata do Amador":K_TAT7,"Brabus":K_TAT7,"Julio BF":K_TAT7,
+  "Edifício Cecisa I":K_TATC,"Norsil":K_TATC,"MCI Reciclagem":K_TATC,"Lanlimp":K_TATC,"Arena Emirados":K_TATC,"Ceneged BP":K_TATC,"Cicuta":K_TATC,
+  "Monitoramento":["Blusa preta vigilância","Casaco preto vigilância"],
+  "Área Técnica":["Blusa preta vigilância","Calça jeans","Casaco preto vigilância","Boné","Coturno"],
+  "Administrativo":["Blusa preta vigilância","Casaco preto vigilância"],
+  "Gerência":["Camisa social preta","Casaco preto vigilância"],
+  "Comercial":["Camisa social preta","Casaco preto vigilância"],
+  "Ceneged":["Camisa porteiro","Calça social","Casaco preto serviços","Sapato social","Gandola","Cinto"],
+  "Ceneged ASG":K_ASG,"Estik Filmes ASG":K_ASG,
+  "Ceneged ASG Miguel Pereira":["Camisa ASG","Calça elástico cinza","Blusa preta serviços","Casaco preto serviços","Botina","Galocha"],
+  "Gran Milano":["Calça social","Blusa cinza","Casaco preto serviços","Sapato social","Gandola","Cinto"],
+  "Condomínio Maximum":["Calça Social","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Sapato Social"],
+  "Vincol":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Coturno","Touca vegas vigilância"],
+  "Rede Aliança":K_PORT,"Ceneged Sapucaia":K_PORT,"Ceneged TR":K_PORT,
+  "Lauer Engenharia":["Blusa cinza","Calça Tática","Casaco preto serviços","Coturno"],
+  "Sede Vegas Vigilância":["Calça Tática","Coturno","Blusa Preta","Casaco Preto"]
+};
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = s => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+const fmtData = iso => iso ? new Date(iso).toLocaleString("pt-BR", {dateStyle:"short", timeStyle:"short"}) : "";
+const brl = v => Number(v || 0).toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+
+async function api(acao, dados) {
+  const r = await fetch(API, { method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify({acao, ...dados}) });
+  if (!r.ok) throw new Error("Falha de conexão (" + r.status + ").");
+  return r.json();
+}
+
+/* abas */
+function mostrar(t) {
+  $("abaNova").setAttribute("aria-selected", t === "nova");
+  $("abaMeus").setAttribute("aria-selected", t === "meus");
+  $("telaNova").hidden = t !== "nova" || !!ultimoPedido;
+  $("telaOk").hidden = t !== "nova" || !ultimoPedido;
+  $("telaMeus").hidden = t !== "meus";
+  if (t === "nova" && ultimoPedido === null) setTimeout(ajustarCanvas, 0);
+}
+
+/* máscaras */
+function mascaraCpf(e){ let v=e.target.value.replace(/\D/g,"").slice(0,11); v=v.replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d{1,2})$/,"$1-$2"); e.target.value=v; }
+$("cpf").oninput = mascaraCpf; $("cCpf").oninput = mascaraCpf;
+$("telefone").oninput = e => { let v=e.target.value.replace(/\D/g,"").slice(0,11);
+  e.target.value = v.length>10 ? v.replace(/(\d{2})(\d{5})(\d{0,4})/,"($1) $2-$3") : v.replace(/(\d{2})(\d{4})(\d{0,4})/,"($1) $2-$3").replace(/-$/,""); };
+function cpfValido(c){ c=c.replace(/\D/g,""); if(c.length!==11||/^(\d)\1{10}$/.test(c)) return false;
+  for(let t=9;t<11;t++){ let s=0; for(let i=0;i<t;i++) s+= +c[i]*(t+1-i); if(((s*10)%11)%10 !== +c[t]) return false; } return true; }
+
+/* cidades e postos */
+Object.keys(cidadesPostos).sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(c => $("cidade").add(new Option(c, c)));
+function carregarPostos() {
+  const s = $("posto"); s.innerHTML = '<option value="">Selecione o posto</option>';
+  (cidadesPostos[$("cidade").value] || []).forEach(p => s.add(new Option(p, p)));
+  montarPecas();
+}
+
+/* catálogo */
+let catalogo = null, escolhas = {}, avisosFalta = {};
+async function carregarCatalogo() {
+  try { const r = await api("catalogo"); if (r.sucesso) catalogo = r.pecas; }
+  catch (e) { catalogo = null; }
+  return catalogo;
+}
+function gruposCatalogo() {
+  const g = {};
+  (catalogo || []).forEach(p => { const k = norm(p.nome); (g[k] = g[k] || { nome: p.nome, tamanhos: [] }).tamanhos.push(p); });
+  Object.values(g).forEach(x => x.tamanhos.sort((a,b) => (isNaN(a.tamanho)||isNaN(b.tamanho)) ? ordemTam(a.tamanho)-ordemTam(b.tamanho) || a.tamanho.localeCompare(b.tamanho) : a.tamanho-b.tamanho));
+  return g;
+}
+function ordemTam(t){ const o=["PP","P","M","G","GG","EG","XG","EXG","EXGG","ÚNICO"]; const i=o.indexOf(String(t).toUpperCase()); return i<0?99:i; }
+
+async function montarPecas() {
+  const box = $("pecas"), posto = $("posto").value;
+  escolhas = {}; avisosFalta = {}; atualizarResumo();
+  if (!posto) { box.innerHTML = '<div class="vazio">Escolha a cidade e o posto para ver as peças do seu uniforme.</div>'; return; }
+  box.innerHTML = '<div class="vazio">Consultando o estoque…</div>';
+  if (!catalogo) await carregarCatalogo();
+  if (!catalogo) { box.innerHTML = '<div class="vazio">Não foi possível consultar o estoque agora. Verifique a internet e escolha o posto de novo.</div>'; return; }
+  const grupos = gruposCatalogo(), kit = (postosUniformes[posto] || []).map(norm);
+  const doKit = kit.filter((k,i) => kit.indexOf(k) === i);
+  const outras = Object.keys(grupos).filter(k => !doKit.includes(k)).sort();
+  let html = doKit.length ? doKit.map(k => linhaPeca(k, grupos[k], (postosUniformes[posto].find(n => norm(n) === k)))).join("") : "";
+  if (!doKit.length) html = Object.keys(grupos).sort().map(k => linhaPeca(k, grupos[k])).join("") || '<div class="vazio">Nenhuma peça cadastrada no estoque ainda.</div>';
+  else if (outras.length) html += `<details class="outras"><summary>Outras peças do estoque (${outras.length})</summary><div class="pecas">${outras.map(k => linhaPeca(k, grupos[k])).join("")}</div></details>`;
+  box.innerHTML = html;
+}
+function linhaPeca(chave, grupo, nomeKit) {
+  const id = "p_" + chave.replace(/[^a-z0-9]/g, "_");
+  if (!grupo) return `<div class="peca"><div class="nm">${esc(nomeKit || chave)}<span class="disp zero">Não cadastrada no estoque</span></div></div>`;
+  const total = grupo.tamanhos.reduce((s,t) => s + t.disponivel, 0);
+  const opts = grupo.tamanhos.map(t => `<option value="${esc(t.sku)}" ${t.disponivel ? "" : "disabled"}>${esc(t.tamanho)}${t.disponivel ? "" : " · sem estoque"}</option>`).join("");
+  const unico = grupo.tamanhos.length === 1;
+  return `<div class="peca" id="${id}" data-chave="${esc(chave)}">
+    <div class="nm">${esc(grupo.nome)}<span class="disp ${total===0?"zero":total<=5?"baixo":""}" id="${id}_d">${total ? total + " disponíveis" : "Sem estoque no momento"}</span></div>
+    <select aria-label="Tamanho de ${esc(grupo.nome)}" onchange="trocarTamanho('${id}',this.value)" ${total ? "" : "disabled"}>
+      ${unico ? "" : '<option value="">Tamanho</option>'}${opts}</select>
+    <div class="qtd"><button type="button" onclick="mudarQtd('${id}',-1)" aria-label="Diminuir">−</button><output id="${id}_q">0</output><button type="button" onclick="mudarQtd('${id}',1)" aria-label="Aumentar" ${total ? "" : "disabled"}>+</button></div>
+    <div class="aviso-falta" id="${id}_a" hidden></div>
+  </div>`;
+}
+function skuInfo(sku) { return (catalogo || []).find(p => p.sku === sku); }
+function trocarTamanho(id, sku) {
+  const ant = escolhas[id];
+  if (!sku) { delete escolhas[id]; } else {
+    const info = skuInfo(sku), qtd = Math.min(ant ? ant.qtd : 0, info.disponivel);
+    escolhas[id] = { sku, qtd };
+    $(id + "_d").textContent = `Tamanho ${info.tamanho}: ${info.disponivel} disponíveis`;
+    $(id + "_d").className = "disp " + (info.disponivel <= 5 ? "baixo" : "");
+  }
+  pintar(id);
+}
+function mudarQtd(id, d) {
+  const sel = $(id).querySelector("select");
+  if (!escolhas[id]) {
+    if (!sel.value) { sel.focus(); sel.classList.add("invalido"); setTimeout(() => sel.classList.remove("invalido"), 1200); return; }
+    escolhas[id] = { sku: sel.value, qtd: 0 };
+  }
+  const max = skuInfo(escolhas[id].sku).disponivel;
+  escolhas[id].qtd = Math.max(0, Math.min(max, escolhas[id].qtd + d));
+  if (d > 0 && escolhas[id].qtd === max) { $(id + "_a").hidden = false; $(id + "_a").textContent = `Limite do estoque para este tamanho: ${max}.`; }
+  pintar(id);
+}
+function pintar(id) {
+  const e = escolhas[id], q = e ? e.qtd : 0;
+  $(id + "_q").textContent = q;
+  $(id).classList.toggle("ativa", q > 0);
+  if (avisosFalta[id] === undefined && (!e || q < skuInfo(e.sku).disponivel)) $(id + "_a").hidden = true;
+  atualizarResumo();
+}
+function itensEscolhidos() {
+  return Object.values(escolhas).filter(e => e.qtd > 0).map(e => { const i = skuInfo(e.sku); return { sku: e.sku, qtd: e.qtd, peca: i.nome, tamanho: i.tamanho }; });
+}
+function atualizarResumo() {
+  const it = itensEscolhidos(), box = $("resumo");
+  box.hidden = !it.length;
+  if (it.length) box.innerHTML = `<b>Seu pedido</b> · ${it.reduce((s,i)=>s+i.qtd,0)} peça(s): ${it.map(i => `${esc(i.peca)} ${esc(i.tamanho)} ×${i.qtd}`).join(", ")}`;
+}
+
+/* foto */
+let fotoData = "";
+function lerFoto(input) {
+  const f = input.files[0]; input.value = "";
+  if (!f) return;
+  if (!f.type.startsWith("image/")) { alert("Envie uma imagem (JPG, PNG ou WEBP)."); return; }
+  const img = new Image(), url = URL.createObjectURL(f);
+  img.onload = () => {
+    const max = 1280, k = Math.min(1, max / Math.max(img.width, img.height));
+    const c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    fotoData = c.toDataURL("image/jpeg", 0.75); URL.revokeObjectURL(url);
+    $("previaImg").src = fotoData; $("previa").hidden = false;
+  };
+  img.onerror = () => alert("Não foi possível ler esta imagem.");
+  img.src = url;
+}
+function removerFoto() { fotoData = ""; $("previa").hidden = true; }
+
+/* assinatura */
+const cv = $("assinatura"), cx = cv.getContext("2d"); let riscando = false, assinou = false;
+function ajustarCanvas() {
+  const r = cv.getBoundingClientRect(); if (!r.width) return;
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = r.width * dpr; cv.height = r.height * dpr; cx.setTransform(dpr,0,0,dpr,0,0);
+  cx.lineWidth = 2.2; cx.lineCap = "round"; cx.lineJoin = "round"; cx.strokeStyle = "#0b0c0d"; assinou = false;
+}
+function ponto(e) { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+cv.addEventListener("pointerdown", e => { riscando = true; cv.setPointerCapture(e.pointerId); const p = ponto(e); cx.beginPath(); cx.moveTo(p.x, p.y); });
+cv.addEventListener("pointermove", e => { if (!riscando) return; const p = ponto(e); cx.lineTo(p.x, p.y); cx.stroke(); assinou = true; });
+["pointerup","pointercancel"].forEach(t => cv.addEventListener(t, () => riscando = false));
+function limparAssinatura() { cx.clearRect(0, 0, cv.width, cv.height); assinou = false; }
+function assinaturaPng() {
+  const o = document.createElement("canvas"), k = 400 / cv.width; o.width = 400; o.height = Math.round(cv.height * k);
+  const g = o.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0,0,o.width,o.height); g.drawImage(cv, 0, 0, o.width, o.height);
+  return o.toDataURL("image/png");
+}
+window.addEventListener("resize", () => { if (!assinou) ajustarCanvas(); });
+
+/* envio */
+const chaveEnvio = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
+let ultimoPedido = null;
+function erroEnvio(msg) { const b = $("erroEnvio"); b.textContent = msg; b.hidden = !msg; if (msg) b.scrollIntoView({behavior:"smooth", block:"center"}); }
+async function enviar() {
+  erroEnvio("");
+  const d = { nome: $("nome").value.trim(), cpf: $("cpf").value, telefone: $("telefone").value, funcao: $("funcao").value.trim(),
+              cidade: $("cidade").value, posto: $("posto").value, observacao: $("observacao").value.trim() };
+  const faltas = [];
+  if (d.nome.split(" ").filter(Boolean).length < 2) faltas.push("nome completo");
+  if (!cpfValido(d.cpf)) faltas.push("CPF válido");
+  if (d.telefone.replace(/\D/g,"").length < 10) faltas.push("telefone");
+  if (!d.funcao) faltas.push("função");
+  if (!d.cidade || !d.posto) faltas.push("cidade e posto");
+  const itens = itensEscolhidos();
+  if (!itens.length) faltas.push("ao menos uma peça");
+  if (!assinou) faltas.push("assinatura");
+  if (faltas.length) return erroEnvio("Falta preencher: " + faltas.join(", ") + ".");
+
+  const btn = $("btnEnviar"); btn.disabled = true; btn.lastChild.textContent = "Enviando…";
+  try {
+    const r = await api("novoPedido", { ...d, chave: chaveEnvio, itens: itens.map(i => ({ sku: i.sku, qtd: i.qtd })), assinatura: assinaturaPng(), foto: fotoData });
+    if (r.falta) { await tratarFalta(r.falta); return; }
+    if (!r.sucesso) {
+      if (r.protocoloAberto) { $("cProt").value = r.protocoloAberto; $("cCpf").value = d.cpf; }
+      return erroEnvio(r.erro || "Não foi possível enviar.");
     }
-
-    const reader = new FileReader();
-
-    reader.onload = e => {
-        fotosBase64 = [{
-            base64: e.target.result,
-            nome: arquivo.name
-        }];
-
-        renderizarPreviews();
-    };
-
-    reader.readAsDataURL(arquivo);
-
-    event.target.value = "";
+    ultimoPedido = { ...r, nome: d.nome, cpf: d.cpf, telefone: d.telefone, funcao: d.funcao, cidade: d.cidade, posto: d.posto, observacao: d.observacao, assinatura: assinaturaPng() };
+    $("okProtocolo").textContent = r.protocolo; $("okStatus").textContent = r.status;
+    $("okItens").innerHTML = r.itens.map(i => `<tr><td>${esc(i.peca)}</td><td>${esc(i.tamanho)}</td><td class="n">${i.qtd}</td></tr>`).join("");
+    $("cCpf").value = d.cpf; $("cProt").value = r.protocolo;
+    mostrar("nova"); window.scrollTo({ top: 0, behavior: "smooth" });
+    baixarComprovante();
+  } catch (e) {
+    erroEnvio("Sem resposta do servidor. Confira a internet e toque em Enviar de novo: o mesmo pedido não será duplicado.");
+  } finally { btn.disabled = false; btn.lastChild.textContent = "Enviar solicitação"; }
+}
+async function tratarFalta(falta) {
+  await carregarCatalogo();
+  falta.forEach(f => {
+    const id = Object.keys(escolhas).find(k => escolhas[k].sku === f.sku); if (!id) return;
+    escolhas[id].qtd = Math.min(escolhas[id].qtd, f.disponivel);
+    avisosFalta[id] = true;
+    $(id + "_a").hidden = false;
+    $(id + "_a").textContent = f.disponivel ? `Só há ${f.disponivel} de ${f.peca} ${f.tamanho}. Ajustamos a quantidade; confira e envie de novo.` : `${f.peca} ${f.tamanho} acabou. Escolha outro tamanho ou retire do pedido.`;
+    pintar(id);
+  });
+  erroEnvio("O estoque mudou enquanto você preenchia. Revise as peças marcadas e envie de novo.");
 }
 
-function removerFoto(index) {
-    fotosBase64.splice(index, 1);
-    renderizarPreviews();
+/* comprovante PDF */
+let logoData = null;
+async function logo() {
+  if (logoData !== null) return logoData;
+  try { const b = await (await fetch("assets/vegaslogo.jpg")).blob(); logoData = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); }); }
+  catch (e) { logoData = ""; }
+  return logoData;
+}
+async function cabecalhoPdf(pdf, titulo) {
+  pdf.setFillColor(0,0,0); pdf.rect(0,0,210,34,"F");
+  const l = await logo(); if (l) try { pdf.addImage(l, "JPEG", 12, 5, 24, 24); } catch (e) {}
+  pdf.setTextColor(230,232,235); pdf.setFont("helvetica","bold"); pdf.setFontSize(18); pdf.text("VEGAS", 40, 16);
+  pdf.setFontSize(8); pdf.setFont("helvetica","normal"); pdf.text("VIGILÂNCIA E SEGURANÇA", 40, 21);
+  pdf.setFontSize(12); pdf.setFont("helvetica","bold"); pdf.text(titulo, 198, 16, { align: "right" });
+  pdf.setFontSize(8); pdf.setFont("helvetica","normal"); pdf.text("Emitido em " + new Date().toLocaleString("pt-BR"), 198, 22, { align: "right" });
+  pdf.setTextColor(20,20,20);
+}
+async function baixarComprovante() {
+  const p = ultimoPedido; if (!p) return;
+  const { jsPDF } = window.jspdf, pdf = new jsPDF();
+  await cabecalhoPdf(pdf, "Comprovante de solicitação");
+  pdf.setFontSize(11);
+  pdf.setFont("helvetica","bold"); pdf.text("Protocolo " + p.protocolo, 14, 46);
+  pdf.setFont("helvetica","normal");
+  [["Funcionário", p.nome], ["CPF", p.cpf], ["Telefone", p.telefone], ["Função", p.funcao], ["Cidade / posto", p.cidade + " / " + p.posto], ["Status", p.status], ["Data", fmtData(p.data)]]
+    .forEach(([k,v], i) => { pdf.setTextColor(110); pdf.text(k, 14, 56 + i*7); pdf.setTextColor(20); pdf.text(String(v || ""), 52, 56 + i*7); });
+  pdf.autoTable({ startY: 108, head: [["Peça","Tamanho","Quantidade"]], body: p.itens.map(i => [i.peca, i.tamanho, i.qtd]),
+    theme: "grid", headStyles: { fillColor: [30,32,36], textColor: 235 }, styles: { fontSize: 10 }, columnStyles: { 2: { halign: "right" } } });
+  let y = pdf.lastAutoTable.finalY + 10;
+  if (p.observacao) { const t = pdf.splitTextToSize("Observação: " + p.observacao, 180); pdf.text(t, 14, y); y += t.length * 5 + 6; }
+  if (y > 240) { pdf.addPage(); y = 20; }
+  pdf.text("Assinatura do funcionário:", 14, y); try { pdf.addImage(p.assinatura, "PNG", 14, y + 3, 70, 26); } catch (e) {}
+  pdf.setFontSize(8); pdf.setTextColor(120); pdf.text("Consulte o andamento em Meus pedidos com o CPF e este protocolo.", 14, 287);
+  pdf.save("comprovante_" + p.protocolo + ".pdf");
 }
 
-function renderizarPreviews() {
-    const div = document.getElementById("fotosPreview");
-    const contador = document.getElementById("fotoContador");
-
-    div.innerHTML = "";
-
-    fotosBase64.forEach((foto, i) => {
-        div.innerHTML += `
-        <div class="foto-thumb">
-            <img src="${foto.base64}" alt="Foto">
-            <button class="remover" onclick="removerFoto(${i})">✕</button>
-        </div>`;
-    });
-
-    contador.textContent =
-        fotosBase64.length > 0
-            ? "1 foto selecionada"
-            : "";
+/* consulta */
+const ORDEM = ["Aguardando aprovação","Aprovado","Separando peças","Disponível para retirada","Entregue ao funcionário"];
+const LEGADO = { "EM ANÁLISE":"Aguardando aprovação", "PENDENTE":"Aprovado", "SEPARADO":"Disponível para retirada", "ENTREGUE":"Entregue ao funcionário" };
+function classeStatus(s) {
+  s = LEGADO[s] || s;
+  if (/Cancelado|Contestação/.test(s)) return "erro";
+  if (/Entregue ao|concluída|Resolvido|Sem pend/.test(s)) return "ok";
+  return "aviso";
+}
+function irParaConsulta() { mostrar("meus"); consultar(); }
+let identidade = null;
+async function consultar() {
+  const cpf = $("cCpf").value, protocolo = $("cProt").value.trim().toUpperCase(), box = $("erroConsulta");
+  box.hidden = true;
+  if (!cpfValido(cpf) || !protocolo) { box.textContent = "Informe um CPF válido e o protocolo."; box.hidden = false; return; }
+  const btn = $("btnConsultar"); btn.disabled = true; btn.textContent = "Consultando…";
+  try {
+    const r = await api("consultar", { cpf, protocolo });
+    if (!r.sucesso) { box.textContent = r.erro; box.hidden = false; $("resultadoConsulta").innerHTML = ""; return; }
+    identidade = { cpf, protocolo };
+    renderConsulta(r);
+  } catch (e) { box.textContent = "Sem resposta do servidor. Tente de novo."; box.hidden = false; }
+  finally { btn.disabled = false; btn.textContent = "Consultar"; }
+}
+function renderConsulta(r) {
+  const comVoce = r.entregas.filter(e => e.pendente > 0);
+  let h = r.pedidos.slice().reverse().map(p => {
+    const st = LEGADO[p.status] || p.status, idx = ORDEM.indexOf(st);
+    const itens = p.itens ? `<table><thead><tr><th>Peça</th><th>Tam.</th><th class="n">Pedido</th><th class="n">Entregue</th></tr></thead><tbody>${
+      p.itens.map(i => `<tr><td>${esc(i.peca)}</td><td>${esc(i.tamanho)}</td><td class="n">${i.qtd}</td><td class="n">${i.entregue || 0}</td></tr>`).join("")}</tbody></table>`
+      : `<p style="color:var(--suave)">${esc(p.uniformes)}</p>`;
+    return `<article class="pedido"><header><b>${esc(p.protocolo)}</b><span class="selo ${classeStatus(p.status)}">${esc(st)}</span></header>
+      <div style="color:var(--suave);font-size:13px">${fmtData(p.data)} · ${esc(p.cidade)} · ${esc(p.posto)}</div>
+      ${idx >= 0 ? `<div class="trilha" aria-label="Etapa ${idx+1} de ${ORDEM.length}">${ORDEM.map((_,i) => `<i class="${i <= idx ? "on" : ""}"></i>`).join("")}</div>` : ""}
+      ${itens}</article>`;
+  }).join("");
+  h += `<h3 class="bloco-t">Peças com você</h3>` + (comVoce.length
+    ? `<table><thead><tr><th>Peça</th><th>Tam.</th><th class="n">Qtd</th><th>Entregue em</th></tr></thead><tbody>${comVoce.map(e => `<tr><td>${esc(e.peca)}</td><td>${esc(e.tamanho)}</td><td class="n">${e.pendente}</td><td>${fmtData(e.dataHora)}</td></tr>`).join("")}</tbody></table>`
+    : `<p style="color:var(--suave)">Nenhuma peça pendente de devolução.</p>`);
+  if (r.devolucoes.length) h += `<h3 class="bloco-t">Devoluções conferidas</h3><table><thead><tr><th>Data</th><th>Peça</th><th>Condição</th><th class="n">Faltante</th></tr></thead><tbody>${
+    r.devolucoes.map(d => `<tr><td>${fmtData(d.dataHora)}</td><td>${esc(d.peca)} ${esc(d.tamanho)}</td><td>${esc(d.condicao)}</td><td class="n">${d.qtdFaltante}</td></tr>`).join("")}</tbody></table>`;
+  if (r.ocorrencias.length) h += `<h3 class="bloco-t">Valores de referência para análise</h3><p style="color:var(--suave);font-size:13px;margin-top:0">Estes valores não são desconto automático. Eles passam por análise e aprovação da empresa, e você pode registrar contestação.</p>` +
+    r.ocorrencias.map(o => `<article class="pedido"><header><b style="font-size:17px">${brl(o.valorTotal)}</b><span class="selo ${classeStatus(o.status)}">${esc(o.status)}</span></header>
+      <div style="font-size:14px">${esc(o.resumo)}</div><div style="color:var(--suave);font-size:13px">Conferido em ${fmtData(o.dataHora)}</div>
+      ${o.contestacao.map(c => `<div class="msg ok" style="margin-top:8px">${esc(c.por)} · ${fmtData(c.em)}: ${esc(c.texto)}</div>`).join("")}
+      ${/Resolvido|Cancelado/.test(o.status) ? "" : `<label class="c" style="margin-top:12px">Contestar este valor<textarea id="ct_${o.id}" maxlength="1000" placeholder="Explique o que aconteceu com a peça."></textarea></label>
+      <button class="btn" style="margin-top:8px" onclick="contestar('${o.id}')">Registrar contestação</button>`}</article>`).join("");
+  $("resultadoConsulta").innerHTML = h;
+}
+async function contestar(id) {
+  const texto = $("ct_" + id).value.trim();
+  if (texto.length < 10) { alert("Descreva o motivo com pelo menos 10 caracteres."); return; }
+  const r = await api("contestar", { ...identidade, ocorrenciaId: id, texto });
+  if (!r.sucesso) { alert(r.erro); return; }
+  consultar();
 }
 
-            /* ── POSTOS / UNIFORMES ── */
-    const cidadesPostos = {
-       "Barra do Piraí":["MCI Reciclagem","Ceneged BP"],
-
-"Barra Mansa":["Royal Centro BM","Royal Boa Vista","Julio BF","Ceneged BM","Transporte Excelsior","Estik Filmes","Estik Filmes ASG","Expresso Massa Falida","Rede Aliança"],
-
-"Miguel Pereira":["Ceneged ASG Miguel Pereira"],
-
-"Niterói":["Sede Vegas Vigilância"],
-
-"Nova Iguaçu":["Royal"],
-
-"Pinheiral":["Norsil","Perfyaço"],
-
-"Piraí":["Peter's House","Mata do Amador"],
-
-"Porto Real":["Vila Vitória"],
-
-"Queimados":["Lanlimp"],
-
-"Resende":["Tachi-S Brasil Porteiro","Tachi-S Brasil Vigilante","Nagumo","Brabus","Zen Cozinha Oriental Vigia", "Zen Cozinha Oriental Vigilante", "Udiaço","Scapini","Royal Campos Elisios","Royal Manejo"],
-
-"Sapucaia":["Ceneged Sapucaia"],
-
-"Três Rios":["Royal 3 Rios","Ceneged TR"],
-
-"Valença":["Ceneged"],
-
-"Volta Redonda":["Fast Broker","Cicuta","Lauer Engenharia","Administrativo","Área Técnica","Monitoramento","Comercial","Nagumo","Royal Vila Sta Cecilia","Royal Retiro","Royal Sessenta","Royal Aterrado","Royal Amaral Peixoto","Royal São Lucas","Royale","Vincol","Gerdau","Projeto Vida","Edifício Cecisa I","Condomínio Maximum","Sind. Met. Sul Fluminense","A. Abreu Beneficiamento","Arena Emirados","Transporte Excelsior","Economy","Gran Milano"],
-    };
-
-    // Preenche o menu de cidades automaticamente, sempre em ordem alfabética,
-    // a partir do objeto cidadesPostos. Assim, para incluir/remover uma cidade
-    // basta editar cidadesPostos acima — o menu se atualiza sozinho.
-    function preencherCidades(){
-        const select = document.getElementById("cidade");
-        if(!select) return;
-        select.innerHTML = '<option value="">Selecione a Cidade</option>';
-        Object.keys(cidadesPostos)
-            .sort((a, b) => a.localeCompare(b, "pt-BR"))
-            .forEach(cidade => {
-                const opt = document.createElement("option");
-                opt.value = cidade;
-                opt.textContent = cidade;
-                select.appendChild(opt);
-            });
-    }
-    document.addEventListener("DOMContentLoaded", preencherCidades);
-    const postosUniformes = {
-
-        "A. Abreu Beneficiamento":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
-        "Nagumo":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal Vila Sta Cecilia":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal Retiro":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal Sessenta":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal Aterrado":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal Amaral Peixoto":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal 3 Rios":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal Centro BM":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal Boa Vista":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal Campos Elisios":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal Manejo":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royal São Lucas":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Royale":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Projeto Vida":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"],
-        "Monitoramento":["Blusa preta vigilância","Casaco preto vigilância"],
-        "Área Técnica":["Blusa preta vigilância","Calça jeans","Casaco preto vigilância","Boné","Coturno"],
-        "Administrativo":["Blusa preta vigilância","Casaco preto vigilância"],
-        "Gerência":["Camisa social preta","Casaco preto vigilância"],
-        "Comercial":["Camisa social preta","Casaco preto vigilância"],
-        "Ceneged":["Camisa porteiro","Calça social","Casaco preto serviços","Sapato social","Gandola","Cinto"],
-        "Ceneged ASG":["Camisa ASG","Calça elástico cinza","Blusa preta serviços","Casaco preto serviços","Coturno","Galocha"],
-        "Vila Vitória":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"],
-        "Economy":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Coturno"],
-        "Edifício Cecisa I":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Cinza","Coturno"],
-        "Gran Milano":["Calça social","Blusa cinza ","Casaco preto serviços","Sapato social","Gandola","Cinto"],
-        "Condomínio Maximum":["Calça Social","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Sapato Social"],
-        "Estik Filmes":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"],
-        "Estik Filmes ASG":["Camisa ASG","Calça elástico cinza","Blusa preta serviços","Casaco preto serviços","Coturno","Galocha"],
-        "Expresso Massa Falida":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"],
-        "Gerdau":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Coturno"],
-        "Tachi-S Brasil Porteiro":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"],
-        "Tachi-S Brasil Vigilante":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
-        "Mata do Amador":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Coturno"],
-        "Norsil":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Cinza","Coturno"],
-        "Scapini":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
-        "Zen Cozinha Oriental Vigia":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"],
-        "Zen Cozinha Oriental Vigilante":["Blazer","Calça social","Camisa social branca","Gravata","Sapato social","Botom preto vigilante"],
-        "Perfyaço":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"],
-        "MCI Reciclagem":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Cinza","Coturno"],
-        "Lanlimp":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Cinza","Coturno"],
-        "Vincol":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Coturno","Touca vegas vigilância"],
-        "Brabus":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Coturno"],
-        "Udiaço":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"],
-        "Rede Aliança":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca engels vigilância"],
-        "Julio BF":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Coturno"],
-        "Transporte Excelsior":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
-        "Sind. Met. Sul Fluminense":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
-        "Arena Emirados":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Cinza","Coturno"],
-        "Peter's House":["Camisa vigilante bege curta","Camisa vigilante bege longa","Calça vigilante tática","Blusa preta vigilância","Casaco vigilância","Gravata","Capa para placa balística","Boné","Fiel","Apito","Coturno","Cinto","Cinto tático","Coldre","Baleiro","Touca vegas vigilância"],
-        "Perfyaço":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"],
-        "Ceneged Sapucaia":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
-        "Ceneged ASG Miguel Pereira":["Camisa ASG","Calça elástico cinza","Blusa preta serviços","Casaco preto serviços","Botina","Galocha"],
-        "Ceneged BP":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Cinza","Coturno"],
-        "Ceneged TR":["Camisa porteiro","Calça social","Blusa preta serviços","Casaco preto serviços","Boné","Botina","Touca vegas vigilância"],
-        "Ceneged BM":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"],
-        "Lauer Engenharia":["Blusa cinza","Calça Tática","Casaco preto serviços","Coturno",],
-        "Cicuta":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Cinza","Coturno"],
-        "Fast Broker":["Calça Tática","Camisa Preta","Cinto","Blusa de Frio","Cobertura/Boné","Touca","Gandola Preta","Coturno"],
-        "Sede Vegas Vigilância":["Calça Tática","Coturno","Blusa Preta","Casaco Preto"],
-    };
-
-        function carregarPostos() {
-            const cidade = document.getElementById("cidade").value;
-            const selectPosto = document.getElementById("posto");
-            selectPosto.innerHTML = '<option value="">Selecione o Posto</option>';
-            document.getElementById("uniformes").innerHTML = "";
-            if (cidadesPostos[cidade]) {
-                cidadesPostos[cidade].forEach(posto => {
-                    const opt = document.createElement("option");
-                    opt.value = posto;
-                    opt.textContent = posto;
-                    selectPosto.appendChild(opt);
-                });
-            }
-        }
-
-        function carregarUniformes() {
-            const posto = document.getElementById("posto").value;
-            const div = document.getElementById("uniformes");
-            div.innerHTML = "";
-            if (!postosUniformes[posto]) return;
-
-            postosUniformes[posto].forEach(nome => {
-                let tamanhos = null;
-                if (/sapato|botina|coturno|galocha/i.test(nome))
-                    tamanhos = Array.from({ length: 15 }, (_, i) => i + 34);
-                else if (/camisa social/i.test(nome))
-                    tamanhos = ["N2", "N3", "N4", "N5", "N6", "N7", "N8"];
-                else if (/calça elástico/i.test(nome))
-                    tamanhos = ["P", "M", "G", "GG", "XG", "EXG", "EXGG"];
-                else if (/calça/i.test(nome))
-                    tamanhos = Array.from({ length: 25 }, (_, i) => i + 36);
-                else if (/camisa|blusa|casaco|gandola|blazer/i.test(nome))
-                    tamanhos = ["P", "M", "G", "GG", "EG"];
-
-                div.innerHTML += `
-        <div class="item">
-            <label><input type="checkbox"> ${nome}</label>
-            ${tamanhos ? `
-            <select>
-                <option>Tamanho</option>
-                ${tamanhos.map(t => `<option>${t}</option>`).join("")}
-            </select>` : ""}
-        </div>`;
-            });
-        }
-
-        /* ======= ASSINATURA ======= */
-        const canvas = document.getElementById("assinatura");
-        const ctx = canvas.getContext("2d");
-        canvas.width = 370;
-        canvas.height = 150;
-
-        let desenhando = false;
-        canvas.addEventListener("mousedown", e => { desenhando = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
-        canvas.addEventListener("mouseup", () => desenhando = false);
-        canvas.addEventListener("mousemove", e => {
-            if (!desenhando) return;
-            ctx.lineWidth = 2; ctx.lineCap = "round";
-            ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke();
-        });
-        canvas.addEventListener("touchstart", e => {
-            e.preventDefault();
-            const r = canvas.getBoundingClientRect(); const t = e.touches[0];
-            desenhando = true; ctx.beginPath(); ctx.moveTo(t.clientX - r.left, t.clientY - r.top);
-        });
-        canvas.addEventListener("touchend", () => desenhando = false);
-        canvas.addEventListener("touchmove", e => {
-            e.preventDefault();
-            if (!desenhando) return;
-            const r = canvas.getBoundingClientRect(); const t = e.touches[0];
-            ctx.lineWidth = 2; ctx.lineCap = "round";
-            ctx.lineTo(t.clientX - r.left, t.clientY - r.top); ctx.stroke();
-        });
-
-        function limpar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
-
-        /* ======= ENVIO ======= */
-        let enviando = false;
-
-        async function enviar() {
-            if (enviando) return;
-            const btn = document.getElementById("btnEnviar");
-            enviando = true;
-            btn.disabled = true;
-            btn.innerText = "ENVIANDO...";
-            btn.style.opacity = "0.6";
-
-            try {
-                const nome = document.getElementById("nome").value.trim();
-                const cpf = document.getElementById("cpf").value;
-                const telefone = document.getElementById("telefone").value;
-                const postoSel = document.getElementById("posto");
-                const posto = postoSel.options[postoSel.selectedIndex].text;
-                const cidade = document.getElementById("cidade").value;
-                const obs = document.getElementById("observacao").value;
-
-                if (!nome || cpf.length < 14 || telefone.length < 14 || !postoSel.value) {
-                    alert("Preencha todos os dados.");
-                    resetarBotao(); return;
-                }
-
-                let lista = [];
-                document.querySelectorAll(".item").forEach(item => {
-                    const check = item.querySelector("input");
-                    const select = item.querySelector("select");
-                    if (check.checked) {
-                        lista.push(select
-                            ? check.parentNode.innerText.trim() + " - " + select.value
-                            : check.parentNode.innerText.trim());
-                    }
-                });
-
-                if (lista.length === 0) {
-                    alert("Selecione ao menos um uniforme.");
-                    resetarBotao(); return;
-                }
-
-                const assinatura = canvas.toDataURL("image/png");
-
-                // Monta payload — fotos como array de base64
-                const payload = {
-                    func: "salvarUniforme",
-                    protocolo: PROTOCOLO,
-                    data: new Date().toLocaleString("pt-BR"),
-                    nome,
-                    cpf,
-                    telefone,
-                    cidade,
-                    posto,
-                    uniformes: lista.join(", "),
-                    observacao: obs,
-                    assinatura,
-                    fotos: fotosBase64.map(f => f.base64)   // array de base64 strings
-                };
-
-                await fetch("https://script.google.com/macros/s/AKfycbwexMtw2Ttr_OoIc24r7g7qyVeoJu-RTFhRopbou6sO_MwfXSGpwxFkE6mH6eB09AVbkA/exec",
-                    { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }
-                );
-
-                /* ===== GERA PDF COM PROTOCOLO E FOTOS ===== */
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF();
-
-                // Cabeçalho
-                pdf.setFontSize(16);
-                pdf.text("COMPROVANTE DE SOLICITAÇÃO", 20, 20);
-
-                // Protocolo destacado
-                pdf.setFillColor(30, 30, 30);
-                pdf.roundedRect(15, 26, 180, 14, 4, 4, 'F');
-                pdf.setTextColor(220, 220, 220);
-                pdf.setFontSize(11);
-                pdf.text("Protocolo: " + PROTOCOLO, 20, 35);
-                pdf.setTextColor(0, 0, 0);
-
-                pdf.setFontSize(12);
-                pdf.text("Funcionário: " + nome, 20, 52);
-                pdf.text("CPF: " + cpf, 20, 62);
-                pdf.text("Telefone: " + telefone, 20, 72);
-                pdf.text("Posto: " + posto, 20, 82);
-
-                let y = 95;
-                pdf.text("Uniformes solicitados:", 20, y); y += 10;
-                lista.forEach(u => {
-                    const linhas = pdf.splitTextToSize("- " + u, 170);
-                    linhas.forEach(l => {
-                        pdf.text(l, 20, y); y += 7;
-                        if (y > 265) { pdf.addPage(); y = 20; }
-                    });
-                });
-
-                if (obs) {
-                    y += 5;
-                    pdf.text("Observação: " + obs, 20, y); y += 10;
-                }
-
-                // Fotos de avaria no PDF
-                if (fotosBase64.length > 0) {
-                    if (y > 200) { pdf.addPage(); y = 20; }
-                    pdf.text("Fotos de avaria:", 20, y); y += 8;
-                    for (const foto of fotosBase64) {
-                        if (y > 220) { pdf.addPage(); y = 20; }
-                        try {
-                            pdf.addImage(foto.base64, "JPEG", 20, y, 80, 60);
-                        } catch {
-                            pdf.addImage(foto.base64, "PNG", 20, y, 80, 60);
-                        }
-                    }
-                }
-
-                // Assinatura
-                if (y > 220) { pdf.addPage(); y = 20; }
-                pdf.text("Assinatura:", 20, y + 10);
-                pdf.addImage(assinatura, "PNG", 20, y + 15, 80, 40);
-                pdf.text("Data: " + new Date().toLocaleString("pt-BR"), 20, y + 60);
-
-                pdf.save("comprovante_uniforme_" + PROTOCOLO + ".pdf");
-
-                btn.innerText = "ENVIADO ✓";
-                btn.style.background = "#16a34a";
-                btn.style.opacity = "1";
-                document.getElementById("avisoDuplicado").style.display = "block";
-                alert("Solicitação enviada!\nProtocolo: " + PROTOCOLO);
-
-            } catch (err) {
-                console.error(err);
-                alert("Erro ao enviar. Tente novamente.");
-                resetarBotao();
-            }
-        }
-
-        function resetarBotao() {
-            const btn = document.getElementById("btnEnviar");
-            enviando = false;
-            btn.disabled = false;
-            btn.innerText = "ENVIAR SOLICITAÇÃO";
-            btn.style.opacity = "1";
-            btn.style.cursor = "pointer";
-            btn.style.background = "linear-gradient(90deg, #c0c0c0, #e5e5e5)";
-        }
-
-    </script>
+ajustarCanvas();
+carregarCatalogo();
+</script>
 </body>
-
 </html>
